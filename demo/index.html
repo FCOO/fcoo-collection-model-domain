@@ -37,7 +37,7 @@ Promise.defaultErrorHandler = function(error){ console.log(error)};
 
 //TEST:intervals.options.durationUnit = 'seconds';
 
-fcoo.model.options.includeModel = true;
+//fcoo.model.options.includeModel = true;
 
 if (window.location.search =='?test')
     fcoo.model.options.staticMode = true;
@@ -76,6 +76,10 @@ fcoo.model.options.domainGroupList = $.extend(true, fcoo.model.options.domainGro
         'background-color': '#C9E9F7',
     }
 });
+
+
+fcoo.model.create();
+
 
 fcoo.promiseList_getAll();
 

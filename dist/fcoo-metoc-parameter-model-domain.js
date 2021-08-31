@@ -2,6 +2,11 @@
 fcoo-metoc-load.js,
 
 Method to load all data regarding models, domains, domain-groups
+
+There are two ways to load and create models and domain-groups
+1: Set fcoo.model.includeModel = true before the fcoo.promiseList is resolved, or
+2: Call fcoo.model.create( options (optional) )
+
 ****************************************************************************/
 (function ($, window/*, document, undefined*/) {
     "use strict";
@@ -9,8 +14,42 @@ Method to load all data regarding models, domains, domain-groups
     //Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {},
         nsModel = ns.model = ns.model || {},
-        nsParameter = ns.parameter = ns.parameter || {},
-        nsModelOptions = nsModel.options = nsModel.options || {};
+        nsParameter = ns.parameter = ns.parameter || {};
+
+
+    /****************************************************************************
+    nsModel.create(options)
+    Set options and creates and loads models and domain-groups
+    ****************************************************************************/
+    nsModel.create = function(options = {}){
+        var nsModelOptions = nsModel.options = $.extend(true, nsModel.options, options);
+
+        //Create and load modelList
+        nsModel.modelList = new nsModel.ModelList();
+        ns.promiseList.append({
+            fileName: {subDir: nsModelOptions.modelList.dataSubDir, fileName: nsModelOptions.modelList.dataFileName},
+            resolve : $.proxy(nsModel.ModelList.prototype.resolve, nsModel.modelList)
+        });
+
+        //Create and load domainGroupList
+        nsModel.domainGroupList = nsModel.domainGroupList || new window.fcoo.model.DomainGroupList();
+        ns.promiseList.append({
+            fileName: {subDir: nsModelOptions.domainGroupList.dataSubDir, fileName: nsModelOptions.domainGroupList.dataFileName},
+            resolve : $.proxy(nsModel.DomainGroupList.prototype.resolve, nsModel.domainGroupList)
+        });
+
+        //Load and update relations between parameters and domainGroups
+        ns.promiseList.append({
+            fileName: {subDir: nsModelOptions.domainGroupList.dataSubDir, fileName: nsModelOptions.domainGroupList.parameterFileName},
+            resolve : function( data ){
+                $.each(nsParameter, function(index, parameter){
+                    if (parameter instanceof nsParameter.Parameter)
+                        parameter._getDomainGroup(data);
+                });
+            }
+        });
+    };
+
 
     /****************************************************************************
     Adding a 'empty' promise to fcoo.promiseList to detect if models and
@@ -19,32 +58,8 @@ Method to load all data regarding models, domains, domain-groups
     ns.promiseList.appendFirst({
         data: {},
         resolve: function(){
-            if (nsModelOptions.includeModel){
-                //Create and load modelList
-                nsModel.modelList = new nsModel.ModelList();
-                ns.promiseList.append({
-                    fileName: {subDir: nsModelOptions.modelList.dataSubDir, fileName: nsModelOptions.modelList.dataFileName},
-                    resolve : $.proxy(nsModel.ModelList.prototype.resolve, nsModel.modelList)
-                });
-
-                //Create and load domainGroupList
-                nsModel.domainGroupList = nsModel.domainGroupList || new window.fcoo.model.DomainGroupList();
-                ns.promiseList.append({
-                    fileName: {subDir: nsModelOptions.domainGroupList.dataSubDir, fileName: nsModelOptions.domainGroupList.dataFileName},
-                    resolve : $.proxy(nsModel.DomainGroupList.prototype.resolve, nsModel.domainGroupList)
-                });
-
-                //Load and update relations between parameters and domainGroups
-                ns.promiseList.append({
-                    fileName: {subDir: nsModelOptions.domainGroupList.dataSubDir, fileName: nsModelOptions.domainGroupList.parameterFileName},
-                    resolve : function( data ){
-                        $.each(nsParameter, function(index, parameter){
-                            if (parameter instanceof nsParameter.Parameter)
-                                parameter._getDomainGroup(data);
-                        });
-                    }
-                });
-            }
+            if (nsModel.options.includeModel)
+                nsModel.create();
         }
     });
 
@@ -65,8 +80,7 @@ Method to load all data regarding models, domains, domain-groups
 
     //Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {},
-        nsModel = ns.model = ns.model || {},
-        nsModelOptions = nsModel.options = nsModel.options || {};
+        nsModel = ns.model = ns.model || {};
 
     /****************************************************************************
     fcoo.model.options.domainGroupList
@@ -88,7 +102,7 @@ Method to load all data regarding models, domains, domain-groups
             maxZoom	            : 7        //Maximum zoom level of the map. If not specified and at least one GridLayer or TileLayer is in the map, the highest of their maxZoom options will be used instead.
         };
 
-    nsModelOptions = $.extend(true, nsModelOptions, {
+    nsModel.options = $.extend(true, nsModel.options, {
         domainGroupList: {
             updateDuration   :  5,                  //Interval between updating the info (minutes)
             maxAbsoluteAge   : 48,                  //Max age (=now - epoch) for a domain
@@ -150,7 +164,7 @@ Method to load all data regarding models, domains, domain-groups
     DomainGroupList
     ****************************************************************************/
     function DomainGroupList(options) {
-        this.options = $.extend(true, {}, nsModelOptions.domainGroupList, options || {});
+        this.options = $.extend(true, {}, nsModel.options.domainGroupList, options || {});
         this.list      = [];
         this.groups    = {};
         this.modelList = [];
@@ -178,7 +192,7 @@ Method to load all data regarding models, domains, domain-groups
                 _this.addDomainGroup(domainGroupOptions);
             });
 
-            if (nsModelOptions.staticMode)
+            if (nsModel.options.staticMode)
                 this.updateAll();
             else
                 nsModel.modelList.onResolve.push(
@@ -211,7 +225,7 @@ Method to load all data regarding models, domains, domain-groups
             });
 
             //If it is the firste time => add interval to update all domainGroups every updateDuration minutes
-            if (!nsModelOptions.staticMode && !this.intervalAdded){
+            if (!nsModel.options.staticMode && !this.intervalAdded){
                 this.intervalAdded = true;
                 window.intervals.addInterval({
                     duration: this.options.updateDuration,
@@ -278,7 +292,7 @@ Method to load all data regarding models, domains, domain-groups
                 });
 
             //If not static-mode => update age and sort by it
-            if (!nsModelOptions.staticMode){
+            if (!nsModel.options.staticMode){
                 //Check all domains if they are to old compared with there parent
                 $.each(this.list, function(index, dommainGroupItem){
                     dommainGroupItem.setAgeOk();
@@ -479,7 +493,7 @@ Method to load all data regarding models, domains, domain-groups
                     icons = [], //1. Status, 2. color on info-map or not-shown
                     ageOk = this.ageOk;
 
-                if (!nsModelOptions.staticMode){
+                if (!nsModel.options.staticMode){
                     if (!ageOk)
                         icons.push(['fas fa-circle text-danger', 'far fa-exclamation-circle']);
                     else
@@ -701,11 +715,10 @@ Objects and methods to create and manage list of models
 
     //Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {},
-        nsModel = ns.model = ns.model || {},
-        nsModelOptions = nsModel.options = nsModel.options || {};
+        nsModel = ns.model = ns.model || {};
 
-    nsModelOptions = $.extend(true, nsModelOptions, {
-        includeModel: true,     //If true all models and domain-groups are loaded and created
+    nsModel.options = $.extend(true, nsModel.options, {
+        includeModel: false,    //If true all models and domain-groups are loaded and created
         staticMode  : false,    //If true no metadata from nc-filer are loaded and no dynamic info in modal-window
         model: {
             roundEpochMomentTo  : 15 //minutes
@@ -723,11 +736,12 @@ Objects and methods to create and manage list of models
         }
     });
 
+
     /****************************************************************************
     ModelList
     ****************************************************************************/
     function ModelList(options) {
-        this.options = $.extend(true, {}, nsModelOptions.modelList, options || {});
+        this.options = $.extend(true, {}, nsModel.options.modelList, options || {});
         this.list   = [];
         this.models = {};
         this.onResolve = []; //[]FUNCTION(modelList) to be called every time meta-data are resolved/read
@@ -759,11 +773,11 @@ Objects and methods to create and manage list of models
                 _this.list.push( newModel );
                 _this.models[newModel.options.id] = newModel;
             });
-            if (!nsModelOptions.staticMode)
+            if (!nsModel.options.staticMode)
                 //Create Interval to read metadata for all domains every X minutes
                 window.intervals.addInterval({
                     duration: this.options.metaDataDuration,
-                    fileName: {mainDir: true, subDir: nsModelOptions.modelList.metaDataSubDir, fileName: nsModelOptions.modelList.metaDataFileName},
+                    fileName: {mainDir: true, subDir: nsModel.options.modelList.metaDataSubDir, fileName: nsModel.options.modelList.metaDataFileName},
                     context : this,
                     resolve : nsModel.ModelList.prototype.resolveMetaData,
                     reject  : nsModel.ModelList.prototype.reject
@@ -819,7 +833,7 @@ Objects and methods to create and manage list of models
     ****************************************************************************/
     function Model(options, modelList) {
         var _this = this;
-        this.options = $.extend(true, {}, nsModelOptions.model, options || {});
+        this.options = $.extend(true, {}, nsModel.options.model, options || {});
         this.modelList = modelList;
         this.domainList = [];
         this.domains = {};
@@ -1129,7 +1143,7 @@ Objects and methods to create and manage list of models
 
             var content = [];
 
-            if (!nsModelOptions.staticMode){
+            if (!nsModel.options.staticMode){
                 if (!this.ageOk)
                     content.push({
                         type     : 'textarea',
@@ -1165,7 +1179,7 @@ Objects and methods to create and manage list of models
             content.push( abbrAndName( this.model.options.id, null,              null,              {da:'Model',            en: 'Model'             } ));
             content.push( abbrAndName( this.options.abbr,     this.options.name, this.options.link, {da:'Område/Opsætning', en: 'Domain/Setting'    }, i18next.s(this.options.areaName)+' =' ));
 
-            if (nsModelOptions.staticMode)
+            if (nsModel.options.staticMode)
                 content.push({
                     type      : 'textarea',
                     label     : {da: 'Opløsning', en:'Resolution'},

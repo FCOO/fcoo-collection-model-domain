@@ -8,11 +8,10 @@ Objects and methods to create and manage list of models
 
     //Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {},
-        nsModel = ns.model = ns.model || {},
-        nsModelOptions = nsModel.options = nsModel.options || {};
+        nsModel = ns.model = ns.model || {};
 
-    nsModelOptions = $.extend(true, nsModelOptions, {
-        includeModel: true,     //If true all models and domain-groups are loaded and created
+    nsModel.options = $.extend(true, nsModel.options, {
+        includeModel: false,    //If true all models and domain-groups are loaded and created
         staticMode  : false,    //If true no metadata from nc-filer are loaded and no dynamic info in modal-window
         model: {
             roundEpochMomentTo  : 15 //minutes
@@ -30,11 +29,12 @@ Objects and methods to create and manage list of models
         }
     });
 
+
     /****************************************************************************
     ModelList
     ****************************************************************************/
     function ModelList(options) {
-        this.options = $.extend(true, {}, nsModelOptions.modelList, options || {});
+        this.options = $.extend(true, {}, nsModel.options.modelList, options || {});
         this.list   = [];
         this.models = {};
         this.onResolve = []; //[]FUNCTION(modelList) to be called every time meta-data are resolved/read
@@ -66,11 +66,11 @@ Objects and methods to create and manage list of models
                 _this.list.push( newModel );
                 _this.models[newModel.options.id] = newModel;
             });
-            if (!nsModelOptions.staticMode)
+            if (!nsModel.options.staticMode)
                 //Create Interval to read metadata for all domains every X minutes
                 window.intervals.addInterval({
                     duration: this.options.metaDataDuration,
-                    fileName: {mainDir: true, subDir: nsModelOptions.modelList.metaDataSubDir, fileName: nsModelOptions.modelList.metaDataFileName},
+                    fileName: {mainDir: true, subDir: nsModel.options.modelList.metaDataSubDir, fileName: nsModel.options.modelList.metaDataFileName},
                     context : this,
                     resolve : nsModel.ModelList.prototype.resolveMetaData,
                     reject  : nsModel.ModelList.prototype.reject
@@ -126,7 +126,7 @@ Objects and methods to create and manage list of models
     ****************************************************************************/
     function Model(options, modelList) {
         var _this = this;
-        this.options = $.extend(true, {}, nsModelOptions.model, options || {});
+        this.options = $.extend(true, {}, nsModel.options.model, options || {});
         this.modelList = modelList;
         this.domainList = [];
         this.domains = {};
@@ -436,7 +436,7 @@ Objects and methods to create and manage list of models
 
             var content = [];
 
-            if (!nsModelOptions.staticMode){
+            if (!nsModel.options.staticMode){
                 if (!this.ageOk)
                     content.push({
                         type     : 'textarea',
@@ -472,7 +472,7 @@ Objects and methods to create and manage list of models
             content.push( abbrAndName( this.model.options.id, null,              null,              {da:'Model',            en: 'Model'             } ));
             content.push( abbrAndName( this.options.abbr,     this.options.name, this.options.link, {da:'Område/Opsætning', en: 'Domain/Setting'    }, i18next.s(this.options.areaName)+' =' ));
 
-            if (nsModelOptions.staticMode)
+            if (nsModel.options.staticMode)
                 content.push({
                     type      : 'textarea',
                     label     : {da: 'Opløsning', en:'Resolution'},

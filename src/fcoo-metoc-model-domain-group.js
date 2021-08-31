@@ -13,8 +13,7 @@
 
     //Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {},
-        nsModel = ns.model = ns.model || {},
-        nsModelOptions = nsModel.options = nsModel.options || {};
+        nsModel = ns.model = ns.model || {};
 
     /****************************************************************************
     fcoo.model.options.domainGroupList
@@ -36,7 +35,7 @@
             maxZoom	            : 7        //Maximum zoom level of the map. If not specified and at least one GridLayer or TileLayer is in the map, the highest of their maxZoom options will be used instead.
         };
 
-    nsModelOptions = $.extend(true, nsModelOptions, {
+    nsModel.options = $.extend(true, nsModel.options, {
         domainGroupList: {
             updateDuration   :  5,                  //Interval between updating the info (minutes)
             maxAbsoluteAge   : 48,                  //Max age (=now - epoch) for a domain
@@ -98,7 +97,7 @@
     DomainGroupList
     ****************************************************************************/
     function DomainGroupList(options) {
-        this.options = $.extend(true, {}, nsModelOptions.domainGroupList, options || {});
+        this.options = $.extend(true, {}, nsModel.options.domainGroupList, options || {});
         this.list      = [];
         this.groups    = {};
         this.modelList = [];
@@ -126,7 +125,7 @@
                 _this.addDomainGroup(domainGroupOptions);
             });
 
-            if (nsModelOptions.staticMode)
+            if (nsModel.options.staticMode)
                 this.updateAll();
             else
                 nsModel.modelList.onResolve.push(
@@ -159,7 +158,7 @@
             });
 
             //If it is the firste time => add interval to update all domainGroups every updateDuration minutes
-            if (!nsModelOptions.staticMode && !this.intervalAdded){
+            if (!nsModel.options.staticMode && !this.intervalAdded){
                 this.intervalAdded = true;
                 window.intervals.addInterval({
                     duration: this.options.updateDuration,
@@ -226,7 +225,7 @@
                 });
 
             //If not static-mode => update age and sort by it
-            if (!nsModelOptions.staticMode){
+            if (!nsModel.options.staticMode){
                 //Check all domains if they are to old compared with there parent
                 $.each(this.list, function(index, dommainGroupItem){
                     dommainGroupItem.setAgeOk();
@@ -427,7 +426,7 @@
                     icons = [], //1. Status, 2. color on info-map or not-shown
                     ageOk = this.ageOk;
 
-                if (!nsModelOptions.staticMode){
+                if (!nsModel.options.staticMode){
                     if (!ageOk)
                         icons.push(['fas fa-circle text-danger', 'far fa-exclamation-circle']);
                     else
