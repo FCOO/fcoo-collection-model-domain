@@ -15,8 +15,8 @@
     "url": "git://github.com/FCOO/fcoo-metoc-parameter-model-domain.git"
   },
   "dependencies": {
-    "fcoo-application": "https://gitlab.com/FCOO/fcoo-application.git#^12.0.0",
-    "fcoo-parameter-unit": "https://gitlab.com/FCOO/fcoo-parameter-unit.git#^1.0.0",
+    "fcoo-application": "fcoo/fcoo-application#^14.0.0",
+    "fcoo-parameter-unit": "fcoo/fcoo-parameter-unit#^1.7.0",
     "intervals": "fcoo/intervals.js#^1.1.6",
     "leaflet": "latest",
     "leaflet-bugfix": "fcoo/leaflet-bugfix#^2.0.2",
