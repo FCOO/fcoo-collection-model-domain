@@ -505,8 +505,17 @@ There are two ways to load and create models and domain-groups
                 if (ageOk){
                     if (this.errorLoadingMask)
                         icons.push(['far fa-square fa-sm', 'far fa-slash']);
-                    else
-                        icons.push(['fas fa-square-full text-'+domainGroupItem.colorName, 'far fa-square-full']);
+                    else {
+                        //Global: square, not Global: full square
+                        if (domain.isGlobal)
+                            icons.push('far fa-square-full text-'+domainGroupItem.colorName);
+
+                        else
+                            icons.push([
+                                'fas fa-square-full text-'+domainGroupItem.colorName,
+                                'fal fa-square-full'
+                            ]);
+                    }
                 }
                 else
                     icons.push('far fa-eye-slash');
