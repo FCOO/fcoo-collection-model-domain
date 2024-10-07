@@ -14,14 +14,25 @@
 </head>
 
 <body style="padding:30px">
+    <script>
+        window.fcoo = window.fcoo || {};
+        window.fcoo.DEMO_VERSION = true;
+        //OR window.fcoo.LOCAL_DATA = true;
+    </script>
+
 	<script src="bower_components.js"></script>
 	<script src="../src/fcoo-metoc-model-domain.js"></script>
 	<script src="../src/fcoo-metoc-model-domain-group.js"></script>
 	<script src="../src/fcoo-metoc-load.js"></script>
 	<script src="../src/fcoo-parameter-unit-extend.js"></script>
 	<script>
-//        window.fcoo.LOCAL_DATA = true;
+//HER           window.fcoo.LOCAL_DATA = true;
+
         window.fcoo.DEMO_VERSION = true;
+
+        //TEMP: No access to data-files on AWS. Read from old location instead 
+        window.fcoo.path.setPath({host: 'bal.fcoo.dk'});
+
 
         window.bsIsTouch = window.bsIsTouch || (window.location.search =='?touch');
 
@@ -34,6 +45,8 @@ moment.sfSetFormat({ time: 12, timezone:'utc' } );
 var modal = null;
 
 Promise.defaultErrorHandler = function(error){ console.log(error)};
+
+
 
 //TEST:intervals.options.durationUnit = 'seconds';
 

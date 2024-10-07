@@ -124,8 +124,9 @@ There are two ways to load and create models and domain-groups
     /****************************************************************************
     Common variables for all domain-groups
     ****************************************************************************/
-    var warningIcon = ['fas fa-circle _back text-warning', 'far fa-exclamation-circle'],
-        infoIcon    = $.bsHeaderIcons.info;
+    function getWarningIcon(){
+        return $.getHeaderIcons(false).warning.icon;
+    }
 
     //colorNameList = []COLORNAME = different colors for domains
     var colorNameList = ["red", "green", "orange", "cyan", "purple", "brown", "black", "grey", "pink", "yellow", "blue", "white"],
@@ -498,7 +499,7 @@ There are two ways to load and create models and domain-groups
                         icons.push(['fas fa-circle text-danger', 'far fa-exclamation-circle']);
                     else
                         if (domain.status.delayed)
-                            icons.push(warningIcon);
+                            icons.push( getWarningIcon() );
                         else
                             icons.push('far fa-check-circle');
                 }
@@ -545,14 +546,13 @@ There are two ways to load and create models and domain-groups
             this.list.sort(function(item1, item2){
                 return (item1.level - item2.level) || (item2.currentPriority - item1.currentPriority);
             });
-
             var result = {
                     flexWidth : true,
                     extraWidth: ns._mmd.extraWidth,
                     megaWidth : ns._mmd.megaWidth,
                     modalContentClassName: ns._mmd.megaWidth ? 'mdg-mega-width' : ns._mmd.extraWidth ? 'mdg-extra-width' : '',
                     header   : {
-                        icon: this.warning ? [warningIcon] : infoIcon,
+                        icon: this.warning ? [getWarningIcon()] : $.getHeaderIcons().info,
                         text: header || this.options.name
                     },
                     onClose  : function(){ ns._mmd.current = null; return true; },
