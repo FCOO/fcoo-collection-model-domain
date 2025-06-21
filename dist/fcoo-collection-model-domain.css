@@ -1,12 +1,9 @@
 /***********************************************
-	fcoo-metoc-parameter-model-domain.scss,
-
+	fcoo-collection-model-domain.scss,
 	(c) 2020, FCOO
 
-	https://github.com/FCOO/fcoo-metoc-model-domain
+	https://github.com/FCOO/fcoo-collection-model-domain
 	https://github.com/FCOO
-
-
 ************************************************/
 .text-pink {
   color: pink !important;
@@ -58,23 +55,4 @@
 
 .text-darkblue {
   color: darkblue !important;
-}
-
-.mdg-extra-width .card-block .card-block, .mdg-mega-width .card-block .card-block {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-.mdg-extra-width .card-block .card-block .form-group, .mdg-mega-width .card-block .card-block .form-group {
-  display: inline-block;
-  flex-grow: 0;
-  flex-shrink: 0;
-  width: 100%;
-}
-.mdg-extra-width .card-block .card-block .form-group.info-box, .mdg-mega-width .card-block .card-block .form-group.info-box {
-  width: 33%;
-}
-
-.mdg-extra-width .card-block .card-block .form-group.info-box .container-icon-and-text {
-  height: 4em !important;
 }
