@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="da" style="font-size: 100%">
 <head>
-	<title>fcoo.dk - fcoo-metoc-parameter-model-domain - Demo</title>
+	<title>fcoo.dk - fcoo-collection-model-domain - Demo</title>
 	<meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta http-equiv='x-dns-prefetch-control' content='on'>
@@ -10,7 +10,7 @@
 	<meta name='owner' content='FCOO'>
 
   <link  href="bower_components.css" rel="stylesheet">
-  <link  href="../src/fcoo-metoc-parameter-model-domain.css" rel="stylesheet">
+  <link  href="../src/fcoo-collection-model-domain.css" rel="stylesheet">
 </head>
 
 <body style="padding:30px">
@@ -18,96 +18,86 @@
         window.fcoo = window.fcoo || {};
         window.fcoo.DEMO_VERSION = true;
         //OR window.fcoo.LOCAL_DATA = true;
+
+        //window.TIME_TEST_NOW = true;
+
     </script>
 
 	<script src="bower_components.js"></script>
-	<script src="../src/fcoo-metoc-model-domain.js"></script>
-	<script src="../src/fcoo-metoc-model-domain-group.js"></script>
-	<script src="../src/fcoo-metoc-load.js"></script>
-	<script src="../src/fcoo-parameter-unit-extend.js"></script>
+	<!-- <script src="../src/05-wms-getCapabilities.js"></script> -->
+	<script src="../src/10-model-domain.js"></script>
+	<script src="../src/20-collections.js"></script>
+	<script src="../src/30-datasets.js"></script>
+
+    <!-- <script src="../src/fcoo-metoc-model-domain-group.js"></script> -->
+	<script src="../src/50-load.js"></script>
+	<script src="../src/60-parameter-unit-extend.js"></script>
 	<script>
 //HER           window.fcoo.LOCAL_DATA = true;
 
-        window.fcoo.DEMO_VERSION = true;
-
-        //TEMP: No access to data-files on AWS. Read from old location instead 
-        window.fcoo.path.setPath({host: 'bal.fcoo.dk'});
 
 
-        window.bsIsTouch = window.bsIsTouch || (window.location.search =='?touch');
+    //TEMP: No access to data-files on AWS. Read from old location instead
+    window.fcoo.path.setPath({host: 'bal.fcoo.dk'});
+    window.bsIsTouch = window.bsIsTouch || (window.location.search =='?touch');
 
-        i18next.init();
-        i18next.changeLanguage('en');
-        i18next.options.fallbackLng = i18next.language == 'da' ? 'en' : 'da';
+    i18next.init();
+    i18next.changeLanguage('en');
+    i18next.options.fallbackLng = i18next.language == 'da' ? 'en' : 'da';
 
-moment.sfSetFormat({ time: 12, timezone:'utc' } );
+    moment.sfSetFormat({ time: 24, timezone:'local' } );
 
-var modal = null;
-
-Promise.defaultErrorHandler = function(error){ console.log(error)};
-
-
-
-//TEST:intervals.options.durationUnit = 'seconds';
-
-//fcoo.model.options.includeModel = true;
-
-if (window.location.search =='?test')
-    fcoo.model.options.staticMode = true;
+    Promise.defaultErrorHandler = function(error){ console.log(error)};
 
 
-
-fcoo.model.options.domainGroupList = $.extend(true, fcoo.model.options.domainGroupList, {
-    helpId   : 'Davs med dig',
-    mapLayers: [
-        L.tileLayer.wms('https://{s}.fcoo.dk/mapproxy/service', {
-            layers: "land-iho_latest",
-            styles: "",
-            errorTileUrl: "https://tiles.fcoo.dk/tiles/empty_512.png",
-            format: "image/png",
-            subdomains: ["wms01", "wms02", "wms03", "wms04"],
-            tileSize: 512,
-            transparent: true,
-            zIndex: 800
-        }),
-
-        // Top layer (coastline + place names)
-        L.tileLayer.wms('https://{s}.fcoo.dk/mapproxy/service', {
-            layers: 'top-dark_latest',
-            styles: "",
-            errorTileUrl: "https://tiles.fcoo.dk/tiles/empty_512.png",
-            format: "image/png",
-            subdomains: ["wms01", "wms02", "wms03", "wms04"],
-            tileSize: 512,
-            transparent: true,
-            zIndex: 1000
-        })
-    ],
-    mapOptions: {
-    },
-    mapContainerStyle: {
-        'background-color': '#C9E9F7',
-    }
-});
+    fcoo.collection.options.includeCollections = true;
+    fcoo.collection.options.relativeTimeRange = [-24, 48];
 
 
-fcoo.model.create();
+    let testNow = moment().startOf('hour');
+    let minNow = moment(testNow);
+    window.__jbs_getNowMoment = function(){ return moment(testNow); };
+
+    function decNow(){
+        testNew = testNow.add(-6, 'hour');
+        console.log('NOW = ',testNow.format());
+        fcoo.collection._onNowChanged();
+    };
+    function incNow(){
+        testNew = testNow.add(6, 'hour');
+        console.log('NOW = ',testNow.format());
+        fcoo.collection._onNowChanged();
+
+    };
+
+    fcoo.promiseList.options.finish.push(() => {
+        let $body = $('body');
+        fcoo.collection.collectionList.list.forEach( collection => {
+            $body.append('<hr>');
+            $.bsButton({text: collection.options.title, onClick: function(){collection.asModal()}}).appendTo($body);
+            $.each(collection.parameters, (id,parameter) => {
+                $body.append('<br>');
+                $.bsButton({text: parameter.name, onClick: function(){parameter.collectionAsModal()}}).appendTo($body);
+            });
+        });
+    });
+
+    fcoo.promiseList_getAll();
 
 
-fcoo.promiseList_getAll();
 
 
-window.openModal = function(paramId){
-    window.fcoo.parameter[paramId].domainGroupAsModal(/* [50,50], 3*/);
-}
-    
 </script>
 
-<a href="javascript:openModal('sea_ice_speed')">sea_ice_speed</a><br>
-<a href="javascript:openModal('sea_surface_wave_significant_height')">sea_surface_wave_significant_height</a><br>
-<a href="javascript:openModal('sea_water_density')">sea_water_density</a><br>
-<a href="javascript:openModal('sea_water_velocity_to_direction')">sea_water_velocity_to_direction</a><br>
-<a href="javascript:openModal('wind_from_direction')">wind_from_direction</a><br>
+
+    <button onClick="javascript:decNow()">Now - 6h</button><button onClick="javascript:incNow()">Now + 6h</button>
+    <hr>
+
+    <a href="javascript:openModal('sea_ice_speed')">sea_ice_speed</a><br>
+    <a href="javascript:openModal('sea_surface_wave_significant_height')">sea_surface_wave_significant_height</a><br>
+    <a href="javascript:openModal('sea_water_density')">sea_water_density</a><br>
+    <a href="javascript:openModal('sea_water_velocity_to_direction')">sea_water_velocity_to_direction</a><br>
+    <a href="javascript:openModal('wind_from_direction')">wind_from_direction</a><br>
 
 </body>
 </html>

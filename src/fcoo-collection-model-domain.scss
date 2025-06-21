@@ -1,0 +1,28 @@
+/***********************************************
+	fcoo-collection-model-domain.scss,
+	(c) 2020, FCOO
+
+	https://github.com/FCOO/fcoo-collection-model-domain
+	https://github.com/FCOO
+************************************************/
+//Create class for color of different domains
+$color-list:
+            "pink",
+            "purple",
+            "red",
+            "orange",
+            "yellow",
+            "green",
+            "cyan",
+            "blue",
+            "brown",
+            "white",
+            "grey",
+            "black",
+            "darkblue";
+
+@each $color-name in $color-list {
+    .text-#{$color-name}{
+        color : #{$color-name} !important;
+    }
+}

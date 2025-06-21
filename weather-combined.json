@@ -1,0 +1,775 @@
+{
+    "variables": {
+        "model_id": {
+            "name": "model_id",
+            "attrs": {
+                "long_name": "Used model id per point",
+                "units": "1"
+            },
+            "derived": true,
+            "dimensions": null
+        },
+        "air_pressure_at_mean_sea_level": {
+            "name": "air_pressure_at_mean_sea_level",
+            "attrs": {
+                "standard_name": "air_pressure_at_mean_sea_level",
+                "units": "hPa",
+                "long_name": "Mean sea-level pressure"
+            },
+            "derived": false,
+            "dimensions": [
+                "dim_t",
+                "dim_y",
+                "dim_x"
+            ]
+        },
+        "air_temperature": {
+            "name": "air_temperature",
+            "attrs": {
+                "standard_name": "air_temperature",
+                "units": "degC",
+                "long_name": "2 metre temperature"
+            },
+            "derived": false,
+            "dimensions": [
+                "dim_t",
+                "dim_y",
+                "dim_x"
+            ]
+        },
+        "cloud_area_fraction": {
+            "name": "cloud_area_fraction",
+            "attrs": {
+                "standard_name": "cloud_area_fraction",
+                "units": "(0 - 1)",
+                "long_name": "Cloud area fraction"
+            },
+            "derived": false,
+            "dimensions": [
+                "dim_t",
+                "dim_y",
+                "dim_x"
+            ]
+        },
+        "northward_wind": {
+            "name": "northward_wind",
+            "attrs": {
+                "standard_name": "northward_wind",
+                "units": "m s**-1",
+                "long_name": "10 metre V wind component"
+            },
+            "derived": false,
+            "dimensions": [
+                "dim_t",
+                "dim_y",
+                "dim_x"
+            ]
+        },
+        "cloud_base_altitude": {
+            "name": "cloud_base_altitude",
+            "attrs": {
+                "standard_name": "cloud_base_altitude",
+                "units": "feet",
+                "long_name": "Cloud base height"
+            },
+            "derived": false,
+            "dimensions": [
+                "dim_t",
+                "dim_y",
+                "dim_x"
+            ]
+        },
+        "visibility_in_air": {
+            "name": "visibility_in_air",
+            "attrs": {
+                "standard_name": "visibility_in_air",
+                "units": "km",
+                "long_name": "Visibility"
+            },
+            "derived": false,
+            "dimensions": [
+                "dim_t",
+                "dim_y",
+                "dim_x"
+            ]
+        },
+        "precipitation_flux": {
+            "name": "precipitation_flux",
+            "attrs": {
+                "standard_name": "precipitation_flux",
+                "units": "mm/h",
+                "long_name": "total precipitation flux"
+            },
+            "derived": false,
+            "dimensions": [
+                "dim_t",
+                "dim_y",
+                "dim_x"
+            ]
+        },
+        "wind_speed": {
+            "name": "wind_speed",
+            "attrs": {
+                "standard_name": "wind_speed",
+                "units": "m/s",
+                "long_name": "wind speed"
+            },
+            "derived": false,
+            "dimensions": [
+                "dim_t",
+                "dim_y",
+                "dim_x"
+            ]
+        },
+        "eastward_wind": {
+            "name": "eastward_wind",
+            "attrs": {
+                "standard_name": "eastward_wind",
+                "units": "m s**-1",
+                "long_name": "10 metre U wind component"
+            },
+            "derived": false,
+            "dimensions": [
+                "dim_t",
+                "dim_y",
+                "dim_x"
+            ]
+        }
+    },
+    "dimensions": {
+        "dim_x": "cax1",
+        "dim_y": "cax2",
+        "dim_t": "time",
+        "dim_z": null
+    },
+    "virtual_coords": {
+        "coords": {
+            "dim_t": {
+                "attrs": {
+                    "calendar": "propleptic_gregorian"
+                },
+                "values": null,
+                "size": null
+            },
+            "dim_x": {
+                "attrs": {},
+                "values": null,
+                "size": null
+            },
+            "dim_y": {
+                "attrs": {},
+                "values": null,
+                "size": null
+            },
+            "dim_z": null
+        },
+        "common_dataset_crs": null,
+        "description": "Attributes such as values and size refer to common shared CRS / TRS / VRS"
+    },
+    "datasets": [
+        {
+            "path": "../../DMI/HARMONIE/IG/vds.json",
+            "model_domain": "HARMONIE:IGB",
+            "last_modified": "2025-06-03T09:04:06Z",
+            "epoch": "2025-06-04T20:00:00.000Z",
+            "time_range": ["2025-06-03T12:00:00", "2025-06-06T00:00:00"],
+            "levels": [5, 10, 15, 20, 25, 50, 75, 100, 150, 200],
+            
+            "id": 1,
+            "dimensions": {
+                "dim_x": "cax1",
+                "dim_y": "cax2",
+                "dim_t": "time",
+                "dim_z": null
+            },
+            "coords": {
+                "dim_t": {
+                    "attrs": {
+                        "standard_name": "time",
+                        "axis": "T",
+                        "cell_methods": "time: mean",
+                        "long_name": "time"
+                    },
+                    "values": null,
+                    "size": 70
+                },
+                "dim_x": {
+                    "attrs": {
+                        "standard_name": "projection_x_coordinate",
+                        "units": "m",
+                        "axis": "X"
+                    },
+                    "values": null,
+                    "size": 1339
+                },
+                "dim_y": {
+                    "attrs": {
+                        "standard_name": "projection_y_coordinate",
+                        "units": "m",
+                        "axis": "Y"
+                    },
+                    "values": null,
+                    "size": 1589
+                },
+                "dim_z": null
+            },
+            "variables": {
+                "precipitation_flux": {
+                    "src_var": "precipitation_flux",
+                    "scale": null,
+                    "offset": null
+                },
+                "cloud_base_altitude": {
+                    "src_var": "cloud_base_altitude",
+                    "scale": null,
+                    "offset": null
+                },
+                "air_pressure_at_mean_sea_level": {
+                    "src_var": "air_pressure_at_mean_sea_level",
+                    "scale": null,
+                    "offset": null
+                },
+                "cloud_area_fraction": {
+                    "src_var": "cloud_area_fraction",
+                    "scale": null,
+                    "offset": null
+                },
+                "air_temperature": {
+                    "src_var": "air_temperature",
+                    "scale": null,
+                    "offset": null
+                },
+                "eastward_wind": {
+                    "src_var": "eastward_wind",
+                    "scale": null,
+                    "offset": null
+                },
+                "eastward_wind_of_gust": {
+                    "src_var": "eastward_wind_of_gust",
+                    "scale": null,
+                    "offset": null
+                },
+                "northward_wind": {
+                    "src_var": "northward_wind",
+                    "scale": null,
+                    "offset": null
+                },
+                "northward_wind_of_gust": {
+                    "src_var": "northward_wind_of_gust",
+                    "scale": null,
+                    "offset": null
+                },
+                "visibility_in_air": {
+                    "src_var": "visibility_in_air",
+                    "scale": null,
+                    "offset": null
+                },
+                "wind_speed_of_gust": {
+                    "src_var": "wind_speed_of_gust",
+                    "scale": null,
+                    "offset": null
+                },
+                "wind_speed": {
+                    "src_var": "wind_speed",
+                    "scale": null,
+                    "offset": null
+                }
+            },
+            "crs": "+proj=lcc +lat_1=72.000002 +lat_0=72.000002 +lon_0=323.999999 +x_0=1337999.57961295 +y_0=1588680.97691483 +R=6371229 +units=m +no_defs +type=crs",
+            "extent": {
+                "intervals": {
+                    "dim_x": {
+                        "bounds": [
+                            -2326507.4842670653,
+                            5002506.908790956
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_y": {
+                        "bounds": [
+                            -236973.8366506826,
+                            3494936.4721475597
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_t": {
+                        "bounds": [
+                            "2025-05-13T21:00:00",
+                            "2025-05-16T18:00:00"
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_z": null
+                },
+                "crs": "+proj=lcc +lat_1=72.000002 +lat_0=72.000002 +lon_0=323.999999 +x_0=1337999.57961295 +y_0=1588680.97691483 +R=6371229 +units=m +no_defs +type=crs"
+            },
+            "real_extent": {
+                "intervals": {
+                    "dim_x": {
+                        "bounds": [
+                            -2326507.4842670653,
+                            5002506.908790956
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_y": {
+                        "bounds": [
+                            -236973.8366506826,
+                            3494936.4721475597
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_t": {
+                        "bounds": [
+                            "2025-05-13T21:00:00",
+                            "2025-05-16T18:00:00"
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_z": null
+                },
+                "crs": null
+            },
+            "sizes": {
+                "dim_t": 70,
+                "dim_x": 1339,
+                "dim_y": 1589,
+                "dim_z": null
+            },
+            "backend_options": null,
+            "attrs": {},
+            "dataset_is_static": false,
+            "is_virtual": true,
+            "dataset": null
+        },
+        {
+            "path": "../../DMI/HARMONIE/DINI/vds.json",
+            "id": 2,
+            "model_domain": "HARMONIE:NEA",
+            "last_modified": "2025-06-03T09:04:06Z",
+            "epoch": "2025-06-04T20:00:00.000Z",
+            "time_range": ["2025-06-03T12:00:00", "2025-06-06T00:00:00"],
+            "levels": [5, 10, 15, 20, 25, 50, 75, 100, 150, 200],
+            
+            "dimensions": {
+                "dim_x": "cax1",
+                "dim_y": "cax2",
+                "dim_t": "time",
+                "dim_z": null
+            },
+            "coords": {
+                "dim_t": {
+                    "attrs": {
+                        "standard_name": "time",
+                        "axis": "T",
+                        "cell_methods": "time: mean",
+                        "long_name": "time"
+                    },
+                    "values": null,
+                    "size": 70
+                },
+                "dim_x": {
+                    "attrs": {
+                        "standard_name": "projection_x_coordinate",
+                        "units": "m",
+                        "axis": "X"
+                    },
+                    "values": null,
+                    "size": 1906
+                },
+                "dim_y": {
+                    "attrs": {
+                        "standard_name": "projection_y_coordinate",
+                        "units": "m",
+                        "axis": "Y"
+                    },
+                    "values": null,
+                    "size": 1606
+                },
+                "dim_z": null
+            },
+            "variables": {
+                "air_pressure_at_mean_sea_level": {
+                    "src_var": "air_pressure_at_mean_sea_level",
+                    "scale": null,
+                    "offset": null
+                },
+                "air_temperature": {
+                    "src_var": "air_temperature",
+                    "scale": null,
+                    "offset": null
+                },
+                "cloud_area_fraction": {
+                    "src_var": "cloud_area_fraction",
+                    "scale": null,
+                    "offset": null
+                },
+                "northward_wind": {
+                    "src_var": "northward_wind",
+                    "scale": null,
+                    "offset": null
+                },
+                "cloud_base_altitude": {
+                    "src_var": "cloud_base_altitude",
+                    "scale": null,
+                    "offset": null
+                },
+                "visibility_in_air": {
+                    "src_var": "visibility_in_air",
+                    "scale": null,
+                    "offset": null
+                },
+                "precipitation_flux": {
+                    "src_var": "precipitation_flux",
+                    "scale": null,
+                    "offset": null
+                },
+                "wind_speed": {
+                    "src_var": "wind_speed",
+                    "scale": null,
+                    "offset": null
+                },
+                "eastward_wind": {
+                    "src_var": "eastward_wind",
+                    "scale": null,
+                    "offset": null
+                },
+                "eastward_wind_of_gust": {
+                    "src_var": "eastward_wind_of_gust",
+                    "scale": null,
+                    "offset": null
+                },
+                "wind_speed_of_gust": {
+                    "src_var": "wind_speed_of_gust",
+                    "scale": null,
+                    "offset": null
+                },
+                "northward_wind_of_gust": {
+                    "src_var": "northward_wind_of_gust",
+                    "scale": null,
+                    "offset": null
+                }
+            },
+            "crs": "+proj=lcc +lat_1=55.5 +lat_0=55.5 +lon_0=352 +x_0=1527524.88192815 +y_0=1588680.97691483 +R=6371229 +units=m +no_defs +type=crs",
+            "extent": {
+                "intervals": {
+                    "dim_x": {
+                        "bounds": [
+                            -1568452.6507483632,
+                            5601444.983985418
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_y": {
+                        "bounds": [
+                            -420786.49395969905,
+                            3843155.7022189745
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_t": {
+                        "bounds": [
+                            "2025-05-13T21:00:00",
+                            "2025-05-16T18:00:00"
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_z": null
+                },
+                "crs": "+proj=lcc +lat_1=55.5 +lat_0=55.5 +lon_0=352 +x_0=1527524.88192815 +y_0=1588680.97691483 +R=6371229 +units=m +no_defs +type=crs"
+            },
+            "real_extent": {
+                "intervals": {
+                    "dim_x": {
+                        "bounds": [
+                            -1568452.6507483632,
+                            5601444.983985418
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_y": {
+                        "bounds": [
+                            -420786.49395969905,
+                            3843155.7022189745
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_t": {
+                        "bounds": [
+                            "2025-05-13T21:00:00",
+                            "2025-05-16T18:00:00"
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_z": null
+                },
+                "crs": null
+            },
+            "sizes": {
+                "dim_t": 70,
+                "dim_x": 1906,
+                "dim_y": 1606,
+                "dim_z": null
+            },
+            "backend_options": null,
+            "attrs": {},
+            "dataset_is_static": false,
+            "is_virtual": true,
+            "dataset": null
+        },
+        {
+            "path": "../../ECMWF/DYSD/vds.json",
+            "model_domain": "IFS:DYSD",
+            "last_modified": "2025-06-03T09:04:06Z",
+            "epoch": "2025-06-04T20:00:00.000Z",
+            "time_range": ["2025-06-03T12:00:00", "2025-06-06T00:00:00"],
+            "levels": [5, 10, 15, 20, 25, 50, 75, 100, 150, 200],
+
+            "id": 3,
+            "dimensions": {
+                "dim_x": "cax1",
+                "dim_y": "cax2",
+                "dim_t": "time",
+                "dim_z": null
+            },
+            "coords": {
+                "dim_t": {
+                    "attrs": {
+                        "axis": "T",
+                        "standard_name": "time",
+                        "long_name": "time",
+                        "cell_methods": "time: mean"
+                    },
+                    "values": null,
+                    "size": 45
+                },
+                "dim_x": {
+                    "attrs": {
+                        "standard_name": "longitude",
+                        "long_name": "longitude",
+                        "units": "degrees_east",
+                        "axis": "X"
+                    },
+                    "values": null,
+                    "size": 5120
+                },
+                "dim_y": {
+                    "attrs": {
+                        "standard_name": "latitude",
+                        "long_name": "latitude",
+                        "units": "degrees_north",
+                        "axis": "Y"
+                    },
+                    "values": null,
+                    "size": 2560
+                },
+                "dim_z": null
+            },
+            "variables": {
+                "air_pressure_at_mean_sea_level": {
+                    "src_var": "air_pressure_at_mean_sea_level",
+                    "scale": null,
+                    "offset": null
+                },
+                "air_temperature": {
+                    "src_var": "air_temperature",
+                    "scale": null,
+                    "offset": null
+                },
+                "cloud_area_fraction": {
+                    "src_var": "cloud_area_fraction",
+                    "scale": null,
+                    "offset": null
+                },
+                "northward_wind": {
+                    "src_var": "northward_wind",
+                    "scale": null,
+                    "offset": null
+                },
+                "cloud_base_altitude": {
+                    "src_var": "cloud_base_altitude",
+                    "scale": null,
+                    "offset": null
+                },
+                "visibility_in_air": {
+                    "src_var": "visibility_in_air",
+                    "scale": null,
+                    "offset": null
+                },
+                "precipitation_flux": {
+                    "src_var": "precipitation_flux",
+                    "scale": null,
+                    "offset": null
+                },
+                "wind_speed": {
+                    "src_var": "wind_speed",
+                    "scale": null,
+                    "offset": null
+                },
+                "eastward_wind": {
+                    "src_var": "eastward_wind",
+                    "scale": null,
+                    "offset": null
+                }
+            },
+            "crs": "OGC:CRS84",
+            "extent": {
+                "intervals": {
+                    "dim_x": {
+                        "bounds": [
+                            -180,
+                            179.92969
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_y": {
+                        "bounds": [
+                            -89.96484,
+                            89.96484
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_t": {
+                        "bounds": [
+                            "2025-05-13T12:00:00",
+                            "2025-05-19T00:00:00"
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_z": null
+                },
+                "crs": "OGC:CRS84"
+            },
+            "real_extent": {
+                "intervals": {
+                    "dim_x": {
+                        "bounds": [
+                            -180,
+                            179.92969
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_y": {
+                        "bounds": [
+                            -89.96484,
+                            89.96484
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_t": {
+                        "bounds": [
+                            "2025-05-13T12:00:00",
+                            "2025-05-19T00:00:00"
+                        ],
+                        "closed": [
+                            true,
+                            true
+                        ]
+                    },
+                    "dim_z": null
+                },
+                "crs": "OGC:CRS84"
+            },
+            "sizes": {
+                "dim_t": 45,
+                "dim_x": 5120,
+                "dim_y": 2560,
+                "dim_z": null
+            },
+            "backend_options": null,
+            "attrs": {},
+            "dataset_is_static": false,
+            "is_virtual": true,
+            "dataset": null
+        }
+    ],
+    "extent": {
+        "intervals": {
+            "dim_x": {
+                "bounds": [
+                    -20037508.342789244,
+                    20029681.469391565
+                ],
+                "closed": [
+                    true,
+                    true
+                ]
+            },
+            "dim_y": {
+                "bounds": [
+                    -51594155.42659492,
+                    51594155.42659492
+                ],
+                "closed": [
+                    true,
+                    true
+                ]
+            },
+            "dim_t": {
+                "bounds": [
+                    "2025-05-13T12:00:00",
+                    "2025-05-19T00:00:00"
+                ],
+                "closed": [
+                    true,
+                    true
+                ]
+            },
+            "dim_z": null
+        },
+        "crs": "EPSG:3857"
+    },
+    "attrs": {},
+    "dataset_paths_are_relative_to_this": true
+}

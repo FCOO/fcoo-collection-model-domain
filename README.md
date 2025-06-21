@@ -1,4 +1,4 @@
-# fcoo-metoc-parameter-model-domain
+# fcoo-collection-model-domain
 >
 
 
@@ -12,10 +12,10 @@ See source code for documentation
 
 ## Installation
 ### bower
-`bower install https://github.com/FCOO/fcoo-metoc-parameter-model-domain.git --save`
+`bower install https://github.com/FCOO/fcoo-collection-model-domain.git --save`
 
 ## Demo
-http://FCOO.github.io/fcoo-metoc-parameter-model-domain/demo/ 
+http://FCOO.github.io/fcoo-collection-model-domain/demo/ 
 
 <!--
 ## Usage
@@ -66,7 +66,7 @@ E.g. key = `unit:metre`, translation `da:"meter", en:"metre"`
 
 
 ## Copyright and License
-This plugin is licensed under the [MIT license](https://github.com/FCOO/fcoo-metoc-parameter-model-domain/LICENSE).
+This plugin is licensed under the [MIT license](https://github.com/FCOO/fcoo-collection-model-domain/LICENSE).
 
 Copyright (c) 2020 [FCOO](https://github.com/FCOO)
 

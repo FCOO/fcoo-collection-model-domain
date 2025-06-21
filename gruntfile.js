@@ -1,7 +1,7 @@
 /***********************************************
-gruntfile.js for fcoo-metoc-parameter-model-domain
+gruntfile.js for fcoo-collection-model-domain
 
-https://github.com/FCOO/fcoo-metoc-parameter-model-domain
+https://github.com/FCOO/fcoo-collection-model-domain
 
 ***********************************************/
 

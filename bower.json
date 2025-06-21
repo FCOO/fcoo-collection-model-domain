@@ -1,40 +1,41 @@
 {
-  "name": "fcoo-metoc-parameter-model-domain",
-  "version": "4.1.2",
-  "homepage": "https://github.com/FCOO/fcoo-metoc-parameter-model-domain",
-  "authors": [
-    "Niels Holt"
-  ],
-  "description": "",
-  "main": [
-    "dist/fcoo-metoc-parameter-model-domain.js",
-    "dist/fcoo-metoc-parameter-model-domain.css"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/FCOO/fcoo-metoc-parameter-model-domain.git"
-  },
-  "dependencies": {
-    "fcoo-application": "fcoo/fcoo-application#^18.0.0",
-    "fcoo-parameter-unit": "fcoo/fcoo-parameter-unit#^1.7.0",
-    "intervals": "fcoo/intervals.js#^1.1.6",
-    "leaflet-bower-bugfix-switches": "fcoo/leaflet-bower-bugfix-switches#latest",
-    "leaflet-polyline": "fcoo/leaflet-polyline#^2.5.1"
-  },
-  "devDependencies": {
-    "bourbon": "latest",
-    "modernizr-mixin": "latest",
-    "mathsass": "latest"
-  },
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "moduleType": [
-    "es6"
-  ]
+    "name": "fcoo-collection-model-domain",
+    "version": "4.1.2",
+    "homepage": "https://github.com/FCOO/fcoo-collection-model-domain",
+    "authors": [
+        "Niels Holt"
+    ],
+    "description": "",
+    "main": [
+        "dist/fcoo-collection-model-domain.js",
+        "dist/fcoo-collection-model-domain.css"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/FCOO/fcoo-collection-model-domain.git"
+    },
+    "dependencies": {
+        "fcoo-application": "fcoo/fcoo-application#^18.0.0",
+        "fcoo-parameter-unit": "fcoo/fcoo-parameter-unit#^1.7.0",
+        "intervals": "fcoo/intervals.js#^1.1.6",
+        "leaflet-bower-bugfix-switches": "fcoo/leaflet-bower-bugfix-switches#latest",
+        "leaflet-polyline": "fcoo/leaflet-polyline#^2.5.1"
+    },
+    "devDependencies": {
+        "bourbon": "latest",
+        "modernizr-mixin": "latest",
+        "mathsass": "latest",
+        "wms-capabilities": "https://github.com/w8r/wms-capabilities"
+    },
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "moduleType": [
+        "es6"
+    ]
 }

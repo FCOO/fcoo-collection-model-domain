@@ -1,0 +1,545 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<WMS_Capabilities version="1.3.0" xmlns="http://www.opengis.net/wms"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:py="http://genshi.edgewall.org/"
+  xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd">
+
+<Service>
+  <Name>WMS</Name>
+  <Title>WMS server for Weather combined</Title>
+  <MaxWidth>8192</MaxWidth>
+  <MaxHeight>8192</MaxHeight>
+  <OnlineResource xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms"></OnlineResource>
+</Service>
+
+<Capability>
+  <Request>
+    <GetCapabilities>
+      <Format>text/xml</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms"></OnlineResource></Get>
+        </HTTP>
+      </DCPType>
+    </GetCapabilities>
+
+    <GetMap>
+      <Format>image/png</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms"></OnlineResource></Get>
+        </HTTP>
+      </DCPType>
+    </GetMap>
+  </Request>
+  <Exception>
+    <Format>XML</Format>
+  </Exception>
+  <Layer>
+    <Title>WMS server for Weather combined</Title>
+    <CRS>EPSG:4326</CRS>
+<CRS>EPSG:3857</CRS>
+<CRS>OGC:CRS84</CRS>
+    <EX_GeographicBoundingBox>
+        <westBoundLongitude>-180.0</westBoundLongitude>
+        <eastBoundLongitude>179.9296875</eastBoundLongitude>
+        <southBoundLatitude>-89.96484375</southBoundLatitude>
+        <northBoundLatitude>89.96484375</northBoundLatitude>
+    </EX_GeographicBoundingBox>
+    <BoundingBox CRS="EPSG:4326" minx="-89.96484375" miny="-180.0" maxx="89.96484375" maxy="179.9296875"/>
+    <Layer>
+      <Name>visibility_in_air</Name>
+      <Title>Visibility - visibility_in_air</Title>
+      <Abstract></Abstract>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-180.0</westBoundLongitude>
+        <eastBoundLongitude>179.9296875</eastBoundLongitude>
+        <southBoundLatitude>-89.96484375</southBoundLatitude>
+        <northBoundLatitude>89.96484375</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:4326" minx="-89.96484375" miny="-180.0" maxx="89.96484375" maxy="179.9296875"/>
+      <Dimension name="time" units="ISO8601" default="2025-05-27T10" nearestValue="1">
+2025-05-26T12:00:00/2025-06-01T00:00:00
+</Dimension>
+      
+      <Style>
+    <Name>legend=AirVisibility_km_RYG_11colors;plot_method=contourf</Name>
+    <Title>Style legend=AirVisibility_km_RYG_11colors;plot_method=contourf for visibility_in_air</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=AirVisibility_km_RYG_11colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=AirVisibility_km_RYG_10colors;plot_method=contourf</Name>
+    <Title>Style legend=AirVisibility_km_RYG_10colors;plot_method=contourf for visibility_in_air</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=AirVisibility_km_RYG_10colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=AirVisibility_km_RYG_3colors;plot_method=contourf</Name>
+    <Title>Style legend=AirVisibility_km_RYG_3colors;plot_method=contourf for visibility_in_air</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=AirVisibility_km_RYG_3colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>      
+    </Layer>
+<Layer>
+      <Name>wind_speed</Name>
+      <Title>wind speed - wind_speed</Title>
+      <Abstract></Abstract>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-180.0</westBoundLongitude>
+        <eastBoundLongitude>179.9296875</eastBoundLongitude>
+        <southBoundLatitude>-89.96484375</southBoundLatitude>
+        <northBoundLatitude>89.96484375</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:4326" minx="-89.96484375" miny="-180.0" maxx="89.96484375" maxy="179.9296875"/>
+      <Dimension name="time" units="ISO8601" default="2025-05-27T10" nearestValue="1">
+2025-05-26T12:00:00/2025-06-01T00:00:00
+</Dimension>
+      
+      <Style>
+    <Name>legend=Wind_ms_BGYR_10colors;plot_method=contourf</Name>
+    <Title>Style legend=Wind_ms_BGYR_10colors;plot_method=contourf for wind_speed</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_BGYR_10colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_bf_kn_YRP_13colors;plot_method=contourf</Name>
+    <Title>Style legend=Wind_bf_kn_YRP_13colors;plot_method=contourf for wind_speed</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_bf_kn_YRP_13colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_kn_YRP_18colors;plot_method=contourf</Name>
+    <Title>Style legend=Wind_kn_YRP_18colors;plot_method=contourf for wind_speed</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_kn_YRP_18colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_YRP_10colors;plot_method=contourf</Name>
+    <Title>Style legend=Wind_ms_YRP_10colors;plot_method=contourf for wind_speed</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_YRP_10colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_YRP_11colors;plot_method=contourf</Name>
+    <Title>Style legend=Wind_ms_YRP_11colors;plot_method=contourf for wind_speed</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_YRP_11colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_BGYRP_11colors;plot_method=contourf</Name>
+    <Title>Style legend=Wind_ms_BGYRP_11colors;plot_method=contourf for wind_speed</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_BGYRP_11colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_BGYRP_11colors_1.1;plot_method=contourf</Name>
+    <Title>Style legend=Wind_ms_BGYRP_11colors_1.1;plot_method=contourf for wind_speed</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_BGYRP_11colors_1.1&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_BGYRP_11colors_1.0;plot_method=contourf</Name>
+    <Title>Style legend=Wind_ms_BGYRP_11colors_1.0;plot_method=contourf for wind_speed</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_BGYRP_11colors_1.0&amp;SIZE=250" />
+    </LegendURL>
+</Style>      
+    </Layer>
+<Layer>
+      <Name>precipitation_flux</Name>
+      <Title>total precipitation flux - precipitation_flux</Title>
+      <Abstract></Abstract>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-180.0</westBoundLongitude>
+        <eastBoundLongitude>179.9296875</eastBoundLongitude>
+        <southBoundLatitude>-89.96484375</southBoundLatitude>
+        <northBoundLatitude>89.96484375</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:4326" minx="-89.96484375" miny="-180.0" maxx="89.96484375" maxy="179.9296875"/>
+      <Dimension name="time" units="ISO8601" default="2025-05-27T10" nearestValue="1">
+2025-05-26T12:00:00/2025-06-01T00:00:00
+</Dimension>
+      
+      <Style>
+    <Name>legend=Precip_mm_per_h_YRP_11colors;plot_method=contourf</Name>
+    <Title>Style legend=Precip_mm_per_h_YRP_11colors;plot_method=contourf for precipitation_flux</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Precip_mm_per_h_YRP_11colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Precip_mm_per_h_GBP_9colors;plot_method=contourf</Name>
+    <Title>Style legend=Precip_mm_per_h_GBP_9colors;plot_method=contourf for precipitation_flux</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Precip_mm_per_h_GBP_9colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>      
+    </Layer>
+<Layer>
+      <Name>air_pressure_at_mean_sea_level</Name>
+      <Title>Mean sea-level pressure - air_pressure_at_mean_sea_level</Title>
+      <Abstract></Abstract>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-180.0</westBoundLongitude>
+        <eastBoundLongitude>179.9296875</eastBoundLongitude>
+        <southBoundLatitude>-89.96484375</southBoundLatitude>
+        <northBoundLatitude>89.96484375</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:4326" minx="-89.96484375" miny="-180.0" maxx="89.96484375" maxy="179.9296875"/>
+      <Dimension name="time" units="ISO8601" default="2025-05-27T10" nearestValue="1">
+2025-05-26T12:00:00/2025-06-01T00:00:00
+</Dimension>
+      
+      <Style>
+    <Name>legend=SeaLevelPressure_hPa_interval4_1.0;gaussian_filter=5;plot_method=contour</Name>
+    <Title>Style legend=SeaLevelPressure_hPa_interval4_1.0;gaussian_filter=5;plot_method=contour for air_pressure_at_mean_sea_level</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=SeaLevelPressure_hPa_interval4_1.0&amp;SIZE=250" />
+    </LegendURL>
+</Style>      
+    </Layer>
+<Layer>
+      <Name>air_temperature</Name>
+      <Title>2 metre temperature - air_temperature</Title>
+      <Abstract></Abstract>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-180.0</westBoundLongitude>
+        <eastBoundLongitude>179.9296875</eastBoundLongitude>
+        <southBoundLatitude>-89.96484375</southBoundLatitude>
+        <northBoundLatitude>89.96484375</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:4326" minx="-89.96484375" miny="-180.0" maxx="89.96484375" maxy="179.9296875"/>
+      <Dimension name="time" units="ISO8601" default="2025-05-27T10" nearestValue="1">
+2025-05-26T12:00:00/2025-06-01T00:00:00
+</Dimension>
+      
+      <Style>
+    <Name>legend=AirTempGlobal_C_BWYR_16colors_1.0;plot_method=contourf</Name>
+    <Title>Style legend=AirTempGlobal_C_BWYR_16colors_1.0;plot_method=contourf for air_temperature</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=AirTempGlobal_C_BWYR_16colors_1.0&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=AirTemp_C_BGYR_13colors;plot_method=contourf</Name>
+    <Title>Style legend=AirTemp_C_BGYR_13colors;plot_method=contourf for air_temperature</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=AirTemp_C_BGYR_13colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=AirTemp_C_BGYR_19colors;plot_method=contourf</Name>
+    <Title>Style legend=AirTemp_C_BGYR_19colors;plot_method=contourf for air_temperature</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=AirTemp_C_BGYR_19colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=AirTempCold_C_BGYR_13colors;plot_method=contourf</Name>
+    <Title>Style legend=AirTempCold_C_BGYR_13colors;plot_method=contourf for air_temperature</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=AirTempCold_C_BGYR_13colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=AirTempCold_C_BGYR_19colors;plot_method=contourf</Name>
+    <Title>Style legend=AirTempCold_C_BGYR_19colors;plot_method=contourf for air_temperature</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=AirTempCold_C_BGYR_19colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=AirTempWarm_C_BGYR_19colors;plot_method=contourf</Name>
+    <Title>Style legend=AirTempWarm_C_BGYR_19colors;plot_method=contourf for air_temperature</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=AirTempWarm_C_BGYR_19colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=AirTempWarm_C_BGYR_13colors;plot_method=contourf</Name>
+    <Title>Style legend=AirTempWarm_C_BGYR_13colors;plot_method=contourf for air_temperature</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=AirTempWarm_C_BGYR_13colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>      
+    </Layer>
+<Layer>
+      <Name>northward_wind</Name>
+      <Title>10 metre V wind component - northward_wind</Title>
+      <Abstract></Abstract>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-180.0</westBoundLongitude>
+        <eastBoundLongitude>179.9296875</eastBoundLongitude>
+        <southBoundLatitude>-89.96484375</southBoundLatitude>
+        <northBoundLatitude>89.96484375</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:4326" minx="-89.96484375" miny="-180.0" maxx="89.96484375" maxy="179.9296875"/>
+      <Dimension name="time" units="ISO8601" default="2025-05-27T10" nearestValue="1">
+2025-05-26T12:00:00/2025-06-01T00:00:00
+</Dimension>
+      
+            
+    </Layer>
+<Layer>
+      <Name>cloud_area_fraction</Name>
+      <Title>Cloud area fraction - cloud_area_fraction</Title>
+      <Abstract></Abstract>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-180.0</westBoundLongitude>
+        <eastBoundLongitude>179.9296875</eastBoundLongitude>
+        <southBoundLatitude>-89.96484375</southBoundLatitude>
+        <northBoundLatitude>89.96484375</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:4326" minx="-89.96484375" miny="-180.0" maxx="89.96484375" maxy="179.9296875"/>
+      <Dimension name="time" units="ISO8601" default="2025-05-27T10" nearestValue="1">
+2025-05-26T12:00:00/2025-06-01T00:00:00
+</Dimension>
+      
+      <Style>
+    <Name>legend=CloudCover_km_BW_10colors_1.0;plot_method=contourf</Name>
+    <Title>Style legend=CloudCover_km_BW_10colors_1.0;plot_method=contourf for cloud_area_fraction</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=CloudCover_km_BW_10colors_1.0&amp;SIZE=250" />
+    </LegendURL>
+</Style>      
+    </Layer>
+<Layer>
+      <Name>cloud_base_altitude</Name>
+      <Title>Cloud base height - cloud_base_altitude</Title>
+      <Abstract></Abstract>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-180.0</westBoundLongitude>
+        <eastBoundLongitude>179.9296875</eastBoundLongitude>
+        <southBoundLatitude>-89.96484375</southBoundLatitude>
+        <northBoundLatitude>89.96484375</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:4326" minx="-89.96484375" miny="-180.0" maxx="89.96484375" maxy="179.9296875"/>
+      <Dimension name="time" units="ISO8601" default="2025-05-27T10" nearestValue="1">
+2025-05-26T12:00:00/2025-06-01T00:00:00
+</Dimension>
+      
+      <Style>
+    <Name>legend=CBH_f_GBP_12colors_1.0;plot_method=contourf</Name>
+    <Title>Style legend=CBH_f_GBP_12colors_1.0;plot_method=contourf for cloud_base_altitude</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=CBH_f_GBP_12colors_1.0&amp;SIZE=250" />
+    </LegendURL>
+</Style>      
+    </Layer>
+<Layer>
+      <Name>eastward_wind</Name>
+      <Title>10 metre U wind component - eastward_wind</Title>
+      <Abstract></Abstract>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-180.0</westBoundLongitude>
+        <eastBoundLongitude>179.9296875</eastBoundLongitude>
+        <southBoundLatitude>-89.96484375</southBoundLatitude>
+        <northBoundLatitude>89.96484375</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:4326" minx="-89.96484375" miny="-180.0" maxx="89.96484375" maxy="179.9296875"/>
+      <Dimension name="time" units="ISO8601" default="2025-05-27T10" nearestValue="1">
+2025-05-26T12:00:00/2025-06-01T00:00:00
+</Dimension>
+      
+            
+    </Layer>
+<Layer>
+      <Name>eastward_wind:northward_wind</Name>
+      <Title>wind - eastward_wind:northward_wind</Title>
+      <Abstract></Abstract>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-180.0</westBoundLongitude>
+        <eastBoundLongitude>179.9296875</eastBoundLongitude>
+        <southBoundLatitude>-89.96484375</southBoundLatitude>
+        <northBoundLatitude>89.96484375</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:4326" minx="-89.96484375" miny="-180.0" maxx="89.96484375" maxy="179.9296875"/>
+      <Dimension name="time" units="ISO8601" default="2025-05-27T10" nearestValue="1">
+2025-05-26T12:00:00/2025-06-01T00:00:00
+</Dimension>
+      
+      <Style>
+    <Name>legend=Wind_ms_BGYR_10colors;plot_method=black_quiver1;vector_spacing=80;vector_offset=20</Name>
+    <Title>Style legend=Wind_ms_BGYR_10colors;plot_method=black_quiver1;vector_spacing=80;vector_offset=20 for eastward_wind:northward_wind</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_BGYR_10colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_BGYRP_11colors;plot_method=black_arrowbarbs;vector_spacing=80;vector_offset=20</Name>
+    <Title>Style legend=Wind_ms_BGYRP_11colors;plot_method=black_arrowbarbs;vector_spacing=80;vector_offset=20 for eastward_wind:northward_wind</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_BGYRP_11colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_BGYR_10colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20</Name>
+    <Title>Style legend=Wind_ms_BGYR_10colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20 for eastward_wind:northward_wind</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_BGYR_10colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_bf_kn_YRP_13colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20</Name>
+    <Title>Style legend=Wind_bf_kn_YRP_13colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20 for eastward_wind:northward_wind</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_bf_kn_YRP_13colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_kn_YRP_18colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20</Name>
+    <Title>Style legend=Wind_kn_YRP_18colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20 for eastward_wind:northward_wind</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_kn_YRP_18colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_YRP_10colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20</Name>
+    <Title>Style legend=Wind_ms_YRP_10colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20 for eastward_wind:northward_wind</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_YRP_10colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_YRP_11colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20</Name>
+    <Title>Style legend=Wind_ms_YRP_11colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20 for eastward_wind:northward_wind</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_YRP_11colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_BGYRP_11colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20</Name>
+    <Title>Style legend=Wind_ms_BGYRP_11colors;plot_method=color_quiver1;vector_spacing=80;vector_offset=20 for eastward_wind:northward_wind</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_BGYRP_11colors&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_BGYRP_11colors_1.1;plot_method=color_quiver1;vector_spacing=80;vector_offset=20</Name>
+    <Title>Style legend=Wind_ms_BGYRP_11colors_1.1;plot_method=color_quiver1;vector_spacing=80;vector_offset=20 for eastward_wind:northward_wind</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_BGYRP_11colors_1.1&amp;SIZE=250" />
+    </LegendURL>
+</Style>
+<Style>
+    <Name>legend=Wind_ms_BGYRP_11colors_1.0;plot_method=color_quiver1;vector_spacing=80;vector_offset=20</Name>
+    <Title>Style legend=Wind_ms_BGYRP_11colors_1.0;plot_method=color_quiver1;vector_spacing=80;vector_offset=20 for eastward_wind:northward_wind</Title>
+    <LegendURL width="250" height="40">
+        <Format>image/png</Format>
+        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:type="simple"
+            xlink:href="http://staging.fcooapp.com/webmap/v3/collections/weather-combined/wms?REQUEST=GetColorbar&amp;STYLES=horizontal%2Cnolabel&amp;CMAP=Wind_ms_BGYRP_11colors_1.0&amp;SIZE=250" />
+    </LegendURL>
+</Style>      
+    </Layer>
+  </Layer>
+</Capability>
+</WMS_Capabilities>
