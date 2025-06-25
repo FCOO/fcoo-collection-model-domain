@@ -202,7 +202,26 @@ Create Datasets
             let e = this.collection.elements;
 
             if (this.isGlobal){
-                e.$mapContainer.css('border-color', this.colorName);
+
+                e.$mapContainer.css({
+                    'cursor'      : 'pointer',
+                    'border-color': this.colorName
+                });
+
+                //Add a tooltip to the map with info on the global model
+                let tooltip = L.tooltip(L.latLng([0, 0]), { sticky: true, permanent: true }).setContent(this.domain.fullNameSimple().replace('&nbsp;', ' ' ));
+                tooltip.addTo(e.map);
+
+                e.map.on('mouseover', ()      => tooltip.addTo(e.map)      );
+                e.map.on('mouseout',  ()      => tooltip.removeFrom(e.map) );
+                e.map.on('mousemove', (event) => tooltip.setLatLng(e.map.layerPointToLatLng(event.layerPoint)) );
+                e.map.on('click', function( event ){
+                    if (this.collection.preventMapClick)
+                        this.collection.preventMapClick = false;
+                    else
+                        this._polygon_onClick(event);
+                }.bind(this) );
+
                 return;
             }
 
@@ -237,14 +256,14 @@ Create Datasets
 
             this.latLngs = this.latLngs || latLngs;
 
-            let disabled = this.displayStatus.disabled;
-
+            let disabled        = this.displayStatus.disabled;
             this.polygon = L.polygon(this.latLngs, {
-                borderColorName : disabled ? 'black'           : this.colorName,
-                colorName       : disabled ? 'gray'/*'white'*/ : this.colorName,
+                borderColorName : disabled ? 'black' : this.colorName,
+                colorName       : disabled ? 'gray'  : this.colorName,
                 extraTransparent: true,
                 addInteractive  : true,
                 border          : true,
+                shadow          : false,
                 hover           : true,
                 interactive     : true,
                 pane            : this.isOcean ? 'oceanPane' : 'overlayPane',
@@ -269,6 +288,8 @@ Create Datasets
         _polygon_onClick
         *********************************************/
         _polygon_onClick: function(){
+            if (!this.isGlobal)
+                this.collection.preventMapClick = true;
             this.collection._updateModalMap( this );
         },
 
@@ -286,17 +307,17 @@ Create Datasets
                     if (selected)
                         map.setZoom( map.getMinZoom(), {animate: false} );
                 }
-
-                if (this.polygon){
-                    //Set style of selected/not-selected polygon
-                    this.polygon.setStyle({
-                        transparent    : true, //!selected || !this.isOcean,
-                        weight         : selected && !this.isOcean ? 3 : 1,
+                else
+                    if (this.polygon){
+                        //Set style of selected/not-selected polygon
+                        this.polygon.setStyle({
+                            transparent    : true, //!selected || !this.isOcean,
+                            weight         : selected && !this.isOcean ? 3 : 1,
                         borderColorName: (selected && !this.isOcean) || disabled ? 'black' : this.colorName,
-                    });
-                    if (selected)
-                        map.fitBounds(this.polygon.getBounds(), {_maxZoom: map.getZoom()});
-                }
+                        });
+                        if (selected)
+                            map.fitBounds(this.polygon.getBounds(), {_maxZoom: map.getZoom()});
+                    }
         }
 
 

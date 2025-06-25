@@ -449,13 +449,20 @@ Create collections and datasets
 
             e.map.setView(options.mapCenter || this.mapCenter || [56.2, 11.5], options.mapZoom || this.mapZoom || 6);
 
+
+
+
+
             //Gets the layers for the map in the modal
             let layerList = nsCollection.options.getMapLayers();
             layerList = Array.isArray(layerList) ? layerList : [layerList];
             layerList.forEach( layer => layer.addTo(e.map) );
 
+
             //Create layerGroup to hole all polygons
             e.layerGroup = L.layerGroup().addTo(e.map);
+
+
 
             //Create new pane with zIndex < the map to hole all polygons fra ocean-domains
             var ocnPane = e.map.createPane('oceanPane');
