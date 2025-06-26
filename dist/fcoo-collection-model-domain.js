@@ -121,14 +121,6 @@ Objects and methods to create and manages list of models
     Domain
     ****************************************************************************/
     function Domain(options = {}, model) {
-
-        if (options.id == 'IGB')
-            options.id = 'IG';
-
-        if (options.id == 'NEA')
-            options.id = 'DINI';
-
-
         this.model = model;
         this.options = $.extend(true, {
             type                : this.model.options.type || 'met',
@@ -137,8 +129,6 @@ Objects and methods to create and manages list of models
             resolution          : "1nm",
             period              : model.domainPeriod || 6,
             process             : 3,
-//HER               epochOffset         : 0,
-//HER               roundEpochMomentTo  : this.model.options.roundEpochMomentTo
         }, nsModel.options.domain, model.options.domain, options);
 
         this.options.abbr = this.options.abbr || this.options.id;
