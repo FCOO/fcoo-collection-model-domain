@@ -337,7 +337,7 @@ Objects and methods to create and manages list of models
             }
             //*****************************************************
             function createSubContainer(contentList){
-                let $div = $('<div></div>').addClass('align-items-stretch row row'),
+                let $div = $('<div></div>').addClass('align-items-stretch row'),
                     colClass = 'col-md-'+(12/contentList.length);
 
                 contentList.forEach( content => {

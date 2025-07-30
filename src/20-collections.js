@@ -435,7 +435,7 @@ Create collections and datasets
             let e = this.elements = {}; //Object holding different elements in the modal
 
             //Detect device and screen-size and set
-            let extraWidth = window.fcoo.modernizrDevice.isDesktop || window.fcoo.modernizrDevice.isTablet,
+            let extraWidth = ns.modernizrDevice.isDesktop || ns.modernizrDevice.isTablet,
                 megaWidth  = extraWidth && (Math.min(ns.modernizrMediaquery.screen_height, ns.modernizrMediaquery.screen_width) >= 920),
                 mapHeight  = 300 + (extraWidth ? 100 : 0) + (megaWidth ? 100 : 0);
 

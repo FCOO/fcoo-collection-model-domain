@@ -112950,10 +112950,12 @@ See src/fcoo-application-create.js
 
     /****************************************************************************
     OPTIONS = {
-        applicationName  : {da:STRING, en:STRING},  //applicationName or applicationHeader are used. Two options available for backward combability
+        //applicationName or applicationHeader are used. Two options available for backward combability
+        applicationName  : {da:STRING, en:STRING},
         applicationHeader: {da:STRING, en:STRING},
 
-        depotOptions: { //Options for saving and loading settings using SavedSettingList (src/fcoo-application-load-save-bookmark-share-setting.js
+        //Options for saving and loading settings using Depot-object (See saved-setting-depot.js)
+        depotOptions: {
             url  : STRING. Url to the service
             token: STRING. Sub-dir with token //Standard "token/"
             depot: STRING. Sub-dir with data  //Standard "depot/"
@@ -112962,28 +112964,31 @@ See src/fcoo-application-create.js
         topMenu: {
             See description in fcoo/fcoo-application and in nsMap.defaultApplicationOptions below
         }
-        standardMenuOptions: { //Options for the standard-menu/mmenu created by methods in src/fcoo-application-mmenu
-            inclBar    : BOOLEAN,
-            barCloseAll: BOOLEAN,
-            inclBar    : BOOLEAN, if true a bar top-right with buttons from items with options.addToBar = true and favorites (optional) and close-all (if barCloseAll=true)
-            barCloseAll: BOOLEAN, if true a top-bar button is added that closes all open submenus
-            favorites  : BOOLEAN, true = default saving, false: no favorites
-        }
 
         leftMenu/rightMenu: true or false or {
             width: NUMBER,
-            buttons: As leftMenuButtons and rightMenuButtons in fcoo-aapplication = {
+            buttons: As leftMenuButtons and rightMenuButtons = {
                 preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
-                save        = true or onClick or buttonOptions, //Standard save-button
-                load        = true or onClick or buttonOptions, //Standard load-button
-                bookmark    = true or onClick or buttonOptions, //Standard bootmark-button
-                share       = true or onClick or buttonOptions, //Standard share-button
-                user        = true or onClick or buttonOptions, //Standard user-button
-                setting     = true or onClick or buttonOptions, //Standard setting-button
+                new         = true or onClick or buttonOptions, //Standard new "something"
+                edit        = true or onClick or buttonOptions, //Standard edit settings
+                save        = true or onClick or buttonOptions, //Standard save save settings
+                load        = true or onClick or buttonOptions, //Standard load load settings
+                bookmark    = true or onClick or buttonOptions,
+                share       = true or onClick or buttonOptions, //Standard share settings
+                user        = true or onClick or buttonOptions,
+
+                cancel      = true or onClick or buttonOptions,
+                ok          = true or onClick or buttonOptions,
+
+                save2       = true or onClick or buttonOptions,
+                reset2      = true or onClick or buttonOptions,
+
+                reset       = true or onClick or buttonOptions, //Standard reset (settings, layers etc)
+                setting     = true or onClick or buttonOptions, //Standard edit global settings (language, formats etc)
                 postButtons = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
             }
 
-            isStandardMenu: true    //True => the standard menu is created in this side using standardMenuOptions and bsMenuOptions
+            isStandardMenu: false    //True => the standard menu is created in this side using standardMenuOptions and bsMenuOptions
             bsMenuOptions : {}      //Only if isStandardMenu: true => options for $.BsMmenu when creating the content of the left/right side
 
             if isStandardMenu: false:
@@ -112997,6 +113002,15 @@ See src/fcoo-application-create.js
 
         keepLeftMenuButton  : false, //Keeps the left menu-button even if leftMenu is null
         keepRightMenuButton : false, //Keeps the right menu-button even if rightMenu is null
+
+        //Options for the standard-menu/mmenu created by methods in fcoo-application-mmenu
+        standardMenuOptions: {
+            inclBar    : BOOLEAN,
+            barCloseAll: BOOLEAN,
+            inclBar    : BOOLEAN, if true a bar top-right with buttons from items with options.addToBar = true and favorites (optional) and close-all (if barCloseAll=true)
+            barCloseAll: BOOLEAN, if true a top-bar button is added that closes all open submenus
+            favorites  : BOOLEAN, true = default saving, false: no favorites
+        }
 
 
 
