@@ -1234,9 +1234,12 @@ Create Datasets
                 return;
             }
 
+
             if (this.latLngs)
                 this.addPolygon();
-            else
+            else {
+                if (!this.domain.options.mask)
+                    this.errorLoadingMask = true;
                 if (!this.errorLoadingMask)
                     //Load polygons from json-file
                     Promise.getJSON(
@@ -1245,6 +1248,7 @@ Create Datasets
                         resolve: this.addPolygon.bind(this),
                         reject : this.rejectPolygon.bind(this)
                     });
+            }
         },
 
         /*********************************************

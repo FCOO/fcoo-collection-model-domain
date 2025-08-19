@@ -112588,7 +112588,7 @@ Methods to create standard FCC-web-applications
 
 
 ****************************************************************************/
-(function ($, moment, window/*, document, undefined*/) {
+(function ($, moment, window, document, undefined) {
     "use strict";
 
     var ns = window.fcoo = window.fcoo || {};
@@ -112606,14 +112606,27 @@ Methods to create standard FCC-web-applications
 
     createApplication(...) will
         1: "Load" (*) setup and proccess the options
-        2: "Load" standard setup/options for differnet parts of the application
-        3: "Load" content for left- and/or right-menu
+        2: "Load" standard setup/options for different parts of the application
+        3: "Load" content for left- and/or right-panel
         4: "Load" standard FCOO-menu
-        5: Create the main structure and the left and/or right menu
+        5: Create the main structure and the left and/or right panel
         6: "Load" options.other and options.metaData (if any)
         7: Load settings in fcoo.appSetting and globalSetting and call options.finally (if any)
 
     *) "Load" can be loading from a file or using given or default options
+
+
+    Regarding loading and creation of menu-structure in left or right panel (#3 and #4):
+    There are three way to set a menu structure (see fcoo-application-standard-menu.js):
+    1: Set a list = MENU_ITEM_LIST or {list: MENU_ITEM_LIST}
+    2: Set name of a file containing the menu-structure
+    3: Mark to use the default FCOO-menu
+
+    A menu-item can initial just be at id (STRING) and other code-packages can add functions to create the content of the menu-item
+    The application must provide a "owner-list" = {MENU_ID: function(options, addMenu)}, where addMenu = function to add new (sub-)menu-items
+
+
+
 
     ****************************************************************************/
 
@@ -112651,10 +112664,32 @@ Methods to create standard FCC-web-applications
     }
 
     /*************************************************************************
+    __FCOO_APPLICATION_ADJUT_OPTIONS
+    Convert options from previous version to current version
+    *************************************************************************/
+    ns.__FCOO_APPLICATION_ADJUT_OPTIONS = function(options){
+        ['leftMenu', 'leftMenuIcon', 'leftMenuButtons', 'keepLeftMenuButton', 'rightMenu', 'rightMenuIcon', 'keepRightMenuButton', 'rightMenuButtons', 'topMenu', 'bottomMenu'].forEach( id => {
+            let newId = id.replace('Menu', 'Panel');
+
+            if ((options[newId] === undefined) && (options[id] !== undefined)){
+                options[newId] =options[id];
+                delete options[id];
+            }
+        });
+    };
+
+
+    /*************************************************************************
     createApplication(
         options,
         create_main_content
-        menuOptions = {ownerList, finallyFunc, fileNameOrMenuOptions}
+        menuOptions = {
+            fileName             : FILENAME,
+            menuList or list     : MENU_ITEM_LIST
+            ownerList            : OWNER_LIST
+            finallyFunc          : FUNCTION,
+            fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
+        }
         application_resolve_setup,
         nsForApplication = ns,
     }
@@ -112671,6 +112706,7 @@ Methods to create standard FCC-web-applications
         application_resolve_setup,
         nsForApplication = ns
     ){
+
         //Set namespace for the application
         nsApp = nsForApplication || nsApp;
 
@@ -112684,7 +112720,7 @@ Methods to create standard FCC-web-applications
         ns.viewport_no_scalable = true;
 
         //1: "Load" setup and proccess the options
-        nsApp.menuOptions = menuOptions;
+        nsApp.menuOptions = ns.adjustMenuOptions(menuOptions);
 
         var promiseOptions = ns.options2promiseOptions(options);
         if (promiseOptions.fileName)
@@ -112699,59 +112735,71 @@ Methods to create standard FCC-web-applications
     ******************************************************************/
     function resolve_setup(options){
 
+        //For backward compatibility a number of ids are converted
+        ns.__FCOO_APPLICATION_ADJUT_OPTIONS(options);
+
         //Set applicationHeader here because it is used in promise-error
         ns.applicationHeader = $._bsAdjustText( options.applicationName || options.applicationHeader || options.header || ns.defaultApplicationOptions.applicationName );
 
         //Adjust options - both in ns and nsApp
         ns.setupOptions = nsApp.setupOptions = options = setOptions(options, ns.defaultApplicationOptions);
 
-        //Set bottom-menu options
-        nsApp.setupOptions.bottomMenu = nsApp.setupOptions.bottomMenu || nsApp.BOTTOM_MENU;
+        //Set bottom-panel options
+        nsApp.setupOptions.bottomPanel = nsApp.setupOptions.bottomPanel || nsApp.BOTTOM_PANEL || nsApp.BOTTOM_MENU;
 
         //Adjust path: If path is file-name (in any form) => move it into default format
         ['help', 'messages', 'warning'].forEach(id => {
-            let topMenuPath = options.topMenu[id];
-            if (topMenuPath && window.intervals.isFileName(topMenuPath))
-                options.topMenu[id] = {url: ns.dataFilePath( topMenuPath )};
+            let topPanelPath = options.topPanel[id];
+            if (topPanelPath && window.intervals.isFileName(topPanelPath))
+                options.topPanel[id] = {url: ns.dataFilePath( topPanelPath )};
         });
 
         //Add helpId to modal for globalSetting (if any)
-        if (nsApp.setupOptions.topMenu && nsApp.setupOptions.topMenu.helpId && nsApp.setupOptions.topMenu.helpId.globalSetting){
+        if (nsApp.setupOptions.topPanel && nsApp.setupOptions.topPanel.helpId && nsApp.setupOptions.topPanel.helpId.globalSetting){
             var modalOptions = ns.globalSetting.options.modalOptions = ns.globalSetting.options.modalOptions || {};
-            modalOptions.helpId = nsApp.setupOptions.topMenu.helpId.globalSetting;
+            modalOptions.helpId = nsApp.setupOptions.topPanel.helpId.globalSetting;
             modalOptions.helpButton = true;
         }
 
         //Adjust and add options for load, save, and share button
         let addTo = ns.setupOptions.saveLoadShare || '', buttons;
         addTo = Array.isArray(addTo) ? addTo : addTo.split(' ');
+
+        //Convert "Menu" to "Panel"
+        addTo = addTo.join(' ').replace('Menu', 'Panel').split(' ');
+
+        ['leftPanel', 'rightPanel', 'topPanel'].forEach( id => {
+            if (options[id] === true)
+                options[id] = {};
+        });
+
         addTo.forEach( where => {
             switch (where.toUpperCase()){
-                case 'TOPMENU'  :
-                    options.topMenu = options.topMenu || {};
-                    options.topMenu.save  = options.topMenu.save  || true;
-                    options.topMenu.load  = options.topMenu.load  || true;
-                    options.topMenu.share = options.topMenu.share || true;
+                case 'TOPPANEL'  :
+                    options.topPanel.save  = options.topPanel.save  || true;
+                    options.topPanel.load  = options.topPanel.load  || true;
+                    options.topPanel.share = options.topPanel.share || true;
                     break;
 
-                case 'LEFTMENU' :
-                    options.leftMenu = options.leftMenu || {};
-                    buttons = options.leftMenu.buttons = options.leftMenu.buttons || {};
-                    buttons.save  = buttons.save  || true;
-                    buttons.load  = buttons.load  || true;
-                    buttons.share = buttons.share || true;
+                case 'LEFTPANEL' :
+                    if (options.leftPanel){
+                        buttons = options.leftPanel.buttons = options.leftPanel.buttons || {};
+                        buttons.save  = buttons.save  || true;
+                        buttons.load  = buttons.load  || true;
+                        buttons.share = buttons.share || true;
+                    }
                     break;
 
-                case 'RIGHTMENU':
-                    options.rightMenu = options.righttMenu || {};
-                    buttons = options.rightMenu.buttons = options.rightMenu.buttons || {};
-                    buttons.save  = buttons.save  || true;
-                    buttons.load  = buttons.load  || true;
-                    buttons.share = buttons.share || true;
+                case 'RIGHTPANEL':
+                    if (options.rightPanel){
+                        buttons = options.rightPanel.buttons = options.rightPanel.buttons || {};
+                        buttons.save  = buttons.save  || true;
+                        buttons.load  = buttons.load  || true;
+                        buttons.share = buttons.share || true;
+                    }
                     break;
             }
         });
-
 
         //Call the applications own resolve method (if any)
         if (appResolveSetup)
@@ -112763,60 +112811,77 @@ Methods to create standard FCC-web-applications
                 ns.promiseList.append( ns.options2promiseOptions(fileNameOrData, nsApp.standard[id]) );
         });
 
-        //3: "Load" content for left- and/or right-menu. If the menu isn't the standard-menu its content is loaded last to have the $-container ready
+        //3: "Load" content for left- and/or right-panel. If the panel is a menu or the standard-menu its content is loaded last to have the $-container ready
+        let menuOptions = $.extend({}, nsApp.menuOptions || {}, options.menuOptions || {});
+
         ['left', 'right'].forEach(prefix => {
-            var menuId = prefix+'Menu',
-                sideMenuOptions = options[menuId];
-            if (!sideMenuOptions) return;
+            var panelId = prefix+'Panel',
+                sidePanelOptions = options[panelId];
+            if (!sidePanelOptions) return;
 
-            if (sideMenuOptions.isStandardMenu){
-                //Set the options for mmenu
-                sideMenuOptions.menuOptions =
-                    $.extend({}, sideMenuOptions.bsMenuOptions || {}, options.standardMenuOptions || {}, {list: []});
+            //1: The panel contains a menu
+            if (sidePanelOptions.isStandardMenu || (menuOptions && sidePanelOptions.isMenu) || sidePanelOptions.menuOptions){
 
-                //Set ref to the menu with the standard menu
-                options.standardMenuId = prefix+'Menu';
+                //sidePanelOptions.menuOptions can just be a file-name with menu-items
+                if (sidePanelOptions.menuOptions && window.intervals.isFileName(sidePanelOptions.menuOptions))
+                    sidePanelOptions.menuOptions = {fileName: sidePanelOptions.menuOptions};
+
+                //Set the options for menu
+                menuOptions = sidePanelOptions.menuOptions =
+                    $.extend({},
+                        sidePanelOptions.isStandardMenu ? options.standardMenuOptions : {} || {},
+                        menuOptions || {},
+                        sidePanelOptions.menuOptions || {}
+                    );
+
+                //Set ref to the panel with the standard menu
+                options.menuPanelId = prefix+'Panel';
             }
             else
-                if (!sideMenuOptions.$menu){
-                    /*  sideMenuOptions contains:
+                //2: Content is given in $panel or $content
+                if (sidePanelOptions.$panel || sidePanelOptions.$content)
+                    sidePanelOptions.$panel = sidePanelOptions.$panel || sidePanelOptions.$content;
+                else {
+                    /*
+                    3: sidePanelOptions contains:
                           fileName: FILENAME, or
                           data    : JSON-OBJECT, or
                           content : A JSON-OBJECT with content as in fcoo/jquery-bootstrap, or
-                          create or resolve : function( data, $container ) - function to create the menus content in $container. Only if fileName or data is given
-
-                        Create the resolve-function */
-                    var resolve, menuResolve;
-                    if (sideMenuOptions.content)
+                          create or resolve : function( data, $container ) - function to create the content of the panel in $container. Only if fileName or data is given
+                        Create the resolve-function
+                    */
+                    var resolve, panelResolve;
+                    if (sidePanelOptions.content)
                         resolve = function( content ){
-                            nsApp.main[menuId].$menu._bsAddHtml( content );
+                            nsApp.main[panelId].$panel._bsAddHtml( content );
                         };
                     else {
-                        menuResolve = sideMenuOptions.resolve || sideMenuOptions.create;
-                        if (menuResolve)
+                        panelResolve = sidePanelOptions.resolve || sidePanelOptions.create;
+                        if (panelResolve)
                             resolve = function( data ){
-                                menuResolve( data, nsApp.main[menuId].$menu );
+                                panelResolve( data, nsApp.main[panelId].$panel );
                             };
                     }
 
-                    if (menuResolve)
+                    if (panelResolve)
                         ns.promiseList.appendLast({
-                            fileName: sideMenuOptions.fileName,
-                            data    : sideMenuOptions.data || sideMenuOptions.content,
+                            fileName: sidePanelOptions.fileName,
+                            data    : sidePanelOptions.data || sidePanelOptions.content,
                             resolve : resolve
                         });
                 }
         });
 
-        //4: "Load" standard FCOO-menu - when the menu is loaded
-        if (nsApp.menuOptions){
-            nsApp.menuOptions.appFinallyFunc = nsApp.menuOptions.finallyFunc;
-            nsApp.menuOptions.finallyFunc = standardMenuFinally;
 
+        //4: "Load" menu (standard or individuel) - when the menu is loaded
+        if (menuOptions){
+            nsApp.menuOptions = menuOptions;
+            nsApp.menuOptions.appFinallyFunc = nsApp.menuOptions.finallyFunc;
+            nsApp.menuOptions.finallyFunc = appMenuFinally;
             ns.createFCOOMenu(nsApp.menuOptions);
         }
 
-        //5: Create the main structure and the left and/or right menu. Is excecuded after the layer-menus and before lft/rigth menu creation
+        //5: Create the main structure and the left and/or right panel. Is excecuded after the layer-menus and before lft/right menu creation
         ns.promiseList.prependLast({
             data   : 'none',
             resolve: createMainStructure
@@ -112846,16 +112911,15 @@ Methods to create standard FCC-web-applications
     }
 
     /*************************************************************************
-    standardMenuFinally(menuList, menuOptions)
-    4: Append menu-items in menuList to the list with item for the standard-menu, and
+    appMenuFinally(menuList, menuOptions)
+    4:  Set loaded or created menu-items in menuList to the list with item for the panel holding the menu (if any), and
         call the users finally-method
     *************************************************************************/
-    function standardMenuFinally(menuList, menuOptions){
-        if (nsApp.setupOptions.standardMenuId){
-            let standardMenuOptions = nsApp.setupOptions[nsApp.setupOptions.standardMenuId].menuOptions;
-
-            if (standardMenuOptions && standardMenuOptions.list)
-                standardMenuOptions.list = standardMenuOptions.list.concat( menuList );
+    function appMenuFinally(menuList, menuOptions){
+        if (nsApp.setupOptions.menuPanelId){
+            let panelMenuOptions = nsApp.setupOptions[nsApp.setupOptions.menuPanelId].menuOptions;
+            if (panelMenuOptions)
+                panelMenuOptions.list = menuList;
         }
 
         if (menuOptions.appFinallyFunc)
@@ -112864,7 +112928,7 @@ Methods to create standard FCC-web-applications
 
     /*************************************************************************
     createMainStructure()
-    5: Create the main structure and the left and/or right menu
+    5: Create the main structure and the left and/or right panel
     *************************************************************************/
     function createMainStructure(){
         var setupOptions = nsApp.setupOptions;
@@ -112877,18 +112941,18 @@ Methods to create standard FCC-web-applications
             applicationHeader   : setupOptions.applicationHeader,
             header              : setupOptions.header,
 
-            //top-, left-, right-, and bottom-menus
-            topMenu             : setupOptions.topMenu,
+            //top-, left-, right-, and bottom-panels
+            topPanel             : setupOptions.topPanel,
 
-            leftMenu            : setupOptions.leftMenu,
-            leftMenuIcon        : setupOptions.leftMenuIcon,
-            keepLeftMenuButton  : setupOptions.keepLeftMenuButton,
+            leftPanel            : setupOptions.leftPanel,
+            leftPanelIcon        : setupOptions.leftPanelIcon,
+            keepLeftPanelButton  : setupOptions.keepLeftPanelButton,
 
-            rightMenu           : setupOptions.rightMenu,
-            rightMenuIcon       : setupOptions.rightMenuIcon,
-            keepRightMenuButton : setupOptions.keepRightMenuButton,
+            rightPanel           : setupOptions.rightPanel,
+            rightPanelIcon       : setupOptions.rightPanelIcon,
+            keepRightPanelButton : setupOptions.keepRightPanelButton,
 
-            bottomMenu          : setupOptions.bottomMenu,
+            bottomPanel          : setupOptions.bottomPanel,
 
             onResizeStart       : setupOptions.onResizeStart,
             onResizeEnd         : setupOptions.onResizeEnd
@@ -112961,13 +113025,13 @@ See src/fcoo-application-create.js
             depot: STRING. Sub-dir with data  //Standard "depot/"
         }
 
-        topMenu: {
+        topPanel: {
             See description in fcoo/fcoo-application and in nsMap.defaultApplicationOptions below
         }
 
-        leftMenu/rightMenu: true or false or {
+        leftPanel/rightPanel: true or false or {
             width: NUMBER,
-            buttons: As leftMenuButtons and rightMenuButtons = {
+            buttons: As leftPanelButtons and rightPanelButtons = {
                 preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
                 new         = true or onClick or buttonOptions, //Standard new "something"
                 edit        = true or onClick or buttonOptions, //Standard edit settings
@@ -112988,20 +113052,20 @@ See src/fcoo-application-create.js
                 postButtons = []buttonOptions or buttonOptions or null //Individuel button(s) placed after the standard buttons
             }
 
-            isStandardMenu: false    //True => the standard menu is created in this side using standardMenuOptions and bsMenuOptions
-            bsMenuOptions : {}      //Only if isStandardMenu: true => options for $.BsMmenu when creating the content of the left/right side
+            isStandardMenu: false    //True => the standard menu is created in this side using standardMenuOptions and menuOptions
+            menuOptions   : {}      //Only if isStandardMenu: true => options for $.BsMmenu when creating the content of the left/right side
 
             if isStandardMenu: false:
             fileName: FILENAME, or
             data    : JSON-OBJECT, or
             content : A JSON-OBJECT with content as in fcoo/jquery-bootstrap
 
-            create or resolve : function( data, $container ) - function to create the menus content in $container. Only if fileName or data is given (and isStandardMenu: false)
+            create or resolve : function( data, $container ) - function to create the content of the panels in $container. Only if fileName or data is given (and isStandardMenu: false)
 
         },
 
-        keepLeftMenuButton  : false, //Keeps the left menu-button even if leftMenu is null
-        keepRightMenuButton : false, //Keeps the right menu-button even if rightMenu is null
+        keepLeftPanelButton  : false, //Keeps the left panel-button even if leftPanel is null
+        keepRightPanelButton : false, //Keeps the right panel-button even if rightPanel is null
 
         //Options for the standard-menu/mmenu created by methods in fcoo-application-mmenu
         standardMenuOptions: {
@@ -113041,9 +113105,9 @@ See src/fcoo-application-create.js
                 depot: 'depot/'
             },
 
-            saveLoadShare: '', //STRING or []STRING. "leftMenu", "rightMenu", "topMenu": Defines where the load-, save and share-buttons are shown
+            saveLoadShare: '', //STRING or []STRING. "leftPanel", "rightPanel", "topPanel": Defines where the load-, save and share-buttons are shown
 
-            topMenu            : {
+            topPanel            : {
                 save : false, //If true a save-button is added (see SavedSettingList)
                 load : false, //If true a load-button is added (see SavedSettingList)
                 share: false, //If true a share-button is added (see SavedSettingList)
@@ -113051,13 +113115,13 @@ See src/fcoo-application-create.js
 
             standardMenuOptions: {},
 
-            leftMenu           : false,
-            leftMenuIcon       : 'fa-layer-group',
-            keepLeftMenuButton : false,
+            leftPanel           : false,
+            leftPanelIcon       : 'fa-layer-group',
+            keepLeftPanelButton : false,
 
-            rightMenu          : false,
-            rightMenuIcon      : 'fa-list',
-            keepRightMenuButton: false,
+            rightPanel          : false,
+            rightPanelIcon      : 'fa-list',
+            keepRightPanelButton: false,
 
 
             //Standard setup/options
@@ -113728,11 +113792,14 @@ Create and manage the main structure for FCOO web applications
     Create the main structure return a object with the created element
     ******************************************************************/
     ns.createMain = function( options ){
+
+        ns.__FCOO_APPLICATION_ADJUT_OPTIONS(options);
+
         options = $.extend({}, {
             $mainContainer      : null,
             mainContainerAsHandleContainer: false,
-            maxMenuWidthPercent : 0.5, //Max total width of open menus when change to mode over
-            minMainWidth        : 0,   //Min width of main-container when menu(s) are open
+            maxPanelWidthPercent : 0.5, //Max total width of open panels when change to mode over
+            minMainWidth        : 0,   //Min width of main-container when panel(s) are open
             globalModeOver      : false,
 
             /*
@@ -113741,18 +113808,18 @@ Create and manage the main structure for FCOO web applications
             header
             */
 
-            topMenu             : null,  //Options for top-menu. See src/fcoo-application-top-menu.js
+            topPanel            : null,  //Options for top-panel. See src/fcoo-application-top-panel.js
 
-            leftMenu            : null,      //Options for left-menu. See src/fcoo-application-touch.js. Includes optional buttons: {preButtons,...}
-            leftMenuIcon        : 'fa-bars', //Icon for button that opens left-menu
-            leftMenuButtons     : null,      //Options for buttons in the header of the left-menu. See format below
-            keepLeftMenuButton  : false,     //Keeps the left menu-button even if leftMenu is null
+            leftPanel           : null,      //Options for left-panel. See src/fcoo-application-touch.js. Includes optional buttons: {preButtons,...}
+            leftPanelIcon       : 'fa-bars', //Icon for button that opens left-panel
+            leftPanelButtons    : null,      //Options for buttons in the header of the left-panel. See format below
+            keepLeftPanelButton : false,     //Keeps the left panel-button even if leftPanel is null
 
-            rightMenu           : null,      //Options for right-menu. See src/fcoo-application-touch.js
-            rightMenuIcon       : 'fa-list', //Icon for button that opens right-menu
-            keepRightMenuButton : false,     //Keeps the right menu-button even if rightMenu is null
-            rightMenuButtons    : null,      //Options for buttons in the header of the right-menu. See format below
-            bottomMenu          : null,      //Options for bottom-menu. See src/fcoo-application-touch.js
+            rightPanel          : null,      //Options for right-panel. See src/fcoo-application-touch.js
+            rightPanelIcon      : 'fa-list', //Icon for button that opens right-panel
+            keepRightPanelButton: false,     //Keeps the right panel-button even if rightPanel is null
+            rightPanelButtons   : null,      //Options for buttons in the header of the right-panel. See format below
+            bottomPanel         : null,      //Options for bottom-panel. See src/fcoo-application-touch.js
 
             onResizeStart       : null,  //function(main) to be called when the main-container starts resizing
             onResizing          : null,  //function(main) to be called when the main-container is being resized
@@ -113786,7 +113853,7 @@ Create and manage the main structure for FCOO web applications
                 var addClass = (value === true);
 
                 if (!addClass){
-                    var valueList = $.isArray(value) ? value : [value],
+                    var valueList = Array.isArray(value) ? value : [value],
                         add = true;
                     valueList.forEach( modernizrDeviceProperties => {
                         modernizrDeviceProperties.split(' ').forEach( property => {
@@ -113803,7 +113870,7 @@ Create and manage the main structure for FCOO web applications
 
 
         /*
-        leftMenuButtons or leftMenu.buttons, and rightMenuButtons rightMenu.buttons = {
+        leftPanelButtons or leftPanel.buttons, and rightPanelButtons rightPanel.buttons = {
             preButtons  = []buttonOptions or buttonOptions or null //Individuel button(s) placed before the standard buttons
 
             //Standard buttons = onClick or buttonOptions or true for default onClick
@@ -113823,10 +113890,10 @@ Create and manage the main structure for FCOO web applications
         */
 
         var result = {
-                menus  : [],
+                panels  : [],
                 options: options
             },
-            //Container for all elements used in top-menu
+            //Container for all elements used in top-panel
             $outerContainer = result.$outerContainer =
                 $('<div/>')
                     .addClass("outer-container"),
@@ -113841,106 +113908,106 @@ Create and manage the main structure for FCOO web applications
 
         $mainContainer.addClass("main-container");
 
-        //Append left-menu (if any)
-        if (result.options.leftMenu){
-            result.leftMenu = ns.touchMenu( $.extend({}, result.options.leftMenu, {
+        //Append left-panel (if any)
+        if (result.options.leftPanel){
+            result.leftPanel = ns.touchPanel( $.extend({}, result.options.leftPanel, {
                 position           : 'left',
                 $neighbourContainer: $outerContainer,
-                preMenuClassName   : 'vertical-pre-menu',
+                prePanelClassName   : 'vertical-pre-panel',
                 hideHandleWhenOpen : true,
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
                 resetListPrepend   : true,
                 main               : result
             }));
-            $body.append( result.leftMenu.$container );
-            result.menus.push(result.leftMenu);
+            $body.append( result.leftPanel.$container );
+            result.panels.push(result.leftPanel);
         }
 
         //Append the outer container
         $outerContainer.appendTo( $body );
 
-        //Create and append top-menu (if any).
-        //Add left-menu if leftMenu: true or keepLeftMenuButton = true. Use leftMenuicon as icon. Same for right-menu
-        if (result.options.topMenu){
-            var topMenuOptions = $.extend({}, result.options.topMenu, {
-                    leftMenu : result.options.leftMenu  || result.options.keepLeftMenuButton  ? {icon: $.FONTAWESOME_PREFIX_STANDARD + ' ' + result.options.leftMenuIcon} : false,
-                    rightMenu: result.options.rightMenu || result.options.keepRightMenuButton ? {icon: $.FONTAWESOME_PREFIX_STANDARD + ' ' +result.options.rightMenuIcon} : false
+        //Create and append top-panel (if any).
+        //Add left-panel if leftPanel: true or keepLeftPanelButton = true. Use leftPanelIcon as icon. Same for right-panel
+        if (result.options.topPanel){
+            var topPanelOptions = $.extend({}, result.options.topPanel, {
+                    leftPanel : result.options.leftPanel  || result.options.keepLeftPanelButton  ? {icon: $.FONTAWESOME_PREFIX_STANDARD + ' ' + result.options.leftPanelIcon} : false,
+                    rightPanel: result.options.rightPanel || result.options.keepRightPanelButton ? {icon: $.FONTAWESOME_PREFIX_STANDARD + ' ' +result.options.rightPanelIcon} : false
                 });
 
-            result.topMenuObject = ns.createTopMenu( topMenuOptions );
-            $outerContainer.append( result.topMenuObject.$container );
+            result.topPanelObject = ns.createTopPanel( topPanelOptions );
+            $outerContainer.append( result.topPanelObject.$container );
 
 
-            result.topMenu = ns.touchMenu({
+            result.topPanel = ns.touchPanel({
                 position           : 'top',
-                height             : result.topMenuObject.$menu.outerHeight() + 1,  //+ 1 = bottom-border
+                height             : result.topPanelObject.$panel.outerHeight() + 1,  //+ 1 = bottom-border
                 $neighbourContainer: $mainContainer,
-                $container         : result.topMenuObject.$menu,
-                $menu              : false,
+                $container         : result.topPanelObject.$panel,
+                $panel              : false,
 
                 isOpen             : true,
                 standardHandler    : true,
-                main: result
+                main               : result
             });
-            result.menus.push(result.topMenu);
+            result.panels.push(result.topPanel);
         }
 
         //Append main-container to outer-container
         $outerContainer.append( $mainContainer );
 
-        //Create and append bottom-menu (if any)
-        if (result.options.bottomMenu){
-            result.bottomMenu = ns.touchMenu( $.extend({}, result.options.bottomMenu, {
+        //Create and append bottom-panel (if any)
+        if (result.options.bottomPanel){
+            result.bottomPanel = ns.touchPanel( $.extend({}, result.options.bottomPanel, {
                 position           : 'bottom',
                 $neighbourContainer: $mainContainer,
                 main: result
             }));
-            $outerContainer.append( result.bottomMenu.$container );
-            result.menus.push(result.bottomMenu);
+            $outerContainer.append( result.bottomPanel.$container );
+            result.panels.push(result.bottomPanel);
         }
 
-        //Create and append right-menu (if any). It appear as a box
-        if (result.options.rightMenu){
-            result.rightMenu = ns.touchMenu( $.extend({}, result.options.rightMenu, {
+        //Create and append right-panel (if any). It appear as a box
+        if (result.options.rightPanel){
+            result.rightPanel = ns.touchPanel( $.extend({}, result.options.rightPanel, {
                 position           : 'right',
                 $neighbourContainer: $outerContainer,
-                preMenuClassName   : 'vertical-pre-menu',
+                prePanelClassName   : 'vertical-pre-panel',
                 hideHandleWhenOpen : true,
                 $handleContainer   : $leftAndRightHandleContainer,
                 multiMode          : true,
-                main: result
+                main               : result
             }));
-            $body.append( result.rightMenu.$container );
-            result.menus.push(result.rightMenu);
+            $body.append( result.rightPanel.$container );
+            result.panels.push(result.rightPanel);
         }
 
-        //Create close-button in left and right pre-menu
+        //Create close-button in left and right pre-panel
         var iconPrefix = 'fa-chevron-';
         //OR var iconPrefix = 'fa-chevron-circle-';
         //OR var iconPrefix = 'fa-arrow-';
 
-        //Toggle left and right-menu on click
-        if (result.options.leftMenu)
-            result.topMenuObject.leftMenu.on('click', $.proxy(result.leftMenu.toggle, result.leftMenu));
+        //Toggle left and right-panel on click
+        if (result.options.leftPanel)
+            result.topPanelObject.leftPanel.on('click', $.proxy(result.leftPanel.toggle, result.leftPanel));
 
-        if (result.options.rightMenu)
-            result.topMenuObject.rightMenu.on('click', $.proxy(result.rightMenu.toggle, result.rightMenu));
+        if (result.options.rightPanel)
+            result.topPanelObject.rightPanel.on('click', $.proxy(result.rightPanel.toggle, result.rightPanel));
 
 
-        //If application has left-menu and/or right-menu: Set up event to change between mode=side and mode=over
-        if (result.options.leftMenu || result.options.rightMenu){
+        //If application has left-panel and/or right-panel: Set up event to change between mode=side and mode=over
+        if (result.options.leftPanel || result.options.rightPanel){
             //Left and right points to each other
-            if (result.options.leftMenu && result.options.rightMenu){
-                var _onOpen  = result._left_right_menu_onOpen.bind(result),
-                    _onClose = result._left_right_menu_onClose.bind(result);
-                result.leftMenu._onOpen.push(_onOpen);
-                result.leftMenu._onClose.push(_onClose);
-                result.leftMenu.theOtherMenu = result.rightMenu;
+            if (result.options.leftPanel && result.options.rightPanel){
+                var _onOpen  = result._left_right_panel_onOpen.bind(result),
+                    _onClose = result._left_right_panel_onClose.bind(result);
+                result.leftPanel._onOpen.push(_onOpen);
+                result.leftPanel._onClose.push(_onClose);
+                result.leftPanel.theOtherPanel = result.rightPanel;
 
-                result.rightMenu._onOpen.push(_onOpen);
-                result.rightMenu._onClose.push(_onClose);
-                result.rightMenu.theOtherMenu = result.leftMenu;
+                result.rightPanel._onOpen.push(_onOpen);
+                result.rightPanel._onClose.push(_onClose);
+                result.rightPanel.theOtherPanel = result.leftPanel;
             }
 
             $body.resize( result._onBodyResize.bind(result) );
@@ -113948,15 +114015,15 @@ Create and manage the main structure for FCOO web applications
         }
 
         //**************************************************
-        //Add menu-buttons to left and right menu. button-options can be in options.[left/right]MenuButtons or options.[left/right]Menu.buttons
-        function createMenuButtons(side){
-            var menuOptions = result.options[side+'Menu'],
-                options     = menuOptions ? menuOptions.buttons || result.options[side+'MenuButtons'] || {} : {},
-                menu        = result[side+'Menu'],
+        //Add panel-buttons to left and right panel. button-options can be in options.[left/right]PanelButtons or options.[left/right]Panel.buttons
+        function createPanelButtons(side){
+            var panelOptions = result.options[side+'Panel'],
+                options     = panelOptions ? panelOptions.buttons || result.options[side+'PanelButtons'] || {} : {},
+                panel        = result[side+'Panel'],
                 sideIsLeft  = side == 'left',
                 sideIsRight = side == 'right',
-                multiSize   = menu ? menu.options.sizeList.length > 1 : false,
-                $container  = menu ? menu.$preMenu : null;
+                multiSize   = panel ? panel.options.sizeList.length > 1 : false,
+                $container  = panel ? panel.$prePanel : null;
 
             if (!$container) return;
 
@@ -113969,34 +114036,36 @@ Create and manage the main structure for FCOO web applications
                     .toggleClass('flex-grow-1', sideIsLeft)
                     .toggleClass('btn-group', multiSize);
 
-            menu.btnDecSize =
+            panel.btnDecSize =
                 $.bsButton({
                     bigIcon: true,
                     square : true,
                     icon   : iconPrefix + side,
-                    onClick: menu.decSize,
-                    context: menu
+                    class  : 'flex-grow-0',
+                    onClick: panel.decSize,
+                    context: panel
                 }).appendTo($closeButtonDiv);
 
             if (multiSize){
-                menu.btnIncSize =
+                panel.btnIncSize =
                     $.bsButton({
                         bigIcon: true,
                         square : true,
+                        class  :'flex-grow-0',
                         icon   : iconPrefix + (sideIsLeft ? 'right' : 'left'),
-                        onClick: menu.incSize,
-                        context: menu
+                        onClick: panel.incSize,
+                        context: panel
                     });
                 if (sideIsLeft)
-                    $closeButtonDiv.append( menu.btnIncSize );
+                    $closeButtonDiv.append( panel.btnIncSize );
                 else
-                    $closeButtonDiv.prepend( menu.btnIncSize );
+                    $closeButtonDiv.prepend( panel.btnIncSize );
             }
 
 
             var buttonGroups = [];
             if (options.preButtons)
-                buttonGroups.push( $.isArray(options.preButtons) ? options.preButtons : [options.preButtons]);
+                buttonGroups.push( Array.isArray(options.preButtons) ? options.preButtons : [options.preButtons]);
 
             //Add standard buttons
             var buttonList = [];
@@ -114034,7 +114103,7 @@ Create and manage the main structure for FCOO web applications
                 buttonGroups.push(buttonList);
 
             if (options.postButtons)
-                buttonGroups.push( $.isArray(options.postButtons) ? options.postButtons : [options.postButtons]);
+                buttonGroups.push( Array.isArray(options.postButtons) ? options.postButtons : [options.postButtons]);
 
             //Create the buttons
             $.each(buttonGroups, function(index, buttonList){
@@ -114059,27 +114128,27 @@ Create and manage the main structure for FCOO web applications
                 $closeButtonDiv.appendTo($container);
         }
         //****************************************************
-        createMenuButtons('left');
-        createMenuButtons('right');
+        createPanelButtons('left');
+        createPanelButtons('right');
 
 
         /*
         Set up for detecting resize-start and resize-end of main-container
         */
 
-        //Detect when any of the touch-menus are opened/closed using touch
+        //Detect when any of the touch-panels are opened/closed using touch
         result.options.onResizeStart = result.options.onResizeStart || result.options.onResize;
 
         $mainContainer.resize( result._main_onResize.bind(result) );
 
-        $.each(['leftMenu', 'rightMenu', 'topMenu', 'bottomMenu'], function(index, menuId){
-            var menu = result[menuId];
-            if (menu){
-                menu.onTouchStart = result._mainResize_onTouchStart.bind(result);
-                menu.onTouchEnd   = result._mainResize_onTouchEnd.bind(result);
+        $.each(['leftPanel', 'rightPanel', 'topPanel', 'bottomPanel'], function(index, id){
+            var panel = result[id];
+            if (panel){
+                panel.onTouchStart = result._mainResize_onTouchStart.bind(result);
+                panel.onTouchEnd   = result._mainResize_onTouchEnd.bind(result);
 
-                menu._onOpen.push( result._mainResize_onOpenOrClose.bind(result) );
-                menu._onClose.push( result._mainResize_onOpenOrClose.bind(result) );
+                panel._onOpen.push( result._mainResize_onOpenOrClose.bind(result) );
+                panel._onClose.push( result._mainResize_onOpenOrClose.bind(result) );
             }
         });
 
@@ -114093,25 +114162,25 @@ Create and manage the main structure for FCOO web applications
     var main_prototype = {
             wasForcedToClose: null,
 
-            _maxSingleMenuWidth: function(){
+            _maxSinglePanelWidth: function(){
                 var result = 0;
 
-                if (this.leftMenu)
-                    result = Math.max(result, this.leftMenu.options.menuDimAndSize.size);
+                if (this.leftPanel)
+                    result = Math.max(result, this.leftPanel.options.panelDimAndSize.size);
 
-                if (this.rightMenu)
-                    result = Math.max(result, this.rightMenu.options.menuDimAndSize.size);
+                if (this.rightPanel)
+                    result = Math.max(result, this.rightPanel.options.panelDimAndSize.size);
 
                 return result;
             },
 
 
-            _totalMenuWidth: function(){
+            _totalPanelWidth: function(){
                 var result = 0;
-                if (this.options.leftMenu && this.options.rightMenu){
-                    [this.leftMenu, this.rightMenu].forEach(menu => {
-                        const width = menu.options.menuDimAndSize.size;
-                        result = result + (typeof width == 'number' ? width : menu.$container.width());
+                if (this.options.leftPanel && this.options.rightPanel){
+                    [this.leftPanel, this.rightPanel].forEach(panel => {
+                        const width = panel.options.panelDimAndSize.size;
+                        result = result + (typeof width == 'number' ? width : panel.$container.width());
                     });
                 }
                 return result;
@@ -114120,16 +114189,16 @@ Create and manage the main structure for FCOO web applications
 
 
             /******************************************************
-            Functions to manage the automatic closing of the menu
-            on the other side when a left or right menu is opened
+            Functions to manage the automatic closing of the panel
+            on the other side when a left or right panel is opened
             ******************************************************/
-            _left_right_menu_onOpen: function(menu){
-                this.lastOpenedMenu = menu;
+            _left_right_panel_onOpen: function(panel){
+                this.lastOpenedPanel = panel;
                 this._onBodyResize();
             },
 
-            _left_right_menu_onClose: function(menu){
-                if (this.wasForcedToClose && (this.wasForcedToClose !== menu))
+            _left_right_panel_onClose: function(panel){
+                if (this.wasForcedToClose && (this.wasForcedToClose !== panel))
                     this.wasForcedToClose.open();
                 this.wasForcedToClose = null;
             },
@@ -114139,23 +114208,23 @@ Create and manage the main structure for FCOO web applications
                 this.wasForcedToClose = null;
 
                 var bodyWidth = $body.width(),
-                    maxTotalMenuWidthAllowed = Math.min(this.options.maxMenuWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
-                    newModeIsOver = this._maxSingleMenuWidth() >=  maxTotalMenuWidthAllowed,
-                    totalMenuWidth = this._totalMenuWidth(),
-                    //Find last opened menu if there are two oen menus
-                    firstOpenedMenu = totalMenuWidth && this.leftMenu.isOpen && this.rightMenu.isOpen ? (this.lastOpenedMenu ? this.lastOpenedMenu.theOtherMenu : null) : null;
+                    maxTotalPanelWidthAllowed = Math.min(this.options.maxPanelWidthPercent*bodyWidth, bodyWidth - this.options.minMainWidth),
+                    newModeIsOver = this._maxSinglePanelWidth() >=  maxTotalPanelWidthAllowed,
+                    totalPanelWidth = this._totalPanelWidth(),
+                    //Find last opened panel if there are two open panels
+                    firstOpenedPanel = totalPanelWidth && this.leftPanel.isOpen && this.rightPanel.isOpen ? (this.lastOpenedPanel ? this.lastOpenedPanel.theOtherPanel : null) : null;
 
                 this.isResizing = true;
                 this.options.globalModeOver = newModeIsOver;
-                if (this.leftMenu)  this.leftMenu.setMode ( newModeIsOver );
-                if (this.rightMenu) this.rightMenu.setMode( newModeIsOver );
+                if (this.leftPanel)  this.leftPanel.setMode ( newModeIsOver );
+                if (this.rightPanel) this.rightPanel.setMode( newModeIsOver );
                 this.isResizing = false;
 
-                //If both menus are open and mode == over or not space for both => close the menu first opened
-                if (firstOpenedMenu && (newModeIsOver || (totalMenuWidth > maxTotalMenuWidthAllowed))){
-                    firstOpenedMenu.close();
+                //If both panels are open and mode == over or not space for both => close the panel first opened
+                if (firstOpenedPanel && (newModeIsOver || (totalPanelWidth > maxTotalPanelWidthAllowed))){
+                    firstOpenedPanel.close();
                     if (!newModeIsOver)
-                        this.wasForcedToClose = firstOpenedMenu;
+                        this.wasForcedToClose = firstOpenedPanel;
                 }
             },
 
@@ -114931,7 +115000,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
     //Adjust options for ns.promiseList
     ['prePromiseAll', 'finally', 'finish'].forEach( function(optionsId){
         var opt = ns.promiseList.options[optionsId];
-        ns.promiseList.options[optionsId] = opt ? ($.isArray(opt) ? opt : [opt]) : [];
+        ns.promiseList.options[optionsId] = opt ? (Array.isArray(opt) ? opt : [opt]) : [];
     });
 
     /***********************************************************************
@@ -115197,7 +115266,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
 
         //*******************************************
         function adjustFileName(fileNameOrList, testRec){
-            if ($.isArray(fileNameOrList)){
+            if (Array.isArray(fileNameOrList)){
                 $.each(fileNameOrList, function(index, fileName){
                     fileNameOrList[index] = adjustFileName(fileName, testRec);
                 });
@@ -115253,7 +115322,7 @@ load setup-files in fcoo.promiseList after checking for test-modes
         //Check all files in allList and adjust the file(s) to load
         var fileNameVersions = promiseList.options.fileNameVersions;
         allList.forEach( function( promiseOptions ){
-            var onlyFileName = promiseOptions.fileName && !$.isArray(promiseOptions.fileName) ? promiseOptions.fileName.fileName : '',
+            var onlyFileName = promiseOptions.fileName && !Array.isArray(promiseOptions.fileName) ? promiseOptions.fileName.fileName : '',
                 fileVersion = fileNameVersions[onlyFileName];
 
             if (fileVersion){
@@ -115564,7 +115633,7 @@ Example:
 
 let ownerList = {};
 //In some package :
-ownerList['OBSERVATIONS"] = function(options, addMenu){
+ownerList['OBSERVATIONS"] = function(options, addMenu, adjustParentMenuOptions, menuOptions)
     //Adjust the options (if needed)
     ...
 
@@ -115581,7 +115650,7 @@ and the menu "OBSERVATIONS_MENU" are being adjustedd and have three sub-menus ad
 
 It is possible to use another owner-list when creating another version of the menu-structure to have different adjustments
 
-All menu-items in standard menu-structure that reference to a "owner-function" in the given user-list, are removed.
+All menu-items in standard menu-structure that do not reference to a "owner-function" in the given user-list, are removed.
 In the example:
 If the applicatuion do not include a package that sets a owner-function for "OBSERVATIONS"
 the hole menu-item "OBSERVATIONS_MENU" are removed automatic.
@@ -115590,26 +115659,35 @@ The sub-menus and/or the finally options for a menu-item can also be in a sepera
 
 The reading of the setup-file (fcoo-menu.json) or other file or direct options are always do via ns.promiseList.append
 
-METHOD: window.fcoo.createFCOOMenu(ownerList: OWNER_LIST, fileNameOrMenuOptions: FILENAME or MENU_OPTIONS)
+Method window.fcoo.createFCOOMenu(options: MENU_OPTIONS)
 
-OWNER_LIST = {id:MENUITEM_ID} of FUNCTION(options: MENUITEM_OPTIONS, addMenu: function(list: MENUITEM_LIST))
-The function given for ownerList[ID] can also contain info on sub-menuitems and/or include reading a setup-file for the specific menu-item
+    MENU_OPTIONS = {
+        fileName: FILENAME,
+        menuList or list: MENU_ITEM_LIST
+        ownerList       : OWNER_LIST
+        finallyFunc     : FUNCTION,
+        fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
+    }
 
-FILENAME = Path to file. Two versions:
-    1: Relative path locally e.q. "data/info.json"
-    2: Using ns.dataFilePath (See fcoo-data-files): {subDir, fileName}.
-    E.q. {subDir: "theSubDir", fileName:"theFileName.json"} => "https://app.fcoo.dk/static/theSubDir/theFileName.json"
-The content of the file must be MENU_OPTIONS
+    FILENAME = Path to file. Two versions:
+        1: Relative path locally e.q. "data/info.json"
+        2: Using ns.dataFilePath (See fcoo-data-files): {subDir, fileName}.
+        E.q. {subDir: "theSubDir", fileName:"theFileName.json"} => "https://app.fcoo.dk/static/theSubDir/theFileName.json"
+    The content of the file must be MENU_ITEM_LIST
 
-MENU_OPTIONS = MENUITEM_LIST =[]MENUITEM_OPTIONS
+    MENU_ITEM_LIST = []MENU_ITEM
 
-MENUITEM_OPTIONS = {icon, text,..., list:MENU_OPTIONS}  - The options to create the menu-item. list = [] of sub-menus, or
-MENUITEM_OPTIONS = {ID: BOOLEAN}                        - false : Do not include, true: Include with default options (=LAYEROPTIONS) given in the packages that build the layer, or
-MENUITEM_OPTIONS = {ID: FILENAME}                       - Include with the options (=LAYEROPTIONS) given in FILENAME pared with the default options, or
-MENUITEM_OPTIONS = {ID: (=OWNER_ID)} or OWNER_ID        - Include with (=LAYEROPTIONS) pared with the default options, or
-MENUITEM_OPTIONS = MMENUITEMOPTIONS                     = Options for a menu-item without layer-toggle. See fcoo/jquery-bootstrap-mmenu for details.
+    MENU_ITEM = {icon, text,..., list:MENU_ITEM_LIST} - The options to create the menu-item. list = [] of sub-menus, or
+    MENU_ITEM = {ID: BOOLEAN}                         - false : Do not include, true: Include with default options (=LAYEROPTIONS) given in the packages that build the layer, or
+    MENU_ITEM = {ID: FILENAME}                        - Include with the options (=LAYEROPTIONS) given in FILENAME pared with the default options, or
+    MENU_ITEM = {ID: (=OWNER_ID)} or OWNER_ID         - Include with (=LAYEROPTIONS) pared with the default options, or
+    MENU_ITEM = MMENUITEMOPTIONS                      - Options for a menu-item without layer-toggle. See fcoo/jquery-bootstrap-mmenu for details.
 
-OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
+    OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
+
+    OWNER_LIST = {MENU_ITEM_ID: FUNCTION(options: MENU_ITEM, addMenu: function(list: MENU_ITEM_LIST))}
+
+
 
 ****************************************************************************/
 (function ($, moment, window/*, document, undefined*/) {
@@ -115619,9 +115697,31 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
 
 
     /****************************************************************************
+    4: "Load" layerMenu and create the layers and the options for the mmenu
+    5: "Load" the added layers via there build-method
+   /****************************************************************************/
 
-4: "Load" layerMenu and create the layers and the options for the mmenu
-5: "Load" the added layers via there build-method
+    //adjustMenuOptions( menuOptions ) adjust menuOptions to allow simple list/object with menu-items
+    ns.adjustMenuOptions = function( menuOptions ){
+        if (!menuOptions)
+            return null;
+
+        //If menuOptions isn't a array and contain "fileName", "menuList", "list", or "fileNameOrMenuOptions" it is a "full" menuOptions.
+        if (!Array.isArray(menuOptions)){
+            if (window.intervals.isFileName(menuOptions))
+                return {fileName: menuOptions};
+
+            let returnIt = false;
+            ['fileName', 'menuList', 'list', 'fileNameOrMenuOptions', 'ownerList', 'finallyFunc'].forEach( id => {
+                if (menuOptions[id] !== undefined)
+                    returnIt = true;
+            });
+
+            if (returnIt)
+                return menuOptions;
+        }
+        return {list: menuOptions};
+    };
 
 
     /*********************************************
@@ -115665,8 +115765,10 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
         }
 
         menuItem.id = menuItem.id || id;
+
         //Convert/adjust the items submenus (in list or submenus)
-        menuItem.list = convertList( menuItem.list || menuItem.submenus );
+        if (menuItem.list || menuItem.submenus)
+            menuItem.list = convertList( menuItem.list || menuItem.submenus );
         delete menuItem.submenus;
 
         return menuItem;
@@ -115678,7 +115780,7 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
             return null;
 
         var result = [];
-        if ($.isArray(listOrSubmenus))
+        if (Array.isArray(listOrSubmenus))
             $.each(listOrSubmenus, (index, menuItem) => {
                 var adjustedMenuItem = adjustMenuItem(null, menuItem);
                 if (adjustedMenuItem)
@@ -115697,17 +115799,35 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
 
 
     /*************************************************************************
-    createFCOOMenu(options = {ownerList, finallyFunc, fileNameOrMenuOptions})
+    createFCOOMenu(options)
+    options = {
+        fileName             : FILENAME,
+        menuList or list     : MENU_ITEM_LIST
+        ownerList            : OWNER_LIST
+        finallyFunc          : FUNCTION,
+        fileNameOrMenuOptions: FILENAME or MENU_ITEM_LIST
+    }
     *************************************************************************/
-    ns.createFCOOMenu = function(options){
+    ns.createFCOOMenu = function( options ){
         options.replaceMenuItems = {};
-        options.fileNameOrMenuOptions = options.fileNameOrMenuOptions || {subDir: 'setup', fileName:'fcoo-menu.json'}; //File name rettes til fcoo-menu.json
+        options.fileNameOrMenuOptions =
+            options.fileNameOrMenuOptions ||
+            options.fileName ||
+            options.menuList ||
+            options.list ||
+            {subDir: 'setup', fileName: 'fcoo-menu.json'};
 
-        ns.promiseList.append( ns.options2promiseOptions( options.fileNameOrMenuOptions, resolveMenu.bind(null, options), true ) );
+        ns.promiseList.append(
+            ns.options2promiseOptions(
+                options.fileNameOrMenuOptions,
+                resolveMenu.bind(null, options),
+                true
+            )
+        );
     };
 
     /*********************************************
-
+    resolveMenu(options, listOrMenus)
     *********************************************/
     function resolveMenu(options, listOrMenus){
         options.menuList = convertList(listOrMenus);
@@ -115723,23 +115843,24 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
     }
 
     /*********************************************
-
+    createMenu(menuList, parentMenuOptions, options)
     *********************************************/
     function createMenu(menuList, parentMenuOptions, options){
         $.each(menuList, function(index, menuItem){
-            let ownerFunc = menuItem.isOwnerMenu && !menuItem.ownerFuncCalled ? options.ownerList[menuItem.id] : null;
-
+            let ownerFunc = menuItem.isOwnerMenu && options.ownerList && !menuItem.ownerFuncCalled ? options.ownerList[menuItem.id] : null;
             if (ownerFunc){
                 ownerFunc(
                     menuItem.options || {},
-                    function(menuItemOrList)                     { addMenu(menuItemOrList, menuList, menuItem.id, options); },  //addMenu
-                    function(adjustmentsToParentMenuOptions = {}){ $.extend(parentMenuOptions, adjustmentsToParentMenuOptions); }   //adjustParentMenuOptions
+                    function(menuItemOrList)                     { addMenu(menuItemOrList, menuList, menuItem.id, options); },      //addMenu
+                    function(adjustmentsToParentMenuOptions = {}){ $.extend(parentMenuOptions, adjustmentsToParentMenuOptions); },  //adjustParentMenuOptions
+                    options                                                                                                         //menuOptions
                 );
 
                 //Mark the owner-menu as completed
                 menuList[index].ownerFuncCalled = true;
 
             }
+
             if (menuItem.list)
                 createMenu(menuItem.list, menuItem, options);
         });
@@ -115750,24 +115871,36 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
     *********************************************/
     function addMenu(menuItemOrList, parentList, id, options){
         //Append menuItemOrList to replaceMenuItems to be replaced in updateMenuList
-        options.replaceMenuItems[id] = $.isArray(menuItemOrList) ? menuItemOrList : [menuItemOrList];
+        options.replaceMenuItems[id] = options.replaceMenuItems[id] || [];
+        options.replaceMenuItems[id] = options.replaceMenuItems[id].concat( Array.isArray(menuItemOrList) ? menuItemOrList : [menuItemOrList] );
     }
 
     /*********************************************
 
     *********************************************/
     function finishMenu(options){
+        //**************************************************
         //If any owner-function was called => Check again since some owner-functions may have just added new menuItems and owner-functions
-        let createMenuAgain = false;
-        options.menuList.forEach(menuItem => {
-            if (menuItem.isOwnerMenu && !menuItem.ownerFuncCalled)
-                createMenuAgain = true;
-        });
+        function checkMenuList( menuList ){
+            let createMenuAgain = false;
+            (menuList || []).forEach(menuItem => {
+                if (menuItem.isOwnerMenu && !menuItem.ownerFuncCalled)
+                    createMenuAgain = true;
+                if (menuItem.list)
+                    checkMenuList( menuItem.list );
+            });
+            if (createMenuAgain)
+                createMenu(menuList, {}, options);
+        }
+        //**************************************************
 
-        if (createMenuAgain)
-            createMenu(options.menuList, {}, options);
+        //1: Update all menu-items
+        updateMenuList(options.menuList, options);
 
-        //Remove any empty menu-items
+        //2: Check if any menu-item need updating/creating
+        checkMenuList(options.menuList);
+
+        //3: Update all menu-items again
         updateMenuList(options.menuList, options);
 
         if (options.finallyFunc)
@@ -115784,14 +115917,14 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
         //Replace menu-item from replaceMenuItems
         for (index=menuList.length-1; index>=0; index--){
             menuItem = menuList[index];
-            if (menuItem && menuItem.id && options.replaceMenuItems[menuItem.id])
+            if (menuItem && menuItem.id && options.replaceMenuItems[menuItem.id]){
                 menuList.splice(index, 1, ...options.replaceMenuItems[menuItem.id]);
+                options.replaceMenuItems[menuItem.id] = null; //Clean up to prevent repeating
+            }
         }
 
         for (index=menuList.length-1; index>=0; index--){
             menuItem = menuList[index];
-
-
             //Convert icon (if exists and possible)
             if (menuItem.icon && $.isPlainObject(menuItem.icon)){
                 //Convert icon with colorName(s) to "real" icons
@@ -115807,14 +115940,17 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
                     );
             }
 
-
             if (menuItem && menuItem.list)
                 updateMenuList(menuItem.list, options);
 
             if (menuItem && !menuItem.isOwnerMenu && ((menuItem.list && menuItem.list.length) || menuItem.type))
                 /* Keep menu-item*/;
             else
-                if (!options.keepAll)
+                if (options.keepAll){
+                    menuItem.icon = menuItem.icon || 'far fa-question';
+                    menuItem.text = menuItem.text || {da: 'MANGLER', en:'MISSING'};
+                }
+                else
                     menuList.splice(index, 1);
         }
     }
@@ -115825,14 +115961,14 @@ OWNER_ID = STRING = Ref. to a entry in the given OWNER_LIST
 
 ;
 /****************************************************************************
-	fcoo-application-top-menu.js
+	fcoo-application-top-panel.js
 
 	(c) 2017, FCOO
 
 	https://gitlab.com/fcoo/fcoo-application
 	https://gitlab.com/fcoo
 
-Create and manage the top-menu for FCOO web applications
+Create and manage the top-panel for FCOO web applications
 
 ****************************************************************************/
 
@@ -115843,20 +115979,20 @@ Create and manage the top-menu for FCOO web applications
     var ns = window.fcoo = window.fcoo || {};
 
     /**************************************************
-    defaultTopMenuButton
-    Create standard button for the top-menu
+    defaultTopPanelButton
+    Create standard button for the top-panel
     **************************************************/
-    function defaultTopMenuButton( $menu, options ){
+    function defaultTopPanelButton( $panel, options ){
         options = $.extend({bigIcon: true, square: true}, options);
         var $result = $.bsButton( options );
         if (options.title)
             $result.i18n(options.title, 'title');
-        $result.addClass('top-menu-item');
+        $result.addClass('top-panel-item');
         return $result;
     }
 
-    function createOpenMenuButton( $menu, elementOptions, menuOptions/*, topMenu */){
-        return defaultTopMenuButton($menu, menuOptions);
+    function createOpenPanelButton( $panel, elementOptions, panelOptions/*, topPanel */){
+        return defaultTopPanelButton($panel, panelOptions);
     }
 
     function defaultAddToElementList( $element, elementList, priority, minWidth ){
@@ -115868,46 +116004,46 @@ Create and manage the top-menu for FCOO web applications
     }
 
     /**************************************************
-    messageGroupTopMenuButton( $menu, allReadIcon, notAllReadIcon )
+    messageGroupTopPanelButton( $panel, allReadIcon, notAllReadIcon )
     Create a button used for message-groups
     The button contains two icons:
         allReadIcon   : displayed when all messages are read
         notAllReadIcon: displayed when one or more message is unread
     **************************************************/
-    function messageGroupTopMenuButton( $menu, allReadIcon, notAllReadIcon ){
+    function messageGroupTopPanelButton( $panel, allReadIcon, notAllReadIcon ){
         var iconList = [];
         function addIcon( icon, className ){
-            icon = $.isArray(icon) ? icon : [icon];
+            icon = Array.isArray(icon) ? icon : [icon];
             icon.forEach( iconClass => iconList.push(iconClass + ' ' + className ) );
         }
         addIcon(allReadIcon,     'show-for-all-read');
         addIcon(notAllReadIcon , 'hide-for-all-read');
-        return defaultTopMenuButton($menu, {icon: [iconList]} ).addClass('all-read'); //all-read: Default no new message
+        return defaultTopPanelButton($panel, {icon: [iconList]} ).addClass('all-read'); //all-read: Default no new message
     }
 
     /**********************************************
-    topMenuElementList = list of options for elements in the top menu
-    buttonInfo = options for a button in the top-menu
-        id       : id from options passed to createTopMenu
+    topPanelElementList = list of options for elements in the top panel
+    buttonInfo = options for a button in the top-panel
+        id       : id from options passed to createTopPanel
         rightSide: true/false. - true => the button is placed to the right
         exclude  : true/false - if true the button is not included in calculation of the total width
         title    : null - title for the button
         icon     : null - icon-class for the button
-        create   : function($menu, elementOptions, menuOptions, topMenu) create and return $element. - function to create the button
+        create   : function($panel, elementOptions, panelOptions, topPanel) create and return $element. - function to create the button
     **********************************************/
-    var topMenuElementList = [
+    var topPanelElementList = [
         {
-            id      : 'leftMenu',
+            id      : 'leftPanel',
             priority: 0,
-            create  : createOpenMenuButton
+            create  : createOpenPanelButton
         },
 
         //***************************************************************
         {
             id: 'logo',
-            create: function( $menu/*, elementOptions, menuOptions, topMenu*/ ){
+            create: function( $panel/*, elementOptions, panelOptions, topPanel*/ ){
                 //Owners abbreviation with click to show "About OWNER"
-                return defaultTopMenuButton( $menu, {
+                return defaultTopPanelButton( $panel, {
                         square : false,
                         title  : 'about:owner',
                         onClick: ns.aboutOwner
@@ -115915,7 +116051,7 @@ Create and manage the top-menu for FCOO web applications
 
                 /* With FCOO-logo
                 return $('<a/>')
-                            .addClass( 'icon-fcoo-logo-contrast btn btn-jb standard top-menu-item' )
+                            .addClass( 'icon-fcoo-logo-contrast btn btn-jb standard top-panel-item' )
                             .i18n('about:owner', 'title')
 
                             .on('click', ns.aboutOwner);
@@ -115929,8 +116065,8 @@ Create and manage the top-menu for FCOO web applications
         //Save, load and share
         {
             id      :'save',
-            create  : function( $menu/*, elementOptions, menuOptions*/ ){
-                return defaultTopMenuButton($menu, {
+            create  : function( $panel/*, elementOptions, panelOptions*/ ){
+                return defaultTopPanelButton($panel, {
                     icon    : 'fa-save',
                     title   : {da: 'Gem', en: 'Save'},
                     newGroup: true,
@@ -115941,8 +116077,8 @@ Create and manage the top-menu for FCOO web applications
         },
         {
             id:'load',
-            create  : function( $menu/*, elementOptions, menuOptions*/ ){
-                return defaultTopMenuButton($menu, {
+            create  : function( $panel/*, elementOptions, panelOptions*/ ){
+                return defaultTopPanelButton($panel, {
                     icon    : 'fa-folder-open',
                     title   : {da: 'Hent', en: 'Load' },
                     newGroup: true,
@@ -115953,8 +116089,8 @@ Create and manage the top-menu for FCOO web applications
         },
         {
             id:'share',
-            create  : function( $menu/*, elementOptions, menuOptions*/ ){
-                return defaultTopMenuButton($menu, {
+            create  : function( $panel/*, elementOptions, panelOptions*/ ){
+                return defaultTopPanelButton($panel, {
                     icon    : 'fa-share-alt',
                     title   : {da: 'Del', en: 'Share' },
                     newGroup: true,
@@ -115967,10 +116103,10 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'header',
-            create: function( $menu, elementOptions, menuOptions/*, topMenu*/ ){
+            create: function( $panel, elementOptions, panelOptions/*, topPanel*/ ){
                 return $('<div/>')
-                           .addClass('text-nowrap top-menu-item top-menu-header')
-                           .i18n( menuOptions );
+                           .addClass('text-nowrap top-panel-item top-panel-header')
+                           .i18n( panelOptions );
             },
             priority: 8,
             minWidth: 200,
@@ -115980,25 +116116,25 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'search',
-            create: function( $menu, elementOptions, menuOptions, topMenu ){
+            create: function( $panel, elementOptions, panelOptions, topPanel ){
                 var $element =
                     $('<form onsubmit="return false;"/>')
-                        .addClass('form-inline top-menu-item')
-                        .appendTo($menu),
+                        .addClass('form-inline top-panel-item')
+                        .appendTo($panel),
                     $inputGroup =
                         $('<div/>')
                             .addClass('input-group p-0')
                             .appendTo($element);
 
-                topMenu.searchInput =
+                topPanel.searchInput =
 
                     $('<input type="text" class="form-control"></div>')
                         .toggleClass('form-control-sm', !window.bsIsTouch) //TODO - Skal rettes, når form er implementeret i jquery-bootstram
                         .i18n({da:'Søg...', en:'Search...'}, 'placeholder')
                         .appendTo( $inputGroup );
 
-                topMenu.searchButton =
-                    defaultTopMenuButton($menu, { icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-search' })
+                topPanel.searchButton =
+                    defaultTopPanelButton($panel, { icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-search' })
                         .appendTo( $inputGroup );
 
                 return $element;
@@ -116013,13 +116149,13 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'warning',
-            create: function( $menu, elementOptions, menuOptions/*, topMenu*/ ){
+            create: function( $panel, elementOptions, panelOptions/*, topPanel*/ ){
                 //Create yellow warning square by overlaying two icons
                 var iconClass = 'fa-exclamation-square';
-                var $result = messageGroupTopMenuButton($menu, $.FONTAWESOME_PREFIX_STANDARD + ' ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
+                var $result = messageGroupTopPanelButton($panel, $.FONTAWESOME_PREFIX_STANDARD + ' ' + iconClass, ['fas text-warning ' + iconClass, 'far '+iconClass] );
 
                 //Create message-group with warnings
-                ns.createFCOOMessageGroup( 'warning', menuOptions, $result );
+                ns.createFCOOMessageGroup( 'warning', panelOptions, $result );
                 return $result;
             },
             priority : 1,
@@ -116029,10 +116165,10 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'messages',
-            create: function( $menu, elementOptions, menuOptions ){
-                var $result = messageGroupTopMenuButton($menu, $.FONTAWESOME_PREFIX_STANDARD + ' fa-envelope', 'fas fa-envelope');
+            create: function( $panel, elementOptions, panelOptions ){
+                var $result = messageGroupTopPanelButton($panel, $.FONTAWESOME_PREFIX_STANDARD + ' fa-envelope', 'fas fa-envelope');
                 //Create message-group with info
-                ns.createFCOOMessageGroup( 'info', menuOptions, $result );
+                ns.createFCOOMessageGroup( 'info', panelOptions, $result );
                 return $result;
             },
             priority : 2,
@@ -116042,8 +116178,8 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'preSetting',
-            create: function( $menu, elementOptions, menuOptions ){
-                return defaultTopMenuButton($menu, menuOptions);
+            create: function( $panel, elementOptions, panelOptions ){
+                return defaultTopPanelButton($panel, panelOptions);
             },
             priority : 2,
             rightSide: true
@@ -116051,8 +116187,8 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'setting',
-            create: function( $menu/*, elementOptions, menuOptions */){
-                var $result = defaultTopMenuButton($menu, {
+            create: function( $panel/*, elementOptions, panelOptions */){
+                var $result = defaultTopPanelButton($panel, {
                         icon   : $.FONTAWESOME_PREFIX_STANDARD + ' fa-cog',
                         onClick: function(){ ns.globalSetting.edit(); }
                     });
@@ -116064,8 +116200,8 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'postSetting',
-            create: function( $menu, elementOptions, menuOptions ){
-                return defaultTopMenuButton($menu, menuOptions);
+            create: function( $panel, elementOptions, panelOptions ){
+                return defaultTopPanelButton($panel, panelOptions);
             },
             priority : 2,
             rightSide: true
@@ -116073,11 +116209,11 @@ Create and manage the top-menu for FCOO web applications
         //***************************************************************
         {
             id: 'help',
-            create: function( $menu, elementOptions, menuOptions ){
-                var $result = defaultTopMenuButton($menu, {icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-question-circle'});
+            create: function( $panel, elementOptions, panelOptions ){
+                var $result = defaultTopPanelButton($panel, {icon: $.FONTAWESOME_PREFIX_STANDARD + ' fa-question-circle'});
 
                 //Create message-group with help
-                ns.createFCOOMessageGroup( 'help', menuOptions, $result );
+                ns.createFCOOMessageGroup( 'help', panelOptions, $result );
                 return $result;
             },
             priority : 4,
@@ -116086,22 +116222,22 @@ Create and manage the top-menu for FCOO web applications
 
         //***************************************************************
         {
-            id       : 'rightMenu',
+            id       : 'rightPanel',
             priority : 0,
             rightSide: true,
-            create   : createOpenMenuButton
+            create   : createOpenPanelButton
         }
 
     ].map( function( options ){
         return $.extend({}, {
             //Default options
-            create          : defaultTopMenuButton,
+            create          : defaultTopPanelButton,
             addToElementList: defaultAddToElementList,
             priority        : 0,
         } ,options);
     });
 
-    var topMenuPrototype = {
+    var topPanelPrototype = {
         /*****************************************************************
         calculateElementSize = function()
         Calculate the total width of the elements for each of the priority
@@ -116137,7 +116273,7 @@ Create and manage the top-menu for FCOO web applications
 
         /*****************************************************************
         onResize = function()
-        Called on topMenu-object when the size of the container is changed
+        Called on topPanel-object when the size of the container is changed
         Recalculate and adjust the number of visible elements
         ******************************************************************/
         onResize: function(){
@@ -116154,19 +116290,19 @@ Create and manage the top-menu for FCOO web applications
             $.each( this.elementList, function(index, elementInfo){
                 var show = (elementInfo.priority <= maxPriority);
                 elementInfo.$element
-                    .toggleClass('top-menu-element-show', show)
-                    .toggleClass('top-menu-element-hide', !show);
+                    .toggleClass('top-panel-element-show', show)
+                    .toggleClass('top-panel-element-hide', !show);
             });
         }
     };
 
     /*****************************************************************
-    createTopMenu = function( options )
-    Create the top menu and return a object with the created element
+    createTopPanel = function( options )
+    Create the top panel and return a object with the created element
     ******************************************************************/
-    ns.createTopMenu = function( options ){
+    ns.createTopPanel = function( options ){
         options = $.extend({}, {
-            leftMenu   : false,
+            leftPanel   : false,
             logo       : true,
             header     : $.extend({}, ns.applicationHeader),
             messages   : null,
@@ -116176,7 +116312,7 @@ Create and manage the top-menu for FCOO web applications
             setting    : true,
             postSetting: false, //or {icon, onClick}
             help       : null,
-            rightMenu  : false
+            rightPanel  : false
         }, options );
 
         //Extend header with ns.applicationBranch (if any)
@@ -116188,7 +116324,7 @@ Create and manage the top-menu for FCOO web applications
         var result = {
                 elementsWidthFound: false
             };
-        $.extend(result, topMenuPrototype);
+        $.extend(result, topPanelPrototype);
 
         /*
         elementList = []{$element, width, priority}
@@ -116198,28 +116334,28 @@ Create and manage the top-menu for FCOO web applications
         */
         var elementList = result.elementList = [];
 
-        //Container for all elements used in top-menu
+        //Container for all elements used in top-panel
         var $container = result.$container =
                 $('<div/>')
-                    .addClass("top-menu-container")
-                    .addClass( $._bsGetSizeClass({baseClass: 'top-menu-container', useTouchSize: true}) );
+                    .addClass("top-panel-container")
+                    .addClass( $._bsGetSizeClass({baseClass: 'top-panel-container', useTouchSize: true}) );
 
-        //Create the menu-bar
-        var $menu = result.$menu = $('<nav/>')
-                .addClass("d-flex justify-content-start align-items-center flex-nowrap top-menu fcoo-app-bg-color fcoo-app-text-color btn-fcoo-app-color")
+        //Create the panel-bar
+        var $panel = result.$panel = $('<nav/>')
+                .addClass("d-flex justify-content-start align-items-center flex-nowrap top-panel fcoo-app-bg-color fcoo-app-text-color btn-fcoo-app-color")
                 .prependTo( $container );
 
-        //Adding buttons etc to the top-menu - Order of buttons/logo are given by topMenuElementList
+        //Adding buttons etc to the top-panel - Order of buttons/logo are given by topPanelElementList
         var firstRightSideFound = false;
-        topMenuElementList.forEach( elementOptions => {
-            let menuOptions = options[elementOptions.id];
-            if (!menuOptions)
+        topPanelElementList.forEach( elementOptions => {
+            let panelOptions = options[elementOptions.id];
+            if (!panelOptions)
                 return true;
 
-            var $element = elementOptions.create( $menu, elementOptions, menuOptions, result );
+            var $element = elementOptions.create( $panel, elementOptions, panelOptions, result );
             if ($element){
                 result[elementOptions.id] = $element;
-                $element.appendTo( $menu );
+                $element.appendTo( $panel );
                 if ((!firstRightSideFound) && elementOptions.rightSide){
                     $element.addClass('right-side');
                     firstRightSideFound = true;
@@ -116237,7 +116373,7 @@ Create and manage the top-menu for FCOO web applications
         onResizeFunc();
 
         return result;
-    }; //end of createTopMenu
+    }; //end of createTopPanel
 }(jQuery, this, document));
 ;
 /****************************************************************************
@@ -116255,7 +116391,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
     var maxMaskOpacity = 0.5; //Equal $modal-backdrop-opacity in \bower_components\bootstrap\scss\_variables.scss
 
-    ns.TouchMenu = function (options) {
+    ns.TouchPanel = ns.TouchMenu = function (options) {
         this._onOpen = [];
         this._onClose = [];
         this.isOpen = false;
@@ -116267,15 +116403,15 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             scrollOptions: null,   //Individuel options for jquery-scroll-container
             modeOver     : false,
             multiMode    : false,
-            menuClassName: '',
+            panelClassName: '',
 
             isOpen       : false,
             sizeList     : [], //List of different size' of content = []SIZEOPTIONS SIZEOPTIONS = {width:NUMBER, modernizr: STRING} modernizr = name of a monernizr-test to be set when the size is set. OR []NUMBER (height/width) OR []STRING (modernizr-test)
             sizeIndex    : -1,
-            onSetSize    : function( /* sizeIndex, menu */ ){},
+            onSetSize    : function( /* sizeIndex, panel */ ){},
 
-            //$menu        : $-element with content (must be inside a <div>), or
-            //content      : object with options to create content using $.fn._bsAddHtml
+            //$content     : $-element with content (must be inside a <div>), or
+            //content      : object with options to create content using $.fn._bsAddHtml, or
             //createContent: function($container) = function to create the content in $container
 
             handleClassName    : '',
@@ -116284,17 +116420,17 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             toggleOnHandleClick: false,
             hideHandleWhenOpen : false,
 
-            $neighbourContainer: null,  //$-container that gets resized when the touch-menu is opened/closed
+            $neighbourContainer: null,  //$-container that gets resized when the touch-panel is opened/closed
 
         }, options || {} );
 
         this.main = this.options.main;
 
-        this.options.verticalMenu    = (this.options.position == 'left') || (this.options.position == 'right');
-        this.options.scroll          = this.options.scroll || (this.options.verticalMenu && !this.options.menuOptions);
+        this.options.verticalPanel    = (this.options.position == 'left') || (this.options.position == 'right');
+        this.options.scroll          = this.options.scroll || (this.options.verticalPanel && !this.options.menuOptions);
         this.options.directionFactor = (this.options.position == 'left') || (this.options.position == 'top') ? 1 : -1;
 
-        if (this.options.verticalMenu){
+        if (this.options.verticalPanel){
             this.options.openDirection  = this.options.position == 'left' ? 'right' : 'left';
             this.options.closeDirection = this.options.position;
         }
@@ -116306,13 +116442,13 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         if (this.options.$neighbourContainer)
             this.options.$neighbourContainer.addClass('neighbour-container');
 
-        //Initialize the menu
+        //Initialize the panel
         this.$container = this.options.$container ? this.options.$container : $('<div/>');
         this.$container
-            .addClass('touch-menu-container')
-            .addClass( $._bsGetSizeClass({baseClass: 'touch-menu-container', useTouchSize: true}) )
+            .addClass('touch-panel-container')
+            .addClass( $._bsGetSizeClass({baseClass: 'touch-panel-container', useTouchSize: true}) )
             .addClass(this.options.position)
-            .addClass(this.options.menuClassName);
+            .addClass(this.options.panelClassName);
 
         //Adjust sizeList (if any)
         if (this.options.sizeList.length){
@@ -116327,63 +116463,63 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                     }
                 sizeOptions.dimention = sizeOptions.dimention || sizeOptions.width || sizeOptions.height || ' ';
             });
-            this.options[ this.options.verticalMenu ? 'width' : 'height' ] = defaultSize;
+            this.options[ this.options.verticalPanel ? 'width' : 'height' ] = defaultSize;
         }
 
         //If the dimention is 'auto' add on-resize event to update width/height
-        if (this.options[ this.options.verticalMenu ? 'width' : 'height' ] == 'auto'){
+        if (this.options[ this.options.verticalPanel ? 'width' : 'height' ] == 'auto'){
             this.$container
-                .addClass(this.options.verticalMenu ? 'vertical-auto-width' : 'horizontal-auto-height')
+                .addClass(this.options.verticalPanel ? 'vertical-auto-width' : 'horizontal-auto-height')
                 .resize( $.proxy( this.onResize, this) );
         }
 
         this.setMode( this.options.modeOver );
 
         //Create container for the contents
-        if (this.options.$preMenu || this.options.inclPreMenu || this.options.preMenuClassName || this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
+        if (this.options.$prePanel || this.options.inclPrePanel || this.options.prePanelClassName || this.options.$postPanel || this.options.inclPostPanel || this.options.postPanelClassName){
 
             //Change container to flex-display
             this.$container.addClass('d-flex');
-            this.$container.addClass(this.options.verticalMenu ? 'flex-column' : 'flex-row');
+            this.$container.addClass(this.options.verticalPanel ? 'flex-column' : 'flex-row');
 
-            if (this.options.$preMenu || this.options.inclPreMenu || this.options.preMenuClassName){
-                this.$preMenu = this.options.$preMenu ? this.options.$preMenu : $('<div/>');
-                this.$preMenu
-                    .addClass('touch-pre-menu flex-shrink-0')
-                    .addClass(this.options.preMenuClassName)
+            if (this.options.$prePanel || this.options.inclPrePanel || this.options.prePanelClassName){
+                this.$prePanel = this.options.$prePanel ? this.options.$prePanel : $('<div/>');
+                this.$prePanel
+                    .addClass('touch-pre-panel flex-shrink-0')
+                    .addClass(this.options.prePanelClassName)
                     .appendTo(this.$container);
             }
 
-            var $menuContainer = $('<div/>')
-                .addClass('touch-menu flex-grow-1 flex-shrink-1')
+            var $panelContainer = $('<div/>')
+                .addClass('touch-panel flex-grow-1 flex-shrink-1')
                 .appendTo(this.$container);
 
                 if (this.options.scroll)
-                    this.$menu = $menuContainer.addScrollbar( this.options.scrollOptions );
+                    this.$content = $panelContainer.addScrollbar( this.options.scrollOptions );
                 else
-                    this.$menu = $menuContainer;
+                    this.$content = $panelContainer;
 
             //Create the bottom/right part
-            if (this.options.$postMenu || this.options.inclPostMenu || this.options.postMenuClassName){
-                this.$postMenu = this.options.$postMenu ? this.options.$postMenu : $('<div/>');
-                this.$postMenu
-                    .addClass('touch-post-menu flex-shrink-0')
-                    .addClass(this.options.postMenuClassName)
+            if (this.options.$postPanel || this.options.inclPostPanel || this.options.postPanelClassName){
+                this.$postPanel = this.options.$postPanel ? this.options.$postPanel : $('<div/>');
+                this.$postPanel
+                    .addClass('touch-post-panel flex-shrink-0')
+                    .addClass(this.options.postPanelClassName)
                     .appendTo(this.$container);
             }
         }
         else
-            this.$menu = this.$container;
+            this.$content = this.$container;
 
-        //Move or create any content into the menu
-        if (this.options.$menu)
-            this.options.$menu.contents().detach().appendTo(this.$menu);
+        //Move or create any content into the panel
+        if (this.options.$content || this.options.$menu) //$menu for backward combability
+            (this.options.$content || this.options.$menu).contents().detach().appendTo(this.$content);
         else
             if (this.options.content)
-                this.$menu._bsAddHtml(this.options.content);
+                this.$content._bsAddHtml(this.options.content);
             else
                 if (this.options.createContent)
-                    this.options.createContent(this.$menu);
+                    this.options.createContent(this.$content);
 
 
         if (window.bsIsTouch)
@@ -116404,7 +116540,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         if (window.bsIsTouch || this.options.allwaysHandle || this.options.toggleOnHandleClick){
             this.$handle = this.options.$handle ? this.options.$handle : $('<div/>');
             this.$handle
-                .addClass('touch-menu-handle')
+                .addClass('touch-panel-handle')
                 .toggleClass(this.options.position, !!this.options.$handleContainer)
                 .addClass(this.options.handleClassName)
                 .toggleClass('hide-when-open', this.options.hideHandleWhenOpen)
@@ -116412,21 +116548,21 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 .appendTo(this.options.$handleContainer ? this.options.$handleContainer : this.$container);
 
             if (this.options.$handleContainer)
-                //Add events on handle outside the menu
+                //Add events on handle outside the panel
                 this._add_swiped(this.$handle);
 
             if (this.options.toggleOnHandleClick)
                 this.$handle.on('click', $.proxy(this.toggle, this));
         }
 
-        //Update dimention and size of the menu and handle
+        //Update dimention and size of the panel and handle
         this.updateDimentionAndSize();
 
         //Create the mask
         if (this.options.modeOver || this.options.multiMode) {
             this.$mask =
                 $('<div/>')
-                .addClass('touch-menu-mask')
+                .addClass('touch-panel-mask')
                 .appendTo('body');
 
             if (window.bsIsTouch)
@@ -116441,11 +116577,11 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         //Create the $.bsMenu if menuOptions are given
         if (this.options.menuOptions){
             this.options.menuOptions.resetListPrepend = this.options.resetListPrepend || this.options.menuOptions.resetListPrepend;
-            this.mmenu = ns.createMmenu(this.options.position, this.options.menuOptions, this.$menu);
+            this.mmenu = ns.createMmenu(this.options.position, this.options.menuOptions, this.$content);
         }
 
         //Add the open/close status to appSetting
-        this.settingId = this.options.position + '-menu-open';
+        this.settingId = this.options.position + '-panel-open';
         ns.appSetting.add({
             id          : this.settingId,
             applyFunc   : this._setOpenCloseFromSetting.bind(this),
@@ -116454,7 +116590,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         });
 
         //Add the size state to appSetting
-        this.sizeId = this.options.position + '-menu-size';
+        this.sizeId = this.options.position + '-panel-size';
         ns.appSetting.add({
             id          : this.sizeId,
             applyFunc   : this._setSizeIndex.bind(this),
@@ -116472,7 +116608,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
     /******************************************
     Extend the prototype
     ******************************************/
-    ns.TouchMenu.prototype = {
+    ns.TouchPanel.prototype = ns.TouchMenu.prototype = {
         _add_swiped: function($element){
             this._this_incSize = this._this_incSize || $.proxy(this.incSize,  this);
             this._this_decSize = this._this_decSize || $.proxy(this.decSize, this);
@@ -116487,8 +116623,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
             if (this.doNotCallOnResize) return;
 
-            var dim = this.options.verticalMenu ? this.$container.outerWidth() : this.$container.outerHeight();
-            this.options[this.options.verticalMenu ? 'width' : 'height'] = dim;
+            var dim = this.options.verticalPanel ? this.$container.outerWidth() : this.$container.outerHeight();
+            this.options[this.options.verticalPanel ? 'width' : 'height'] = dim;
 
             this.updateDimentionAndSize();
 
@@ -116499,8 +116635,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
         updateDimentionAndSize: function(){
             var _this = this,
-                cssDimensionId = this.options.verticalMenu ? 'height' : 'width',
-                cssPosId       = this.options.verticalMenu ? 'top'    : 'left',
+                cssDimensionId = this.options.verticalPanel ? 'height' : 'width',
+                cssPosId       = this.options.verticalPanel ? 'top'    : 'left',
                 cssPositionId;
             switch (this.options.position){
                 case 'left'  : cssPositionId = 'right';  break;
@@ -116512,7 +116648,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             //*********************************************************************
             function getDimensionAndSize( width, height, defaultSize ){
                 var result =
-                    _this.options.verticalMenu ? {
+                    _this.options.verticalPanel ? {
                         dimension: height || 0,
                         size     : width  || defaultSize
                     } : {
@@ -116524,35 +116660,35 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             }
             //*********************************************************************
             function setElementDimensionAndSize( $elem, options ){
-                //Set width (top/bottom) or height (left/right) of menu and center if not 100%
+                //Set width (top/bottom) or height (left/right) of panel and center if not 100%
                 if (options.dimension)
                     $elem
                         .css(cssDimensionId, options.dimension + 'px')
                         .css(cssPosId, '50%')
-                        .css(_this.options.verticalMenu ? 'margin-top' : 'margin-left', -1*options.halfDimension);
+                        .css(_this.options.verticalPanel ? 'margin-top' : 'margin-left', -1*options.halfDimension);
                 else
                     $elem
                         .css(cssDimensionId, '100%')
                         .css(cssPosId,   '0px');
 
-                $elem.css(_this.options.verticalMenu ? 'width' : 'height', options.size);
+                $elem.css(_this.options.verticalPanel ? 'width' : 'height', options.size);
                 return $elem;
             }
             //*********************************************************************
 
-            this.options.menuDimAndSize   = getDimensionAndSize( this.options.width,       this.options.height,       280 );
+            this.options.panelDimAndSize  = getDimensionAndSize( this.options.width,       this.options.height,       282 );
             this.options.handleDimAndSize = getDimensionAndSize( this.options.handleWidth, this.options.handleHeight,  20 );
 
-            //Update the menu-element
-            this.$container.css(this.options.position, -1*this.options.menuDimAndSize.size + 'px');
+            //Update the panel-element
+            this.$container.css(this.options.position, -1*this.options.panelDimAndSize.size + 'px');
 
-            //Set width (top/bottom) or height (left/right) of menu and center if not 100%
-            setElementDimensionAndSize(this.$container, this.options.menuDimAndSize);
+            //Set width (top/bottom) or height (left/right) of panel and center if not 100%
+            setElementDimensionAndSize(this.$container, this.options.panelDimAndSize);
             if (this.$handle){
                 if (!this.options.$handleContainer)
                     this.$handle.css(cssPositionId, -1 * (this.options.handleOffsetFactor || 1) * this.options.handleDimAndSize.size + 'px');
 
-                //Set width (top/bottom) or height (left/right) of menu and center if not 100%
+                //Set width (top/bottom) or height (left/right) of panel and center if not 100%
                 setElementDimensionAndSize(this.$handle, this.options.handleDimAndSize);
             }
         },
@@ -116584,12 +116720,20 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         },
 
         animateToPosition: function (pos, animateMain, noAnimation) {
+
             this.$container.toggleClass('no-animation', !!noAnimation);
 
-            if (this.options.verticalMenu)
-                this.$container.css('transform', 'translate3d(' + this.options.directionFactor*pos + 'px, 0, 0)');
-            else
-                this.$container.css('transform', 'translate3d(0, ' + this.options.directionFactor*pos + 'px, 0)');
+            let truePos = this.options.directionFactor*pos;
+            if (this.options.verticalPanel){
+                this.$container.css('transform', 'translate3d(' + truePos + 'px, 0, 0)');
+                this.$container.css('width', pos + 'px');
+                this.$container.css(this.options.position, -pos + 'px');
+            }
+            else {
+                this.$container.css('transform', 'translate3d(0, ' + truePos + 'px, 0)');
+                this.$container.css('height', pos + 'px');
+                this.$container.css(this.options.position, -pos + 'px');
+            }
 
             this.changeNeighbourContainerPos(pos, animateMain && !noAnimation);
         },
@@ -116601,8 +116745,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                     .css('margin-'+this.options.position, Math.max(0,pos)+'px');
         },
 
-        setMaskOpacity: function (newMenuPos) {
-            this._setMaskOpacity( parseFloat((newMenuPos / this.options.menuDimAndSize.size) * maxMaskOpacity) );
+        setMaskOpacity: function (newPanelPos) {
+            this._setMaskOpacity( parseFloat((newPanelPos / this.options.panelDimAndSize.size) * maxMaskOpacity) );
         },
 
         _setMaskOpacity: function (opacity) {
@@ -116672,10 +116816,10 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             if ((sizeIndex < 0) || (sizeIndex >= this.options.sizeList.length))
                 return this;
 
-            const vertical = this.options.verticalMenu;
+            const vertical = this.options.verticalPanel;
             let originalDim,
                 sizeOptions = this.options.sizeList[sizeIndex],
-                //animateByJS = true if the different sizes of the menu is given by the content instead of direct dimention
+                //animateByJS = true if the different sizes of the panel is given by the content instead of direct dimention
                 animateByJS = (sizeIndex != this.options.sizeIndex) && (sizeOptions.dimention == 'auto') && this.isOpen && false;
 
             this.options.sizeIndex = sizeIndex;
@@ -116738,7 +116882,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
             this.$container.addClass('opened').removeClass('opening closing closed');
             this._copyClassName();
 
-            this.animateToPosition(this.options.menuDimAndSize.size, true, noAnimation);
+            this.animateToPosition(this.options.panelDimAndSize.size, true, noAnimation);
 
             this.isOpen = true;
 
@@ -116749,7 +116893,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
                 func(_this);
             });
 
-            window.modernizrOn(this.options.position +'-menu-open');
+            window.modernizrOn(this.options.position +'-panel-open');
 
             this._invoke(this.options.onOpen);
 
@@ -116771,7 +116915,7 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
 
             this._onClose.forEach(func => func(this), this);
 
-            window.modernizrOff(this.options.position +'-menu-open');
+            window.modernizrOff(this.options.position +'-panel-open');
 
             this._invoke(this.options.onClose);
 
@@ -116794,8 +116938,8 @@ Is adjusted fork of Touch-Menu-Like-Android (https://github.com/ericktatsui/Touc
         }
     };
 
-    ns.touchMenu = function(options){
-        return new ns.TouchMenu(options);
+    ns.touchPanel = ns.touchMenu = function(options){
+        return new ns.TouchPanel(options);
     };
 
 }(jQuery, this, document));
@@ -118221,12 +118365,12 @@ Methods for loading and saving settings for the application
             ns.globalSetting.set(ns.standardSettingId, code);
 
             let displatEditCode = ns.ss_db2displayFormat(code),
-                settingMenuDiv_da = '<div><i class="fal fa-cog"></i>&nbsp;Indstillinger&nbsp;' + '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.da+'</div>',
-                settingMenuDiv_en = '<div><i class="fal fa-cog"></i>&nbsp;Settingsr&nbsp;'+      '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.en+'</div>';
+                settingPanelDiv_da = '<div><i class="fal fa-cog"></i>&nbsp;Indstillinger&nbsp;' + '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.da+'</div>',
+                settingPanelDiv_en = '<div><i class="fal fa-cog"></i>&nbsp;Settingsr&nbsp;'+      '<i class="fas fa-caret-right"></i></i>&nbsp;<i class="fal ' + ns.standardSettingHeader.icon+'"></i>&nbsp;'+ns.standardSettingHeader.text.en+'</div>';
 
             let noty = window.notyInfo({
-                da: 'Opsætning med id <em>'+displatEditCode+'</em> er angivet som Standard Opsætning, og den bruges om udgangspunkt, når '+ ns.ss_getAppName('da', true)+ ' starter<br>&nbsp;<br>Standard Opsætning kan ændres under<br>' + settingMenuDiv_da,
-                en: 'Setting with <em>'+displatEditCode+'</em> is set as Standard Setting and will be used as default when '+ ns.ss_getAppName('en', true) +' starts<br>&nbsp;<br>Standard Setting can be set under<br>' + settingMenuDiv_en,
+                da: 'Opsætning med id <em>'+displatEditCode+'</em> er angivet som Standard Opsætning, og den bruges om udgangspunkt, når '+ ns.ss_getAppName('da', true)+ ' starter<br>&nbsp;<br>Standard Opsætning kan ændres under<br>' + settingPanelDiv_da,
+                en: 'Setting with <em>'+displatEditCode+'</em> is set as Standard Setting and will be used as default when '+ ns.ss_getAppName('en', true) +' starts<br>&nbsp;<br>Standard Setting can be set under<br>' + settingPanelDiv_en,
             },{
                 layout   : 'center',
                 textAlign: 'center',
