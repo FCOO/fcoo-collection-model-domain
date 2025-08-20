@@ -23,14 +23,14 @@ There are two ways to load and create models and virtuel datasets (domain-groups
     domain-groups should be loaded
     ****************************************************************************/
     ns.promiseList.appendFirst({
-        data: {},
+        data: 'Check if models need to be loaded',
         resolve: function(){
             if (nsModel.options.includeModel || nsCollection.options.includeCollections)
                 nsModel.createModels();
         }
     });
     ns.promiseList.appendFirst({
-        data: {},
+        data: 'Check if collections need to be loaded',
         resolve: function(){
             if (nsCollection.options.includeCollections)
                 nsCollection.createCollections();

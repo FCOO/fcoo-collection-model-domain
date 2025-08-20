@@ -230,7 +230,8 @@ Create collections and datasets
         this.firstTime      = true;
 
         //Get meta-data
-        ns.promiseList.appendLast({
+        //ns.promiseList.appendLast({
+        ns.promiseList.append({
             fileName: this.fullPath,
             resolve : this.resolve.bind(this)
         });
