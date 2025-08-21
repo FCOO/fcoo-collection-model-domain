@@ -7,6 +7,9 @@ Create collections and datasets
 (function ($, L, i18next, moment, window/*, document, undefined*/) {
     "use strict";
 
+    //Test-mode: If true the "NOW" is updated every 10 sec
+    window.FCOOCOLLECTION_TEST_NOW = window.FCOOCOLLECTION_TEST_NOW || false;
+
     //Create fcoo-namespace
     let ns = window.fcoo = window.fcoo || {},
         nsCollection = ns.collection = ns.collection || {},
@@ -106,7 +109,7 @@ Create collections and datasets
         globalColorName = "red";//"darkblue";
 
 
-    const timeUnit = 'hour';
+    const timeUnit = window.FCOOMAPSTIME_TEST_NOW ? 'seconds' : 'hour';
     nsCollection.globalStart = null;
     nsCollection.globalEnd   = null;
 
@@ -152,11 +155,20 @@ Create collections and datasets
     /****************************************************************************
     Add event to update colleactions/models/domains info when "now" changes
     ****************************************************************************/
-    window.intervals.addInterval({
-        duration: moment.duration(1, timeUnit).asMinutes(),
-        data    : {},
-        resolve : nsCollection._onNowChanged
-    });
+    if (window.FCOOCOLLECTION_TEST_NOW){
+        let testInterval = new window.Intervals({durationUnit: 'seconds'});
+        testInterval.addInterval({
+            duration: 10,
+            data    : {},
+            resolve : nsCollection._onNowChanged
+        });
+    }
+    else
+        window.intervals.addInterval({
+            duration: moment.duration(1, timeUnit).asMinutes(),
+            data    : {},
+            resolve : nsCollection._onNowChanged
+        });
 
 
     /****************************************************************************
@@ -326,6 +338,8 @@ Create collections and datasets
                 }
                 this.asModal(this.modalOptions);
             }
+
+
 
         },
 
