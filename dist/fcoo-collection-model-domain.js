@@ -702,6 +702,8 @@ Create collections and datasets
         this.fullPath       = this.collectionList.options.path + '/' + this.id;
         this.firstTime      = true;
 
+        this.onUpdate       = [];
+
         //Get meta-data
         //ns.promiseList.appendLast({
         ns.promiseList.append({
@@ -771,6 +773,12 @@ Create collections and datasets
             return this.datasets[id.toUpperCase()];
         },
 
+        /*********************************************
+        addOnUpdate
+        *********************************************/
+        addOnUpdate: function( func ){
+            this.onUpdate.push(func);
+        },
 
         /*********************************************
         update
@@ -800,9 +808,11 @@ Create collections and datasets
                 this.asModal(this.modalOptions);
             }
 
-
-
+            //Call on-update-func (if any)
+            this.onUpdate.forEach( func => func(this), this);
         },
+
+
 
 
         /*********************************************
