@@ -799,12 +799,12 @@ Create collections and datasets
 
             //Get time range for the collection on the time range from its datasets
             //TODO Perhaps Some method to prioritise between datasets
-            this.timeRange = {min: null, max: null};
+            this.timeRange = {};
             $.each(this.datasets, function(id, dataset){
                 if (dataset.displayStatus.start)
-                    this.timeRange.min = this.timeRange.min ? moment.min(this.timeRange.min, dataset.displayStatus.start) : dataset.displayStatus.min;
+                    this.timeRange.min = this.timeRange.min ? moment.min(this.timeRange.min, dataset.displayStatus.start) : dataset.displayStatus.start;
                 if (dataset.displayStatus.end)
-                    this.timeRange.max = this.timeRange.max ? moment.max(this.timeRange.max, dataset.displayStatus.end)   : dataset.displayStatus.max;
+                    this.timeRange.max = this.timeRange.max ? moment.max(this.timeRange.max, dataset.displayStatus.end)   : dataset.displayStatus.end;
             }.bind(this) );
 
             //If the modal with status is open => update it
