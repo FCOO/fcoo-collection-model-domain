@@ -333,8 +333,18 @@ Create collections and datasets
                 this.state = Math.min( this.state, dataset.displayStatus.state );
             }.bind(this) );
 
-            //@todo: Next: Some method to Prioritise between datasets
+            //@todo: Next: Some method to prioritise between datasets
 
+
+            //Get time range for the collection on the time range from its datasets
+            //TODO Perhaps Some method to prioritise between datasets
+            this.timeRange = {min: null, max: null};
+            $.each(this.datasets, function(id, dataset){
+                if (dataset.displayStatus.start)
+                    this.timeRange.min = this.timeRange.min ? moment.min(this.timeRange.min, dataset.displayStatus.start) : dataset.displayStatus.min;
+                if (dataset.displayStatus.end)
+                    this.timeRange.max = this.timeRange.max ? moment.max(this.timeRange.max, dataset.displayStatus.end)   : dataset.displayStatus.max;
+            }.bind(this) );
 
             //If the modal with status is open => update it
             if (this.bsModal){
