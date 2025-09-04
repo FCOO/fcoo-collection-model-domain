@@ -56,22 +56,29 @@ Create Datasets
         update
         Sets status and displayStatus = {
             sequence_id         : NUMBER
-            lastModified        : moment
-            epoch               : moment
-            start               : moment
-            end                 : moment
-            expectedNextUpdate  : moment
+            lastModified        : MOMENT
+            epoch               : MOMENT
+            start               : MOMENT
+            end                 : MOMENT
+            expectedNextUpdate  : MOMENT
             delayed             : BOOLEAN
             state               : STRING (only range check for displayStatus) =
-                stateOk    = On time and start-end cover hole globalStart-globalEnd-range
-                stateWarn  = Is delayed or start-end do not cover hole globalStart-globalEnd-range
-                stateFail  = start-end is outside globalStart-globalEnd. Also sets disabled = false
+                stateOk    = On time and start-end cover hole globalMinMoment-globalMaxMoment-range
+                stateWarn  = Is delayed or start-end do not cover hole globalMinMoment-globalMaxMoment-range
+                stateFail  = start-end is outside globalMinMoment-globalMaxMoment. Also sets disabled = false
         }
         *********************************************/
         update: function(options = {}){
             let o = this.options = $.extend(true, {}, this.options || {}, options);
             let s = this.status = this.status || {};
             let d = this.domain.options;
+
+            //if window.FCOOCOLLECTION_TEST_STATUS == true => display text with the 'reason'
+            this.STATUSTEXT = '';
+            let ADD = function(...theArgs){
+                if (window.FCOOCOLLECTION_TEST_STATUS)
+                    this.STATUSTEXT = this.STATUSTEXT + (this.STATUSTEXT ? '<br>' : '') +  theArgs.join(' ');
+            }.bind(this);
 
             s.sequence_id   = o.sequence_id;
             s.lastModified  = moment(o.attrs.created);
@@ -101,6 +108,7 @@ Create Datasets
                                             .add(45, 'minutes')           //Rounding
                                             .startOf('hour');
                 s.delayed = s.expectedNextUpdate.isBefore( window.__jbs_getNowMoment() );
+                ADD('Delayed=', s.delayed, 'Next update=', s.expectedNextUpdate.toString());
             }
             else {
                 s.expectedNextUpdate = null;
@@ -112,37 +120,51 @@ Create Datasets
                       nsCollection.stateOk;
 
 
-            //Create displayStatus = status but with correction relative to globalStart and globalEnd
+            //Create displayStatus = status but with correction relative to globalMinMoment and globalMaxMoment
             let ds = this.displayStatus = {};
 
-            $.each(s, (id, value) => {
-                ds[id] = value instanceof moment ? moment(value) : value;
-            });
 
-            if (nsCollection.globalStart || nsCollection.globalEnd){
-                //Check relation between dastaset.start -> dataset.end and globalStart -> globalEnd
-                //1: start-end do not cover globalStart-globalEnd
-                if (
-                    (nsCollection.globalStart && ds.start && ds.start.isAfter(nsCollection.globalStart) ) ||
-                    (nsCollection.globalEnd   && ds.end   && ds.end.isBefore(nsCollection.globalEnd)    )
-                   )
-                    ds.state = Math.max(ds.state, nsCollection.stateWarn);
+            $.each(s, (id, value) => ds[id] = value instanceof moment ? moment(value) : value );
 
-                //2: start-end is outside globalStart-globalEnd
-                if (
-                    (nsCollection.globalStart && ds.end   && ds.end.isBefore(nsCollection.globalStart)) ||
-                    (nsCollection.globalEnd   && ds.start && ds.start.isAfter(nsCollection.globalEnd) )
-                   ) {
-                    ds.state = nsCollection.stateFail;
-                    ds.disabled = true;
-                }
 
-                //Adjust start and end to globalStart and globalEnd
-                if (nsCollection.globalStart && ds.start && ds.start.isBefore(nsCollection.globalStart))
-                    ds.start = moment(nsCollection.globalStart);
+            //Set state based on the time range of the dataset compared with the global time range
+            let now      = window.__jbs_getNowMoment(),
+                dsMin = ds.start ? ds.start.diff(now, 'hour') : null,
+                dsMax = ds.end   ? ds.end.diff  (now, 'hour') : null,
+                glMin = nsCollection.globalMin,
+                glMax = nsCollection.globalMax,
+                minExists = !!nsCollection.globalMinMoment && (dsMin !== null),
+                maxExists = !!nsCollection.globalMaxMoment && (dsMax !== null);
 
-                if (nsCollection.globalEnd && ds.end && ds.end.isAfter(nsCollection.globalEnd))
-                    ds.end = moment(nsCollection.globalEnd);
+
+            //Check relation between dastaset.start -> dataset.end and globalMinMoment -> globalMaxMoment
+
+            /* REMOVED: Allows dataset to not cover global range
+            //start-end do not cover globalMin-globalMax
+            if ( ( minExists && (dsMin > glMin) ) || ( maxExists && (dsMax < glMax) ) ){
+                ds.state = Math.max(ds.state || 0, nsCollection.stateWarn);
+                ADD('start-end do not cover globalMin-globalMax', ds.state);
+            }
+            */
+            //start-end is outside globalMin-globalMax
+            if ( ( minExists && (dsMin > glMax) ) || ( maxExists && (dsMax < glMin)  ) ) {
+                ds.state = nsCollection.stateFail;
+                ds.disabled = true;
+                ADD('start-end is outside globalMin-globalMax', ds.state);
+            }
+
+
+            //Adjust start and end to globalMinMoment and globalMaxMoment
+            if (minExists && (dsMin < glMin))
+                ds.start = moment(nsCollection.globalMinMoment);
+
+            if (maxExists && (dsMax > glMax))
+                ds.end = moment(nsCollection.globalMaxMoment);
+
+            //Add debug info regarding the range
+            if (window.FCOOCOLLECTION_TEST_STATUS){
+                ADD('Global Range  = ' + glMin + ' to ' + glMax);
+                ADD('Dataset Range = ' + dsMin + ' to ' + dsMax);
             }
         },
 
@@ -180,7 +202,7 @@ Create Datasets
                     text: this.domain.fullNameSimple()
                 },
                 content: function( $container) {
-                    this.domain.createDetailContent( $container, this.displayStatus );
+                    this.domain.createDetailContent( $container, this.displayStatus, this.STATUSTEXT );
                 }.bind(this)
             };
         },

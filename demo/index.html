@@ -20,6 +20,7 @@
         //OR window.fcoo.LOCAL_DATA = true;
 
         window.FCOOCOLLECTION_TEST_NOW = false;
+        window.FCOOCOLLECTION_TEST_STATUS = true;
     </script>
 
 	<script src="bower_components.js"></script>
@@ -57,19 +58,14 @@
     let minNow = moment(testNow);
     window.__jbs_getNowMoment = function(){ return moment(testNow); };
 
-    function decNow(){
-        testNew = testNow.add(-6, 'hour');
+    function changeNow( delta = -6){
+        testNew = testNow.add(delta, 'hour');
         console.log('NOW = ',testNow.format());
         fcoo.collection._onNowChanged();
-    };
-    function incNow(){
-        testNew = testNow.add(6, 'hour');
-        console.log('NOW = ',testNow.format());
-        fcoo.collection._onNowChanged();
-
     };
 
     fcoo.promiseList.options.finish.push(() => {
+        fcoo.collection._onNowChanged();
         let $body = $('body');
         fcoo.collection.collectionList.list.forEach( collection => {
             $body.append('<hr>');
@@ -84,7 +80,9 @@
     fcoo.promiseList_getAll();
 </script>
 
-    <button onClick="javascript:decNow()">Now - 6h</button><button onClick="javascript:incNow()">Now + 6h</button>
+    <button onClick="javascript:changeNow(-1)">Now - 1h</button><button onClick="javascript:changeNow(+1)">Now + 1h</button><br>
+    <button onClick="javascript:changeNow(-3)">Now - 3h</button><button onClick="javascript:changeNow(+3)">Now + 3h</button><br>
+    <button onClick="javascript:changeNow(-6)">Now - 6h</button><button onClick="javascript:changeNow(+6)">Now + 6h</button><br>
     <hr>
 </body>
 </html>

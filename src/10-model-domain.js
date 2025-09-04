@@ -11,11 +11,7 @@ Objects and methods to create and manages list of models
         nsModel = ns.model = ns.model || {};
 
     nsModel.options = $.extend(true, nsModel.options, {
-        includeModel      : false,    //If true all Models and Domains are loaded and created
-
-//HER           model: {
-//HER               roundEpochMomentTo  : 15 //minutes
-//HER           },
+        includeModel: false,    //If true all Models and Domains are loaded and created
 
         modelList: {
             //data located in file under sub-dir 'static' contains all the groups
@@ -197,7 +193,7 @@ Objects and methods to create and manages list of models
             end                 : moment or dateString with end-time for the period of forecast
         }
         *********************************************/
-        createDetailContent: function( $container, status ){
+        createDetailContent: function( $container, status, STATUSTEXT ){
             //*****************************************************
             function replaceSpace( text ){
                 return text.replace(/ /g, '&nbsp;');
@@ -357,6 +353,9 @@ Objects and methods to create and manages list of models
                 subContent,
                 hasDynamicContent = !!status;
 
+            if (STATUSTEXT)
+                content.push({label: 'DEBUG', type: 'textarea', center: true, text: STATUSTEXT});
+
 
             if (hasDynamicContent){
                 if (status.disabled)
@@ -400,7 +399,16 @@ Objects and methods to create and manages list of models
                                 furtureRelative: true
                             })
                         );
+                    content.push( createSubContainer(subContent) );
 
+                    subContent = [];
+                    subContent.push(
+                        momentAsText({
+                            label          : {da: 'Prognosen går fra', en:'The forecast starts at'},
+                            date           : status.start,
+                            pastRelative   : true,
+                        })
+                    );
                     subContent.push(
                         momentAsText({
                             label          : {da: 'Prognosen går frem til', en:'The forecast ends at'},

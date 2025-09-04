@@ -11,11 +11,7 @@ Objects and methods to create and manages list of models
         nsModel = ns.model = ns.model || {};
 
     nsModel.options = $.extend(true, nsModel.options, {
-        includeModel      : false,    //If true all Models and Domains are loaded and created
-
-//HER           model: {
-//HER               roundEpochMomentTo  : 15 //minutes
-//HER           },
+        includeModel: false,    //If true all Models and Domains are loaded and created
 
         modelList: {
             //data located in file under sub-dir 'static' contains all the groups
@@ -197,7 +193,7 @@ Objects and methods to create and manages list of models
             end                 : moment or dateString with end-time for the period of forecast
         }
         *********************************************/
-        createDetailContent: function( $container, status ){
+        createDetailContent: function( $container, status, STATUSTEXT ){
             //*****************************************************
             function replaceSpace( text ){
                 return text.replace(/ /g, '&nbsp;');
@@ -357,6 +353,9 @@ Objects and methods to create and manages list of models
                 subContent,
                 hasDynamicContent = !!status;
 
+            if (STATUSTEXT)
+                content.push({label: 'DEBUG', type: 'textarea', center: true, text: STATUSTEXT});
+
 
             if (hasDynamicContent){
                 if (status.disabled)
@@ -400,7 +399,16 @@ Objects and methods to create and manages list of models
                                 furtureRelative: true
                             })
                         );
+                    content.push( createSubContainer(subContent) );
 
+                    subContent = [];
+                    subContent.push(
+                        momentAsText({
+                            label          : {da: 'Prognosen går fra', en:'The forecast starts at'},
+                            date           : status.start,
+                            pastRelative   : true,
+                        })
+                    );
                     subContent.push(
                         momentAsText({
                             label          : {da: 'Prognosen går frem til', en:'The forecast ends at'},
@@ -566,13 +574,15 @@ Create collections and datasets
 
 
     //colorNameList = []COLORNAME = different colors for domains
-    var colorNameList = ["blue"/*"red"*/, "green", "orange", "cyan", "purple", "brown", "black", "grey", "pink", "yellow", "blue", "white"],
-        globalColorName = "red";//"darkblue";
+    const colorNameList   = ["blue", /*"red",*/ "green", /*"orange",*/ "cyan", "purple", "brown", /*"black",*/ "grey", "pink", "yellow"/*, "white"*/],
+          globalColorName = "orange";//"red";//"darkblue";
 
 
     const timeUnit = window.FCOOMAPSTIME_TEST_NOW ? 'seconds' : 'hour';
-    nsCollection.globalStart = null;
-    nsCollection.globalEnd   = null;
+    nsCollection.globalMin       = null;
+    nsCollection.globalMax       = null;
+    nsCollection.globalMinMoment = null;
+    nsCollection.globalMaxMoment = null;
 
     /****************************************************************************
     nsCollection.setTimeRange(start, end)
@@ -582,14 +592,23 @@ Create collections and datasets
 
     nsCollection.setTimeRange = function(start, end){
         timeRange = [start, end];
-        if (typeof start == 'number')
-            nsCollection.globalStart = window.__jbs_getNowMoment().add(start, 'hour');
-        else
-            nsCollection.globalStart = moment.utc(start);
-        if (typeof end == 'number')
-            nsCollection.globalEnd = window.__jbs_getNowMoment().add(end, 'hour');
-        else
-            nsCollection.globalEnd = moment.utc(end);
+        if (typeof start == 'number'){
+            nsCollection.globalMin       = start;
+            nsCollection.globalMinMoment = window.__jbs_getNowMoment().add(start, 'hour');
+        }
+        else {
+            nsCollection.globalMinMoment = moment.utc(start);
+            nsCollection.globalMin = nsCollection.globalMinMoment.diff(window.__jbs_getNowMoment(), 'hour');
+        }
+
+        if (typeof end == 'number'){
+            nsCollection.globalMax       = end;
+            nsCollection.globalMaxMoment = window.__jbs_getNowMoment().add(end, 'hour');
+        }
+        else {
+            nsCollection.globalMaxMoment = moment.utc(end);
+            nsCollection.globalMax = nsCollection.globalMaxMoment.diff(window.__jbs_getNowMoment(), 'hour');
+        }
 
         nsCollection.updateAll();
 
@@ -619,7 +638,7 @@ Create collections and datasets
     if (window.FCOOCOLLECTION_TEST_NOW){
         let testInterval = new window.Intervals({durationUnit: 'seconds'});
         testInterval.addInterval({
-            duration: 10,
+            duration: 2,
             data    : {},
             resolve : nsCollection._onNowChanged
         });
@@ -835,8 +854,8 @@ Create collections and datasets
             parameter : PARAMETER - The Parameter that are being displayed (optional)
         *********************************************/
         asModal: function(options = {}){
-            this.modalOptions = options;
-            this.modalAsStatic = !!options.asStatic;
+            this.modalOptions   = options;
+            this.modalAsStatic  = !!options.asStatic;
             this.modalParameter = options.parameter;
 
             if (this.modalParameter)
@@ -945,10 +964,6 @@ Create collections and datasets
 
             e.map.setView(options.mapCenter || this.mapCenter || [56.2, 11.5], options.mapZoom || this.mapZoom || 6);
 
-
-
-
-
             //Gets the layers for the map in the modal
             let layerList = nsCollection.options.getMapLayers();
             layerList = Array.isArray(layerList) ? layerList : [layerList];
@@ -957,8 +972,6 @@ Create collections and datasets
 
             //Create layerGroup to hole all polygons
             e.layerGroup = L.layerGroup().addTo(e.map);
-
-
 
             //Create new pane with zIndex < the map to hole all polygons fra ocean-domains
             var ocnPane = e.map.createPane('oceanPane');
@@ -1100,22 +1113,29 @@ Create Datasets
         update
         Sets status and displayStatus = {
             sequence_id         : NUMBER
-            lastModified        : moment
-            epoch               : moment
-            start               : moment
-            end                 : moment
-            expectedNextUpdate  : moment
+            lastModified        : MOMENT
+            epoch               : MOMENT
+            start               : MOMENT
+            end                 : MOMENT
+            expectedNextUpdate  : MOMENT
             delayed             : BOOLEAN
             state               : STRING (only range check for displayStatus) =
-                stateOk    = On time and start-end cover hole globalStart-globalEnd-range
-                stateWarn  = Is delayed or start-end do not cover hole globalStart-globalEnd-range
-                stateFail  = start-end is outside globalStart-globalEnd. Also sets disabled = false
+                stateOk    = On time and start-end cover hole globalMinMoment-globalMaxMoment-range
+                stateWarn  = Is delayed or start-end do not cover hole globalMinMoment-globalMaxMoment-range
+                stateFail  = start-end is outside globalMinMoment-globalMaxMoment. Also sets disabled = false
         }
         *********************************************/
         update: function(options = {}){
             let o = this.options = $.extend(true, {}, this.options || {}, options);
             let s = this.status = this.status || {};
             let d = this.domain.options;
+
+            //if window.FCOOCOLLECTION_TEST_STATUS == true => display text with the 'reason'
+            this.STATUSTEXT = '';
+            let ADD = function(...theArgs){
+                if (window.FCOOCOLLECTION_TEST_STATUS)
+                    this.STATUSTEXT = this.STATUSTEXT + (this.STATUSTEXT ? '<br>' : '') +  theArgs.join(' ');
+            }.bind(this);
 
             s.sequence_id   = o.sequence_id;
             s.lastModified  = moment(o.attrs.created);
@@ -1145,6 +1165,7 @@ Create Datasets
                                             .add(45, 'minutes')           //Rounding
                                             .startOf('hour');
                 s.delayed = s.expectedNextUpdate.isBefore( window.__jbs_getNowMoment() );
+                ADD('Delayed=', s.delayed, 'Next update=', s.expectedNextUpdate.toString());
             }
             else {
                 s.expectedNextUpdate = null;
@@ -1156,37 +1177,51 @@ Create Datasets
                       nsCollection.stateOk;
 
 
-            //Create displayStatus = status but with correction relative to globalStart and globalEnd
+            //Create displayStatus = status but with correction relative to globalMinMoment and globalMaxMoment
             let ds = this.displayStatus = {};
 
-            $.each(s, (id, value) => {
-                ds[id] = value instanceof moment ? moment(value) : value;
-            });
 
-            if (nsCollection.globalStart || nsCollection.globalEnd){
-                //Check relation between dastaset.start -> dataset.end and globalStart -> globalEnd
-                //1: start-end do not cover globalStart-globalEnd
-                if (
-                    (nsCollection.globalStart && ds.start && ds.start.isAfter(nsCollection.globalStart) ) ||
-                    (nsCollection.globalEnd   && ds.end   && ds.end.isBefore(nsCollection.globalEnd)    )
-                   )
-                    ds.state = Math.max(ds.state, nsCollection.stateWarn);
+            $.each(s, (id, value) => ds[id] = value instanceof moment ? moment(value) : value );
 
-                //2: start-end is outside globalStart-globalEnd
-                if (
-                    (nsCollection.globalStart && ds.end   && ds.end.isBefore(nsCollection.globalStart)) ||
-                    (nsCollection.globalEnd   && ds.start && ds.start.isAfter(nsCollection.globalEnd) )
-                   ) {
-                    ds.state = nsCollection.stateFail;
-                    ds.disabled = true;
-                }
 
-                //Adjust start and end to globalStart and globalEnd
-                if (nsCollection.globalStart && ds.start && ds.start.isBefore(nsCollection.globalStart))
-                    ds.start = moment(nsCollection.globalStart);
+            //Set state based on the time range of the dataset compared with the global time range
+            let now      = window.__jbs_getNowMoment(),
+                dsMin = ds.start ? ds.start.diff(now, 'hour') : null,
+                dsMax = ds.end   ? ds.end.diff  (now, 'hour') : null,
+                glMin = nsCollection.globalMin,
+                glMax = nsCollection.globalMax,
+                minExists = !!nsCollection.globalMinMoment && (dsMin !== null),
+                maxExists = !!nsCollection.globalMaxMoment && (dsMax !== null);
 
-                if (nsCollection.globalEnd && ds.end && ds.end.isAfter(nsCollection.globalEnd))
-                    ds.end = moment(nsCollection.globalEnd);
+
+            //Check relation between dastaset.start -> dataset.end and globalMinMoment -> globalMaxMoment
+
+            /* REMOVED: Allows dataset to not cover global range
+            //start-end do not cover globalMin-globalMax
+            if ( ( minExists && (dsMin > glMin) ) || ( maxExists && (dsMax < glMax) ) ){
+                ds.state = Math.max(ds.state || 0, nsCollection.stateWarn);
+                ADD('start-end do not cover globalMin-globalMax', ds.state);
+            }
+            */
+            //start-end is outside globalMin-globalMax
+            if ( ( minExists && (dsMin > glMax) ) || ( maxExists && (dsMax < glMin)  ) ) {
+                ds.state = nsCollection.stateFail;
+                ds.disabled = true;
+                ADD('start-end is outside globalMin-globalMax', ds.state);
+            }
+
+
+            //Adjust start and end to globalMinMoment and globalMaxMoment
+            if (minExists && (dsMin < glMin))
+                ds.start = moment(nsCollection.globalMinMoment);
+
+            if (maxExists && (dsMax > glMax))
+                ds.end = moment(nsCollection.globalMaxMoment);
+
+            //Add debug info regarding the range
+            if (window.FCOOCOLLECTION_TEST_STATUS){
+                ADD('Global Range  = ' + glMin + ' to ' + glMax);
+                ADD('Dataset Range = ' + dsMin + ' to ' + dsMax);
             }
         },
 
@@ -1224,7 +1259,7 @@ Create Datasets
                     text: this.domain.fullNameSimple()
                 },
                 content: function( $container) {
-                    this.domain.createDetailContent( $container, this.displayStatus );
+                    this.domain.createDetailContent( $container, this.displayStatus, this.STATUSTEXT );
                 }.bind(this)
             };
         },

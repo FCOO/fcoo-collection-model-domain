@@ -105,13 +105,15 @@ Create collections and datasets
 
 
     //colorNameList = []COLORNAME = different colors for domains
-    var colorNameList = ["blue"/*"red"*/, "green", "orange", "cyan", "purple", "brown", "black", "grey", "pink", "yellow", "blue", "white"],
-        globalColorName = "red";//"darkblue";
+    const colorNameList   = ["blue", /*"red",*/ "green", /*"orange",*/ "cyan", "purple", "brown", /*"black",*/ "grey", "pink", "yellow"/*, "white"*/],
+          globalColorName = "orange";//"red";//"darkblue";
 
 
     const timeUnit = window.FCOOMAPSTIME_TEST_NOW ? 'seconds' : 'hour';
-    nsCollection.globalStart = null;
-    nsCollection.globalEnd   = null;
+    nsCollection.globalMin       = null;
+    nsCollection.globalMax       = null;
+    nsCollection.globalMinMoment = null;
+    nsCollection.globalMaxMoment = null;
 
     /****************************************************************************
     nsCollection.setTimeRange(start, end)
@@ -121,14 +123,23 @@ Create collections and datasets
 
     nsCollection.setTimeRange = function(start, end){
         timeRange = [start, end];
-        if (typeof start == 'number')
-            nsCollection.globalStart = window.__jbs_getNowMoment().add(start, 'hour');
-        else
-            nsCollection.globalStart = moment.utc(start);
-        if (typeof end == 'number')
-            nsCollection.globalEnd = window.__jbs_getNowMoment().add(end, 'hour');
-        else
-            nsCollection.globalEnd = moment.utc(end);
+        if (typeof start == 'number'){
+            nsCollection.globalMin       = start;
+            nsCollection.globalMinMoment = window.__jbs_getNowMoment().add(start, 'hour');
+        }
+        else {
+            nsCollection.globalMinMoment = moment.utc(start);
+            nsCollection.globalMin = nsCollection.globalMinMoment.diff(window.__jbs_getNowMoment(), 'hour');
+        }
+
+        if (typeof end == 'number'){
+            nsCollection.globalMax       = end;
+            nsCollection.globalMaxMoment = window.__jbs_getNowMoment().add(end, 'hour');
+        }
+        else {
+            nsCollection.globalMaxMoment = moment.utc(end);
+            nsCollection.globalMax = nsCollection.globalMaxMoment.diff(window.__jbs_getNowMoment(), 'hour');
+        }
 
         nsCollection.updateAll();
 
@@ -158,7 +169,7 @@ Create collections and datasets
     if (window.FCOOCOLLECTION_TEST_NOW){
         let testInterval = new window.Intervals({durationUnit: 'seconds'});
         testInterval.addInterval({
-            duration: 10,
+            duration: 2,
             data    : {},
             resolve : nsCollection._onNowChanged
         });
@@ -374,8 +385,8 @@ Create collections and datasets
             parameter : PARAMETER - The Parameter that are being displayed (optional)
         *********************************************/
         asModal: function(options = {}){
-            this.modalOptions = options;
-            this.modalAsStatic = !!options.asStatic;
+            this.modalOptions   = options;
+            this.modalAsStatic  = !!options.asStatic;
             this.modalParameter = options.parameter;
 
             if (this.modalParameter)
@@ -484,10 +495,6 @@ Create collections and datasets
 
             e.map.setView(options.mapCenter || this.mapCenter || [56.2, 11.5], options.mapZoom || this.mapZoom || 6);
 
-
-
-
-
             //Gets the layers for the map in the modal
             let layerList = nsCollection.options.getMapLayers();
             layerList = Array.isArray(layerList) ? layerList : [layerList];
@@ -496,8 +503,6 @@ Create collections and datasets
 
             //Create layerGroup to hole all polygons
             e.layerGroup = L.layerGroup().addTo(e.map);
-
-
 
             //Create new pane with zIndex < the map to hole all polygons fra ocean-domains
             var ocnPane = e.map.createPane('oceanPane');
