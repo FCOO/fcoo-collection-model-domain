@@ -404,17 +404,17 @@ Objects and methods to create and manages list of models
                     subContent = [];
                     subContent.push(
                         momentAsText({
-                            label          : {da: 'Prognosen går fra', en:'The forecast starts at'},
-                            date           : status.start,
-                            pastRelative   : true,
+                            label       : {da: 'Prognosen går fra', en:'The forecast starts at'},
+                            date        : status.start,
+                            inclRelative: true
                         })
                     );
                     subContent.push(
                         momentAsText({
-                            label          : {da: 'Prognosen går frem til', en:'The forecast ends at'},
-                            date           : status.end,
-                            furtureRelative: true,
-                            exactRelative  : true,
+                            label       : {da: 'Prognosen går til', en:'The forecast ends at'},
+                            date        : status.end,
+                            inclRelative: true
+
                         })
                     );
 
