@@ -8,7 +8,20 @@ Objects and methods to create and manages list of models
 
     //Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {},
+        nsCollection = ns.collection = ns.collection || {},
         nsModel = ns.model = ns.model || {};
+
+
+    function state2ColorName( state ){
+        let result = 'success';
+        switch (state){
+            case nsCollection.stateOk   : result = 'success'; break;
+            case nsCollection.stateWarn : result = 'warning'; break;
+            case nsCollection.stateAlert: result = 'alert';   break;
+            case nsCollection.stateFail : result = 'error';   break;
+        }
+        return result;
+    }
 
     nsModel.options = $.extend(true, nsModel.options, {
         includeModel: false,    //If true all Models and Domains are loaded and created
@@ -363,12 +376,11 @@ Objects and methods to create and manages list of models
                         type     : 'textarea',
                         center   : true,
                         icon     : 'far fa-eye-slash',
-                        iconClass: 'font-weight-bold text-danger',
-                        text     : [
-                            {da: replaceSpace('VISES IKKE'), en: replaceSpace('NOT SHOWN')},
-                            {da: replaceSpace('Prognosen er ikke tilgængelig'), en: replaceSpace('The forecast is not available')}
-                        ],
-                        textClass: ['font-weight-bold text-danger', 'text-danger']
+                        colorName: 'error',
+                        text     : {
+                            da: replaceSpace('VISES IKKE') + ' ' + replaceSpace('Prognosen er ikke tilgængelig'),
+                            en: replaceSpace('NOT SHOWN')  + ' ' + replaceSpace('The forecast is not available')
+                        }
                     });
                 else {
                     subContent = [];
@@ -381,16 +393,17 @@ Objects and methods to create and manages list of models
                     );
 
                     const label = {da: 'Forventet næste opdatering', en:'Expected next update'};
-                    if (status.delayed)
+                    if (status.delayed){
                         subContent.push({
-                            label : label,
-                            class : 'info-box',
-                            type  : 'textarea',
-                            center: true,
-                            middle: true,
-                            textClass: 'font-weight-bold text-warning',
-                            text: {da: 'FORSINKET', en: 'DELAYED'}
+                            label    : label,
+                            class    : 'info-box',
+                            type     : 'textarea',
+                            center   : true,
+                            middle   : true,
+                            colorName: state2ColorName(status.state),
+                            text     : {da: 'FORSINKET', en: 'DELAYED'}
                         });
+                    }
                     else
                         subContent.push(
                             momentAsText({
@@ -551,31 +564,26 @@ Create collections and datasets
     }, nsCollection.options || {} );
 
     //Var and methods for state
-    nsCollection.stateOk   = 1,
-    nsCollection.stateWarn = 2,
-    nsCollection.stateFail = 3;
-
-
-    nsCollection.getWarningIcon = function(){
-        return $.getHeaderIcons(false).warning.icon;
-    };
-
+    const stateOk    = nsCollection.stateOk    = 1,
+          stateWarn  = nsCollection.stateWarn  = 2,
+          stateAlert = nsCollection.stateAlert = 3,
+          stateFail  = nsCollection.stateFail  = 4;
 
     nsCollection.getStateIcon = function(state){
-        let result = 'far fa-check-circle';
+        let result = ns.bsIcon.success;
         switch (state){
-          //case nsCollection.stateOk  : Part of default
-            case nsCollection.stateWarn: result = nsCollection.getWarningIcon(); break;
-            case nsCollection.stateFail: result = ['fas fa-circle text-danger', 'far fa-exclamation-circle']; break;
+            case stateOk   : result = ns.bsIcon.success; break;
+            case stateWarn : result = ns.bsIcon.warning; break;
+            case stateAlert: result = ns.bsIcon.alert;   break;
+            case stateFail : result = ns.bsIcon.error;   break;
         }
         return result;
     };
 
 
-
     //colorNameList = []COLORNAME = different colors for domains
-    const colorNameList   = ["blue", /*"red",*/ "green", /*"orange",*/ "cyan", "purple", "brown", /*"black",*/ "grey", "pink", "yellow"/*, "white"*/],
-          globalColorName = "orange";//"red";//"darkblue";
+    const colorNameList   = ["blue", "green", "cyan", "purple", "grey", "pink"],
+          globalColorName = "brown";
 
 
     const timeUnit = window.FCOOMAPSTIME_TEST_NOW ? 'seconds' : 'hour';
@@ -806,15 +814,17 @@ Create collections and datasets
             $.each(this.datasets, (id, dataset) => dataset.update() );
 
             //Detect the status of the hole collection based on the status of its datasets
-            this.state = nsCollection.stateFail;
+            //minState = lowest common state
+            let commonMinState = stateFail;
+            $.each(this.datasets, (id, dataset) => commonMinState = Math.min( commonMinState, dataset.displayStatus.state ) );
 
-            //First: Lowest state from all included datasets
-            $.each(this.datasets, function(id, dataset){
-                this.state = Math.min( this.state, dataset.displayStatus.state );
-            }.bind(this) );
-
-            //@todo: Next: Some method to prioritise between datasets
-
+            //primaryState = highest state of all primary dataset (if any)
+            let primaryState = stateOk;
+            $.each(this.datasets, (id, dataset) => {
+                if (dataset.isPrimary)
+                    primaryState = Math.max( primaryState, dataset.displayStatus.state );
+            });
+            this.state = Math.max( commonMinState, primaryState);
 
             //Get time range for the collection on the time range from its datasets
             //TODO Perhaps Some method to prioritise between datasets
@@ -1016,7 +1026,6 @@ Create collections and datasets
                     dataset.addToMap();
             }
 
-
             var result = {
                     flexWidth : true,
                     extraWidth: extraWidth,
@@ -1069,6 +1078,13 @@ Create Datasets
         nsModel      = ns.model = ns.model || {},
         nsCollection = ns.collection = ns.collection || {};
 
+    //Dataset states
+    const stateOk    = nsCollection.stateOk,
+          stateWarn  = nsCollection.stateWarn,
+          stateAlert = nsCollection.stateAlert,
+          stateFail  = nsCollection.stateFail;
+
+
     function createDummyDomain(){
         //Create "dummy" modal and domain for fallback
         let dummyModel = new nsModel.Model({
@@ -1103,6 +1119,7 @@ Create Datasets
         this.domain = domain || createDummyDomain();
 
         this.isGlobal = this.domain.isGlobal;
+this.isPrimary = this.isGlobal || !!options.primary;
         this.isOcean = this.domain.options.type == 'ocean';
 
         this.update( options );
@@ -1164,25 +1181,35 @@ Create Datasets
                                             .add(d.process || 0, 'hour')  //Expected process-time
                                             .add(45, 'minutes')           //Rounding
                                             .startOf('hour');
-                s.delayed = s.expectedNextUpdate.isBefore( window.__jbs_getNowMoment() );
-                ADD('Delayed=', s.delayed, 'Next update=', s.expectedNextUpdate.toString());
+                let now = window.__jbs_getNowMoment();
+                s.delayed = s.expectedNextUpdate.isBefore( now );
+                s.delayedHours = now.diff(s.expectedNextUpdate, 'hour');
+                ADD('Delayed=', s.delayed, 'Next update=', s.expectedNextUpdate.toString(), 'Delayed hours=', s.delayedHours );
             }
             else {
                 s.expectedNextUpdate = null;
                 s.delayed = false;
             }
 
-            s.state = s.disabled ? nsCollection.stateFail :
-                      s.delayed  ? nsCollection.stateWarn :
-                      nsCollection.stateOk;
+            //Set state
+            s.state = stateOk;
+            if (s.disabled)
+                s.state = stateFail;
+            else
+                if (s.delayed){
+                    s.state = stateWarn;
+                    if (s.delayedHours > d.period)
+                        s.state = stateAlert;
+                    if ( s.end && s.end.isBefore(window.__jbs_getNowMoment()) )
+                        s.state = stateFail;
+
+                }
+
 
 
             //Create displayStatus = status but with correction relative to globalMinMoment and globalMaxMoment
             let ds = this.displayStatus = {};
-
-
             $.each(s, (id, value) => ds[id] = value instanceof moment ? moment(value) : value );
-
 
             //Set state based on the time range of the dataset compared with the global time range
             let now      = window.__jbs_getNowMoment(),
@@ -1196,13 +1223,6 @@ Create Datasets
 
             //Check relation between dastaset.start -> dataset.end and globalMinMoment -> globalMaxMoment
 
-            /* REMOVED: Allows dataset to not cover global range
-            //start-end do not cover globalMin-globalMax
-            if ( ( minExists && (dsMin > glMin) ) || ( maxExists && (dsMax < glMax) ) ){
-                ds.state = Math.max(ds.state || 0, nsCollection.stateWarn);
-                ADD('start-end do not cover globalMin-globalMax', ds.state);
-            }
-            */
             //start-end is outside globalMin-globalMax
             if ( ( minExists && (dsMin > glMax) ) || ( maxExists && (dsMax < glMin)  ) ) {
                 ds.state = nsCollection.stateFail;

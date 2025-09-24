@@ -12,6 +12,13 @@ Create Datasets
         nsModel      = ns.model = ns.model || {},
         nsCollection = ns.collection = ns.collection || {};
 
+    //Dataset states
+    const stateOk    = nsCollection.stateOk,
+          stateWarn  = nsCollection.stateWarn,
+          stateAlert = nsCollection.stateAlert,
+          stateFail  = nsCollection.stateFail;
+
+
     function createDummyDomain(){
         //Create "dummy" modal and domain for fallback
         let dummyModel = new nsModel.Model({
@@ -46,6 +53,7 @@ Create Datasets
         this.domain = domain || createDummyDomain();
 
         this.isGlobal = this.domain.isGlobal;
+this.isPrimary = this.isGlobal || !!options.primary;
         this.isOcean = this.domain.options.type == 'ocean';
 
         this.update( options );
@@ -107,25 +115,35 @@ Create Datasets
                                             .add(d.process || 0, 'hour')  //Expected process-time
                                             .add(45, 'minutes')           //Rounding
                                             .startOf('hour');
-                s.delayed = s.expectedNextUpdate.isBefore( window.__jbs_getNowMoment() );
-                ADD('Delayed=', s.delayed, 'Next update=', s.expectedNextUpdate.toString());
+                let now = window.__jbs_getNowMoment();
+                s.delayed = s.expectedNextUpdate.isBefore( now );
+                s.delayedHours = now.diff(s.expectedNextUpdate, 'hour');
+                ADD('Delayed=', s.delayed, 'Next update=', s.expectedNextUpdate.toString(), 'Delayed hours=', s.delayedHours );
             }
             else {
                 s.expectedNextUpdate = null;
                 s.delayed = false;
             }
 
-            s.state = s.disabled ? nsCollection.stateFail :
-                      s.delayed  ? nsCollection.stateWarn :
-                      nsCollection.stateOk;
+            //Set state
+            s.state = stateOk;
+            if (s.disabled)
+                s.state = stateFail;
+            else
+                if (s.delayed){
+                    s.state = stateWarn;
+                    if (s.delayedHours > d.period)
+                        s.state = stateAlert;
+                    if ( s.end && s.end.isBefore(window.__jbs_getNowMoment()) )
+                        s.state = stateFail;
+
+                }
+
 
 
             //Create displayStatus = status but with correction relative to globalMinMoment and globalMaxMoment
             let ds = this.displayStatus = {};
-
-
             $.each(s, (id, value) => ds[id] = value instanceof moment ? moment(value) : value );
-
 
             //Set state based on the time range of the dataset compared with the global time range
             let now      = window.__jbs_getNowMoment(),
@@ -139,13 +157,6 @@ Create Datasets
 
             //Check relation between dastaset.start -> dataset.end and globalMinMoment -> globalMaxMoment
 
-            /* REMOVED: Allows dataset to not cover global range
-            //start-end do not cover globalMin-globalMax
-            if ( ( minExists && (dsMin > glMin) ) || ( maxExists && (dsMax < glMax) ) ){
-                ds.state = Math.max(ds.state || 0, nsCollection.stateWarn);
-                ADD('start-end do not cover globalMin-globalMax', ds.state);
-            }
-            */
             //start-end is outside globalMin-globalMax
             if ( ( minExists && (dsMin > glMax) ) || ( maxExists && (dsMax < glMin)  ) ) {
                 ds.state = nsCollection.stateFail;

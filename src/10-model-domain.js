@@ -8,7 +8,20 @@ Objects and methods to create and manages list of models
 
     //Create fcoo-namespace
     var ns = window.fcoo = window.fcoo || {},
+        nsCollection = ns.collection = ns.collection || {},
         nsModel = ns.model = ns.model || {};
+
+
+    function state2ColorName( state ){
+        let result = 'success';
+        switch (state){
+            case nsCollection.stateOk   : result = 'success'; break;
+            case nsCollection.stateWarn : result = 'warning'; break;
+            case nsCollection.stateAlert: result = 'alert';   break;
+            case nsCollection.stateFail : result = 'error';   break;
+        }
+        return result;
+    }
 
     nsModel.options = $.extend(true, nsModel.options, {
         includeModel: false,    //If true all Models and Domains are loaded and created
@@ -363,12 +376,11 @@ Objects and methods to create and manages list of models
                         type     : 'textarea',
                         center   : true,
                         icon     : 'far fa-eye-slash',
-                        iconClass: 'font-weight-bold text-danger',
-                        text     : [
-                            {da: replaceSpace('VISES IKKE'), en: replaceSpace('NOT SHOWN')},
-                            {da: replaceSpace('Prognosen er ikke tilgængelig'), en: replaceSpace('The forecast is not available')}
-                        ],
-                        textClass: ['font-weight-bold text-danger', 'text-danger']
+                        colorName: 'error',
+                        text     : {
+                            da: replaceSpace('VISES IKKE') + ' ' + replaceSpace('Prognosen er ikke tilgængelig'),
+                            en: replaceSpace('NOT SHOWN')  + ' ' + replaceSpace('The forecast is not available')
+                        }
                     });
                 else {
                     subContent = [];
@@ -381,16 +393,17 @@ Objects and methods to create and manages list of models
                     );
 
                     const label = {da: 'Forventet næste opdatering', en:'Expected next update'};
-                    if (status.delayed)
+                    if (status.delayed){
                         subContent.push({
-                            label : label,
-                            class : 'info-box',
-                            type  : 'textarea',
-                            center: true,
-                            middle: true,
-                            textClass: 'font-weight-bold text-warning',
-                            text: {da: 'FORSINKET', en: 'DELAYED'}
+                            label    : label,
+                            class    : 'info-box',
+                            type     : 'textarea',
+                            center   : true,
+                            middle   : true,
+                            colorName: state2ColorName(status.state),
+                            text     : {da: 'FORSINKET', en: 'DELAYED'}
                         });
+                    }
                     else
                         subContent.push(
                             momentAsText({

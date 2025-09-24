@@ -82,31 +82,26 @@ Create collections and datasets
     }, nsCollection.options || {} );
 
     //Var and methods for state
-    nsCollection.stateOk   = 1,
-    nsCollection.stateWarn = 2,
-    nsCollection.stateFail = 3;
-
-
-    nsCollection.getWarningIcon = function(){
-        return $.getHeaderIcons(false).warning.icon;
-    };
-
+    const stateOk    = nsCollection.stateOk    = 1,
+          stateWarn  = nsCollection.stateWarn  = 2,
+          stateAlert = nsCollection.stateAlert = 3,
+          stateFail  = nsCollection.stateFail  = 4;
 
     nsCollection.getStateIcon = function(state){
-        let result = 'far fa-check-circle';
+        let result = ns.bsIcon.success;
         switch (state){
-          //case nsCollection.stateOk  : Part of default
-            case nsCollection.stateWarn: result = nsCollection.getWarningIcon(); break;
-            case nsCollection.stateFail: result = ['fas fa-circle text-danger', 'far fa-exclamation-circle']; break;
+            case stateOk   : result = ns.bsIcon.success; break;
+            case stateWarn : result = ns.bsIcon.warning; break;
+            case stateAlert: result = ns.bsIcon.alert;   break;
+            case stateFail : result = ns.bsIcon.error;   break;
         }
         return result;
     };
 
 
-
     //colorNameList = []COLORNAME = different colors for domains
-    const colorNameList   = ["blue", /*"red",*/ "green", /*"orange",*/ "cyan", "purple", "brown", /*"black",*/ "grey", "pink", "yellow"/*, "white"*/],
-          globalColorName = "orange";//"red";//"darkblue";
+    const colorNameList   = ["blue", "green", "cyan", "purple", "grey", "pink"],
+          globalColorName = "brown";
 
 
     const timeUnit = window.FCOOMAPSTIME_TEST_NOW ? 'seconds' : 'hour';
@@ -337,15 +332,17 @@ Create collections and datasets
             $.each(this.datasets, (id, dataset) => dataset.update() );
 
             //Detect the status of the hole collection based on the status of its datasets
-            this.state = nsCollection.stateFail;
+            //minState = lowest common state
+            let commonMinState = stateFail;
+            $.each(this.datasets, (id, dataset) => commonMinState = Math.min( commonMinState, dataset.displayStatus.state ) );
 
-            //First: Lowest state from all included datasets
-            $.each(this.datasets, function(id, dataset){
-                this.state = Math.min( this.state, dataset.displayStatus.state );
-            }.bind(this) );
-
-            //@todo: Next: Some method to prioritise between datasets
-
+            //primaryState = highest state of all primary dataset (if any)
+            let primaryState = stateOk;
+            $.each(this.datasets, (id, dataset) => {
+                if (dataset.isPrimary)
+                    primaryState = Math.max( primaryState, dataset.displayStatus.state );
+            });
+            this.state = Math.max( commonMinState, primaryState);
 
             //Get time range for the collection on the time range from its datasets
             //TODO Perhaps Some method to prioritise between datasets
@@ -546,7 +543,6 @@ Create collections and datasets
                 if (dataset.include)
                     dataset.addToMap();
             }
-
 
             var result = {
                     flexWidth : true,

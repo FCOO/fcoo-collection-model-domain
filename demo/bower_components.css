@@ -1121,8 +1121,8 @@ Color for time = tree colors for the past, now, and the future
 :root {
   --fc-time-past-color: #EADCC1;
   --fc-time-past-text-color: #000;
-  --fc-time-now-color: #3B7511;
-  --fc-time-now-text-color: #fff;
+  --fc-time-now-color: #BDD9BF;
+  --fc-time-now-text-color: #000;
   --fc-time-future-color: #94B5C2;
   --fc-time-future-text-color: #000;
 }
@@ -23473,7 +23473,7 @@ html.mouse-hover .base-slider-container.round.active .handle:hover, html.mouse-h
   margin-top: 8.2285714286px;
 }
 
-.base-slider-container {
+.base-slider-container:not(.handle-is-fixed) {
   width: calc(100% - 24px);
   margin-left: 12px !important;
   margin-right: 12px !important;
@@ -23853,6 +23853,11 @@ Modal
 /***********************************************
 Button And Modal
 Opacity for semi-transparent and transparent content using color-mix
+************************************************/
+/***********************************************
+$type-2-alert-color
+Conections between "type" and Bootstrap color-class-names
+Used in _noty.scss and _modal.scss
 ************************************************/
 :root,
 [data-bs-theme=light] {
@@ -24369,6 +24374,10 @@ legend + * {
 [type=search] {
   -webkit-appearance: textfield;
   outline-offset: -2px;
+}
+[type=search]::-webkit-search-cancel-button {
+  cursor: pointer;
+  filter: grayscale(1);
 }
 
 /* rtl:raw:
@@ -28459,7 +28468,7 @@ textarea.form-control-lg {
   padding: 1.25rem 1rem;
 }
 
-.alert-primary, .noty_theme__jquery-bootstrap.noty_type__alert {
+.alert-primary {
   --bs-alert-color: var(--bs-primary-text-emphasis);
   --bs-alert-bg: var(--bs-primary-bg-subtle);
   --bs-alert-border-color: var(--bs-primary-border-subtle);
@@ -28473,35 +28482,35 @@ textarea.form-control-lg {
   --bs-alert-link-color: var(--bs-secondary-text-emphasis);
 }
 
-.alert-success, .noty_theme__jquery-bootstrap.noty_type__success {
+.alert-success, .noty_theme__jquery-bootstrap.noty_type__success, .input-group-container.has-alert-background.noty_theme__jquery-bootstrap.noty_type__success, .input-group-container.has-alert-background.alert-success {
   --bs-alert-color: var(--bs-success-text-emphasis);
   --bs-alert-bg: var(--bs-success-bg-subtle);
   --bs-alert-border-color: var(--bs-success-border-subtle);
   --bs-alert-link-color: var(--bs-success-text-emphasis);
 }
 
-.alert-info, .noty_theme__jquery-bootstrap.noty_type__info {
+.alert-info, .noty_theme__jquery-bootstrap.noty_type__info, .input-group-container.has-alert-background.noty_theme__jquery-bootstrap.noty_type__info, .input-group-container.has-alert-background.alert-info {
   --bs-alert-color: var(--bs-info-text-emphasis);
   --bs-alert-bg: var(--bs-info-bg-subtle);
   --bs-alert-border-color: var(--bs-info-border-subtle);
   --bs-alert-link-color: var(--bs-info-text-emphasis);
 }
 
-.alert-warning, .noty_theme__jquery-bootstrap.noty_type__warning {
+.alert-warning, .noty_theme__jquery-bootstrap.noty_type__warning, .input-group-container.has-alert-background.noty_theme__jquery-bootstrap.noty_type__warning, .input-group-container.has-alert-background.alert-warning {
   --bs-alert-color: var(--bs-warning-text-emphasis);
   --bs-alert-bg: var(--bs-warning-bg-subtle);
   --bs-alert-border-color: var(--bs-warning-border-subtle);
   --bs-alert-link-color: var(--bs-warning-text-emphasis);
 }
 
-.alert-danger, .noty_theme__jquery-bootstrap.noty_type__error, form.form-validation .invalid-tooltip {
+.alert-danger, .noty_theme__jquery-bootstrap.noty_type__error, form.form-validation .invalid-tooltip, .input-group-container.has-alert-background.alert-error {
   --bs-alert-color: var(--bs-danger-text-emphasis);
   --bs-alert-bg: var(--bs-danger-bg-subtle);
   --bs-alert-border-color: var(--bs-danger-border-subtle);
   --bs-alert-link-color: var(--bs-danger-text-emphasis);
 }
 
-.alert-light, .noty_theme__jquery-bootstrap.noty_type__help {
+.alert-light, .noty_theme__jquery-bootstrap.noty_type__help, .input-group-container.has-alert-background.alert-help {
   --bs-alert-color: var(--bs-light-text-emphasis);
   --bs-alert-bg: var(--bs-light-bg-subtle);
   --bs-alert-border-color: var(--bs-light-border-subtle);
@@ -36339,6 +36348,63 @@ Common classes for differnet elements
 STYLE FOR DIFFERENT ELEMENTS
 *************************************************/
 /************************************************************
+Icon
+Classes for special BS icons = colored icon using Bootstrap alert colors
+************************************************************/
+i[class*=bs-icon-front-color-], i[class*=bs-icon-back-color-] {
+  --icon-bs-color: inherit;
+  color: var(--icon-bs-color);
+}
+
+i.bs-icon-front-color-success {
+  --icon-bs-color: var(--bs-success-text-emphasis);
+}
+
+i.bs-icon-back-color-success {
+  --icon-bs-color: var(--bs-success-bg-subtle);
+}
+
+i.bs-icon-front-color-alert {
+  --icon-bs-color: var(--bs-alert-text-emphasis);
+}
+
+i.bs-icon-back-color-alert {
+  --icon-bs-color: var(--bs-alert-bg-subtle);
+}
+
+i.bs-icon-front-color-warning {
+  --icon-bs-color: var(--bs-warning-text-emphasis);
+}
+
+i.bs-icon-back-color-warning {
+  --icon-bs-color: var(--bs-warning-bg-subtle);
+}
+
+i.bs-icon-front-color-error {
+  --icon-bs-color: var(--bs-danger-text-emphasis);
+}
+
+i.bs-icon-back-color-error {
+  --icon-bs-color: var(--bs-danger-bg-subtle);
+}
+
+i.bs-icon-front-color-info {
+  --icon-bs-color: var(--bs-info-text-emphasis);
+}
+
+i.bs-icon-back-color-info {
+  --icon-bs-color: var(--bs-info-bg-subtle);
+}
+
+i.bs-icon-front-color-help {
+  --icon-bs-color: var(--bs-light-text-emphasis);
+}
+
+i.bs-icon-back-color-help {
+  --icon-bs-color: var(--bs-light-bg-subtle);
+}
+
+/************************************************************
 TEXT
 
 Additional classes for text
@@ -36374,6 +36440,19 @@ Bootstrap allready have the following classes
 .fst-normal     Text with normal font style>
 
 */
+:root {
+  --bs-alert-text-emphasis: rgb(101.2, 50.4, 8);
+  --bs-alert-bg-subtle: rgb(254.6, 229.2, 208);
+  --bs-alert-border-subtle: tint-color #fd7e14, 60%;
+}
+
+.alert-alert, .noty_theme__jquery-bootstrap.noty_type__alert, .input-group-container.has-alert-background.noty_theme__jquery-bootstrap.noty_type__alert, .input-group-container.has-alert-background.alert-alert {
+  --bs-alert-color: rgb(101.2, 50.4, 8);
+  --bs-alert-bg: rgb(254.6, 229.2, 208);
+  --bs-alert-border-color: tint-color #fd7e14, 60%;
+  --bs-alert-link-color: rgb(101.2, 50.4, 8);
+}
+
 .opacity-0 {
   opacity: 0;
 }
@@ -36487,6 +36566,10 @@ Bootstrap allready have the following classes
 
 .text-checked, .text-active {
   color: rgb(30, 144, 255);
+}
+
+.text-alert {
+  color: #fd7e14;
 }
 
 /************************************************************
@@ -37082,6 +37165,16 @@ HEADER-CONTENT
   --icon-bg: #ffc107;
   --icon-hover-bg: rgb(236.5, 177.375, 0);
   --icon-active-bg: rgb(211, 158.25, 0);
+}
+.header-content .header-icon-container.with-square-icons .header-icon.header-icon-alert {
+  --icon-bg: #fd7e14;
+  --icon-hover-bg: rgb(245.4113924051, 112.7848101266, 2.0886075949);
+  --icon-active-bg: rgb(220.1265822785, 101.164556962, 1.8734177215);
+}
+.header-content .header-icon-container.with-square-icons .header-icon.header-icon-error {
+  --icon-bg: #dc3545;
+  --icon-hover-bg: rgb(210.9493670886, 36.5506329114, 53.2594936709);
+  --icon-active-bg: rgb(189.2151898734, 32.7848101266, 47.7721518987);
 }
 .header-content .header-icon-container.with-square-icons .header-icon.header-icon-selected {
   --icon-bg: rgb(30, 144, 255);
@@ -37941,6 +38034,18 @@ form.form-xs, .input-group-container-xs, .input-group-xs {
   margin-bottom: var(--bs-input-padding-y);
   padding-bottom: var(--bs-input-padding-y);
   border-bottom: var(--bs-border-width) solid var(--jb-structure-border-color);
+}
+
+/************************************************************
+Style for different background/text-color a la Bootsrap alert
+************************************************************/
+/****************************************************
+Use Bootstrap alert-COLOR for different types
+****************************************************/
+.input-group-container.has-alert-background .input-group {
+  color: var(--bs-alert-color);
+  background-color: var(--bs-alert-bg);
+  border-color: var(--bs-alert-color);
 }
 
 /************************************************************
@@ -38947,12 +39052,12 @@ the complete scss for noty is copyed and modified
   display: none;
 }
 
-.noty_theme__jquery-bootstrap.noty_type__alert {
-  --bs-alert-bg-flash: var(--bs-primary);
-}
-
 .noty_theme__jquery-bootstrap.noty_type__success {
   --bs-alert-bg-flash: var(--bs-success);
+}
+
+.noty_theme__jquery-bootstrap.noty_type__alert {
+  --bs-alert-bg-flash: var(--bs-alert);
 }
 
 .noty_theme__jquery-bootstrap.noty_type__warning {
@@ -43111,6 +43216,11 @@ Modal
 /***********************************************
 Button And Modal
 Opacity for semi-transparent and transparent content using color-mix
+************************************************/
+/***********************************************
+$type-2-alert-color
+Conections between "type" and Bootstrap color-class-names
+Used in _noty.scss and _modal.scss
 ************************************************/
 /************************************************************
 MIXIN
