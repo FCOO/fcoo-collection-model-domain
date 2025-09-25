@@ -67,12 +67,21 @@
     fcoo.promiseList.options.finish.push(() => {
         fcoo.collection._onNowChanged();
         let $body = $('body');
+
+        let  bounds = L.latLngBounds([[61.52269494598361, -4.833984375000001], [53.08082737207479, -11.667480468750002]]);
+
+
         fcoo.collection.collectionList.list.forEach( collection => {
             $body.append('<hr>');
             $.bsButton({text: collection.options.title, onClick: function(){collection.asModal()}}).appendTo($body);
             $.each(collection.parameters, (id,parameter) => {
                 $body.append('<br>');
-                $.bsButton({text: parameter.name, onClick: function(){parameter.collectionAsModal()}}).appendTo($body);
+                $.bsButton({
+                    text: parameter.name,
+                    onClick: function(){
+                        parameter.collectionAsModal({ bounds:  bounds});
+                    }
+                }).appendTo($body);
             });
         });
     });

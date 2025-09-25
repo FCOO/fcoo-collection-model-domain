@@ -26,3 +26,20 @@ $color-list:
         color : #{$color-name} !important;
     }
 }
+
+
+//Color for the outline of "current map"
+:root {
+    --cmd-current-map: darkmagenta;
+}
+
+.cmd-current-map-container {
+    display       : flex;
+    flex-direction: row;
+    align-items   : center;
+
+    .cmd-current-map {
+        display: inline-block;
+        border : 2px solid var(--cmd-current-map);
+    }
+}

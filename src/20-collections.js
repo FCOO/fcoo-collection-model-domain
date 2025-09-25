@@ -399,17 +399,19 @@ Create collections and datasets
 
             this.$accordion = this.bsModal.bsModal.$body.find('.BSACCORDION');
 
-            if (this.map){
-                if (options.mapCenter)
-                    this.map.setView(options.mapCenter);
-                if (options.mapZoom)
-                    this.map.setZoom(options.mapZoom);
-            }
-
             this.bsModal.show();
-            if (this.map)
-                this.map.invalidateSize();
 
+            let map = this.elements.map;
+            if (map){
+                map.invalidateSize();
+
+                if (options.mapCenter)
+                    map.setView(options.mapCenter);
+                if (options.mapZoom)
+                    map.setZoom(options.mapZoom);
+                if (options.bounds)
+                    map.fitBounds(options.bounds);
+            }
         },
 
         /*********************************************
@@ -488,6 +490,10 @@ Create collections and datasets
             e.$mapContainer = $('<div/>').css(nsCollection.options.mapContainerCss).height(mapHeight);
             e.map = L.map(e.$mapContainer.get(0), nsCollection.options.modalMapOptions);
 
+if (options.bounds)
+    L.rectangle(options.bounds, {color: "var(--cmd-current-map)", weight: 2, fill: false}).addTo(e.map);
+
+
             e.$mapContainer.resize( e.map.invalidateSize.bind(e.map) );
 
             e.map.setView(options.mapCenter || this.mapCenter || [56.2, 11.5], options.mapZoom || this.mapZoom || 6);
@@ -543,6 +549,17 @@ Create collections and datasets
                 if (dataset.include)
                     dataset.addToMap();
             }
+            let footer = null;
+            if (options.bounds){
+                //Construkt a map-outline in the footer
+                let ne = e.map.latLngToLayerPoint( options.bounds.getNorthEast() ),
+                    sw = e.map.latLngToLayerPoint( options.bounds.getSouthWest() ),
+                    wh  = Math.abs( ne.x - sw.x ) / Math.abs( ne.y - sw.y ),
+                    w   = Math.max( wh >= 1 ? 20    : wh*20, 7 ),
+                    h   = Math.max( wh >= 1 ? 20/wh : 20,    7 ),
+                    txt = i18next.sentence({da:'Aktuelle kort', en:'Current map'});
+                footer =  `<div class="cmd-current-map-container"><div style="width:${w}px; height:${h}px;" class="cmd-current-map"></div><span>&nbsp;:&nbsp;${txt}</span></div>`;
+            }
 
             var result = {
                     flexWidth : true,
@@ -562,7 +579,8 @@ Create collections and datasets
                         children: [{
                             header  : {icon:'fa-map', text:{da: 'Oversigtskort', en:'Overview map'}},
                             isOpen  : this.accordionStatus[0],
-                            content : e.$mapContainer
+                            content : e.$mapContainer,
+                            footer  : footer
                         }, {
                             header  : {icon:'far fa-circle-info', text: {da:'Prognoser', en:'Forecasts'}},
                             isOpen  : this.accordionStatus[1],

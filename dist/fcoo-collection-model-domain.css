@@ -56,3 +56,17 @@
 .text-darkblue {
   color: darkblue !important;
 }
+
+:root {
+  --cmd-current-map: darkmagenta;
+}
+
+.cmd-current-map-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.cmd-current-map-container .cmd-current-map {
+  display: inline-block;
+  border: 2px solid var(--cmd-current-map);
+}
