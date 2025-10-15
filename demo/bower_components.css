@@ -1031,6 +1031,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
 		}
 	}
 
+/***********************************************
+	canvas-utilities.scss,
+
+	(c) 2022, FCOO
+
+	https://github.com/FCOO/canvas-utilities
+	https://github.com/FCOO
+
+
+************************************************/
+path:focus {
+  outline: none; }
+
 @charset "UTF-8";
 /***********************************************
     fcoo-colors.scss,
@@ -44476,6 +44489,2847 @@ This is fixed by overwriting the last size with "inherit"
   font-size: inherit;
 }
 /***********************************************
+leaflet-bootstrap-marker.scss
+
+lbm-type-TYPE lbm-color-COLOR [lbm-border-color-COLOR] [lbm-transparent] [lbm-puls] [lbm-hover]
+
+lbm-type-TYPE     : Sets the different type of bsMarker
+lbm-[COLOR]       : Sets inner color to [COLOR]
+lbm-border-[COLOR]: border-color = [COLOR]
+
+lbm-shadow        : Shadow in same color as inner color
+lbm-puls          : Has a pulsing ring
+lbm-transparent   : Inner color get opacity: 0.7
+lbm-hover         : When hover: get shadow and opacity: 0.9 for ibm-transparent
+************************************************/
+/***********************************************************************
+
+leaflet-bootstrap-marker-mixin.scss
+
+*************************************************************************/
+/***********************************************************************
+marker-circle-color
+Create style for bsMarkerCircle in different colors
+*************************************************************************/
+/***********************************************************************
+lbm-circle-and-icon-classes
+Create class for bsMarkerCircle named $name with color and color-border
+*************************************************************************/
+/***********************************************************************
+lbm-marker-and-icon-classes
+Create class for bsMarkerCircle named $name with color and color-border
+*************************************************************************/
+/***********************************************************************
+fa-lbm-color
+Create class for color and border-color used by L.bsMarkerAsIcon (and $.bsMarkerAsIcon)
+to create fa-icon looking like the marker
+*************************************************************************/
+/***********************************************
+leaflet-bootstrap-marker.scss
+
+lbm-type-TYPE lbm-color-COLOR [lbm-border-color-COLOR] [lbm-transparent] [lbm-puls] [lbm-hover]
+
+lbm-type-TYPE     : Sets the different type of bsMarker
+lbm-[COLOR]       : Sets inner color to [COLOR]
+lbm-border-[COLOR]: border-color = [COLOR]
+
+lbm-shadow        : Shadow in same color as inner color
+lbm-puls          : Has a pulsing ring
+lbm-transparent   : Inner color get opacity: 0.7
+lbm-hover         : When hover: get shadow and opacity: 0.9 for ibm-transparent
+************************************************/
+/***********************************************
+
+leaflet-bootstrap-marker-colors.scss
+List of avaible color-name and values
+
+************************************************/
+/***********************************************
+leaflet-bootstrap-marker-base.scss
+************************************************/
+.fa-lbm-color-pink {
+  color: pink;
+}
+
+.fa-lbm-border-color-pink {
+  color: pink;
+}
+
+.fa-lbm-color-purple {
+  color: purple;
+}
+
+.fa-lbm-border-color-purple {
+  color: purple;
+}
+
+.fa-lbm-color-red {
+  color: red;
+}
+
+.fa-lbm-border-color-red {
+  color: red;
+}
+
+.fa-lbm-color-orange {
+  color: orange;
+}
+
+.fa-lbm-border-color-orange {
+  color: orange;
+}
+
+.fa-lbm-color-yellow {
+  color: yellow;
+}
+
+.fa-lbm-border-color-yellow {
+  color: yellow;
+}
+
+.fa-lbm-color-green {
+  color: green;
+}
+
+.fa-lbm-border-color-green {
+  color: green;
+}
+
+.fa-lbm-color-cyan {
+  color: cyan;
+}
+
+.fa-lbm-border-color-cyan {
+  color: cyan;
+}
+
+.fa-lbm-color-blue {
+  color: blue;
+}
+
+.fa-lbm-border-color-blue {
+  color: blue;
+}
+
+.fa-lbm-color-brown {
+  color: brown;
+}
+
+.fa-lbm-border-color-brown {
+  color: brown;
+}
+
+.fa-lbm-color-white {
+  color: white;
+}
+
+.fa-lbm-border-color-white {
+  color: white;
+}
+
+.fa-lbm-color-grey {
+  color: grey;
+}
+
+.fa-lbm-border-color-grey {
+  color: grey;
+}
+
+.fa-lbm-color-black {
+  color: black;
+}
+
+.fa-lbm-border-color-black {
+  color: black;
+}
+
+.fa-lbm-color-indigo {
+  color: indigo;
+}
+
+.fa-lbm-border-color-indigo {
+  color: indigo;
+}
+
+.fa-lbm-color-teal {
+  color: teal;
+}
+
+.fa-lbm-border-color-teal {
+  color: teal;
+}
+
+.fa-lbm-color-darkgray {
+  color: darkgray;
+}
+
+.fa-lbm-border-color-darkgray {
+  color: darkgray;
+}
+
+.fa-lbm-color-primary {
+  color: #0d6efd;
+}
+
+.fa-lbm-border-color-primary {
+  color: #0d6efd;
+}
+
+.fa-lbm-color-secondary {
+  color: #6c757d;
+}
+
+.fa-lbm-border-color-secondary {
+  color: #6c757d;
+}
+
+.fa-lbm-color-success {
+  color: #198754;
+}
+
+.fa-lbm-border-color-success {
+  color: #198754;
+}
+
+.fa-lbm-color-info {
+  color: #0dcaf0;
+}
+
+.fa-lbm-border-color-info {
+  color: #0dcaf0;
+}
+
+.fa-lbm-color-warning {
+  color: #ffc107;
+}
+
+.fa-lbm-border-color-warning {
+  color: #ffc107;
+}
+
+.fa-lbm-color-danger {
+  color: #dc3545;
+}
+
+.fa-lbm-border-color-danger {
+  color: #dc3545;
+}
+
+.fa-lbm-color-light {
+  color: #f8f9fa;
+}
+
+.fa-lbm-border-color-light {
+  color: #f8f9fa;
+}
+
+.fa-lbm-color-dark {
+  color: #212529;
+}
+
+.fa-lbm-border-color-dark {
+  color: #212529;
+}
+
+.fa-lbm-color-standard {
+  color: #4285F4;
+}
+
+.fa-lbm-border-color-standard {
+  color: #4285F4;
+}
+
+.lbm-base .inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+.lbm-base .inner.text {
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  letter-spacing: 0px;
+  font-weight: bold;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+}
+.lbm-base.lbm-text-is-black .inner {
+  color: #000;
+}
+.lbm-base.lbm-text-is-white .inner {
+  color: #fff;
+}
+.lbm-base.lbm-base.lbm-size-xs {
+  font-size: 8px;
+}
+.lbm-base.lbm-base.lbm-size-xs.lbm-scale-40 {
+  font-size: 3px;
+}
+.lbm-base.lbm-base.lbm-size-xs.lbm-scale-50 {
+  font-size: 4px;
+}
+.lbm-base.lbm-base.lbm-size-xs.lbm-scale-60 {
+  font-size: 5px;
+}
+.lbm-base.lbm-base.lbm-size-xs.lbm-scale-70 {
+  font-size: 6px;
+}
+.lbm-base.lbm-base.lbm-size-xs.lbm-scale-80 {
+  font-size: 6px;
+}
+.lbm-base.lbm-base.lbm-size-xs.lbm-scale-90 {
+  font-size: 7px;
+}
+.lbm-base.lbm-base.lbm-size-xs.lbm-scale-120 {
+  font-size: 10px;
+}
+.lbm-base.lbm-base.lbm-size-xs.lbm-scale-130 {
+  font-size: 10px;
+}
+.lbm-base.lbm-base.lbm-size-xs.lbm-scale-150 {
+  font-size: 12px;
+}
+.lbm-base.lbm-base.lbm-size-xs.lbm-scale-180 {
+  font-size: 14px;
+}
+.lbm-base.lbm-base.lbm-size-xs.lbm-scale-200 {
+  font-size: 16px;
+}
+.lbm-base.lbm-base.lbm-size-sm {
+  font-size: 14px;
+}
+.lbm-base.lbm-base.lbm-size-sm.lbm-scale-40 {
+  font-size: 6px;
+}
+.lbm-base.lbm-base.lbm-size-sm.lbm-scale-50 {
+  font-size: 7px;
+}
+.lbm-base.lbm-base.lbm-size-sm.lbm-scale-60 {
+  font-size: 8px;
+}
+.lbm-base.lbm-base.lbm-size-sm.lbm-scale-70 {
+  font-size: 10px;
+}
+.lbm-base.lbm-base.lbm-size-sm.lbm-scale-80 {
+  font-size: 11px;
+}
+.lbm-base.lbm-base.lbm-size-sm.lbm-scale-90 {
+  font-size: 13px;
+}
+.lbm-base.lbm-base.lbm-size-sm.lbm-scale-120 {
+  font-size: 17px;
+}
+.lbm-base.lbm-base.lbm-size-sm.lbm-scale-130 {
+  font-size: 18px;
+}
+.lbm-base.lbm-base.lbm-size-sm.lbm-scale-150 {
+  font-size: 21px;
+}
+.lbm-base.lbm-base.lbm-size-sm.lbm-scale-180 {
+  font-size: 25px;
+}
+.lbm-base.lbm-base.lbm-size-sm.lbm-scale-200 {
+  font-size: 28px;
+}
+.lbm-base.lbm-base.lbm-size-nl {
+  font-size: 24px;
+}
+.lbm-base.lbm-base.lbm-size-nl.lbm-scale-40 {
+  font-size: 10px;
+}
+.lbm-base.lbm-base.lbm-size-nl.lbm-scale-50 {
+  font-size: 12px;
+}
+.lbm-base.lbm-base.lbm-size-nl.lbm-scale-60 {
+  font-size: 14px;
+}
+.lbm-base.lbm-base.lbm-size-nl.lbm-scale-70 {
+  font-size: 17px;
+}
+.lbm-base.lbm-base.lbm-size-nl.lbm-scale-80 {
+  font-size: 19px;
+}
+.lbm-base.lbm-base.lbm-size-nl.lbm-scale-90 {
+  font-size: 22px;
+}
+.lbm-base.lbm-base.lbm-size-nl.lbm-scale-120 {
+  font-size: 29px;
+}
+.lbm-base.lbm-base.lbm-size-nl.lbm-scale-130 {
+  font-size: 31px;
+}
+.lbm-base.lbm-base.lbm-size-nl.lbm-scale-150 {
+  font-size: 36px;
+}
+.lbm-base.lbm-base.lbm-size-nl.lbm-scale-180 {
+  font-size: 43px;
+}
+.lbm-base.lbm-base.lbm-size-nl.lbm-scale-200 {
+  font-size: 48px;
+}
+.lbm-base.lbm-base.lbm-size-lg {
+  font-size: 32px;
+}
+.lbm-base.lbm-base.lbm-size-lg.lbm-scale-40 {
+  font-size: 13px;
+}
+.lbm-base.lbm-base.lbm-size-lg.lbm-scale-50 {
+  font-size: 16px;
+}
+.lbm-base.lbm-base.lbm-size-lg.lbm-scale-60 {
+  font-size: 19px;
+}
+.lbm-base.lbm-base.lbm-size-lg.lbm-scale-70 {
+  font-size: 22px;
+}
+.lbm-base.lbm-base.lbm-size-lg.lbm-scale-80 {
+  font-size: 26px;
+}
+.lbm-base.lbm-base.lbm-size-lg.lbm-scale-90 {
+  font-size: 29px;
+}
+.lbm-base.lbm-base.lbm-size-lg.lbm-scale-120 {
+  font-size: 38px;
+}
+.lbm-base.lbm-base.lbm-size-lg.lbm-scale-130 {
+  font-size: 42px;
+}
+.lbm-base.lbm-base.lbm-size-lg.lbm-scale-150 {
+  font-size: 48px;
+}
+.lbm-base.lbm-base.lbm-size-lg.lbm-scale-180 {
+  font-size: 58px;
+}
+.lbm-base.lbm-base.lbm-size-lg.lbm-scale-200 {
+  font-size: 64px;
+}
+.lbm-base.lbm-base.lbm-size-xl {
+  font-size: 42px;
+}
+.lbm-base.lbm-base.lbm-size-xl.lbm-scale-40 {
+  font-size: 17px;
+}
+.lbm-base.lbm-base.lbm-size-xl.lbm-scale-50 {
+  font-size: 21px;
+}
+.lbm-base.lbm-base.lbm-size-xl.lbm-scale-60 {
+  font-size: 25px;
+}
+.lbm-base.lbm-base.lbm-size-xl.lbm-scale-70 {
+  font-size: 29px;
+}
+.lbm-base.lbm-base.lbm-size-xl.lbm-scale-80 {
+  font-size: 34px;
+}
+.lbm-base.lbm-base.lbm-size-xl.lbm-scale-90 {
+  font-size: 38px;
+}
+.lbm-base.lbm-base.lbm-size-xl.lbm-scale-120 {
+  font-size: 50px;
+}
+.lbm-base.lbm-base.lbm-size-xl.lbm-scale-130 {
+  font-size: 55px;
+}
+.lbm-base.lbm-base.lbm-size-xl.lbm-scale-150 {
+  font-size: 63px;
+}
+.lbm-base.lbm-base.lbm-size-xl.lbm-scale-180 {
+  font-size: 76px;
+}
+.lbm-base.lbm-base.lbm-size-xl.lbm-scale-200 {
+  font-size: 84px;
+}
+.lbm-base.lbm-scale-inner-40 .inner * {
+  font-size: 0.4em;
+}
+.lbm-base.lbm-scale-inner-50 .inner * {
+  font-size: 0.5em;
+}
+.lbm-base.lbm-scale-inner-60 .inner * {
+  font-size: 0.6em;
+}
+.lbm-base.lbm-scale-inner-70 .inner * {
+  font-size: 0.7em;
+}
+.lbm-base.lbm-scale-inner-80 .inner * {
+  font-size: 0.8em;
+}
+.lbm-base.lbm-scale-inner-90 .inner * {
+  font-size: 0.9em;
+}
+.lbm-base.lbm-scale-inner-120 .inner * {
+  font-size: 1.2em;
+}
+.lbm-base.lbm-scale-inner-130 .inner * {
+  font-size: 1.3em;
+}
+.lbm-base.lbm-scale-inner-150 .inner * {
+  font-size: 1.5em;
+}
+.lbm-base.lbm-scale-inner-180 .inner * {
+  font-size: 1.8em;
+}
+.lbm-base.lbm-scale-inner-200 .inner * {
+  font-size: 2em;
+}
+
+.leaflet-tooltip-icon-xs.leaflet-tooltip-bottom {
+  margin-top: 7px;
+}
+.leaflet-tooltip-icon-xs.leaflet-tooltip-top {
+  margin-top: -7px;
+}
+.leaflet-tooltip-icon-xs.leaflet-tooltip-left {
+  margin-left: -7px;
+}
+.leaflet-tooltip-icon-xs.leaflet-tooltip-right {
+  margin-left: 7px;
+}
+
+.leaflet-tooltip-icon-sm.leaflet-tooltip-bottom {
+  margin-top: 10px;
+}
+.leaflet-tooltip-icon-sm.leaflet-tooltip-top {
+  margin-top: -10px;
+}
+.leaflet-tooltip-icon-sm.leaflet-tooltip-left {
+  margin-left: -10px;
+}
+.leaflet-tooltip-icon-sm.leaflet-tooltip-right {
+  margin-left: 10px;
+}
+
+.leaflet-tooltip-icon-nl.leaflet-tooltip-bottom {
+  margin-top: 15px;
+}
+.leaflet-tooltip-icon-nl.leaflet-tooltip-top {
+  margin-top: -15px;
+}
+.leaflet-tooltip-icon-nl.leaflet-tooltip-left {
+  margin-left: -15px;
+}
+.leaflet-tooltip-icon-nl.leaflet-tooltip-right {
+  margin-left: 15px;
+}
+
+.leaflet-tooltip-icon-lg.leaflet-tooltip-bottom {
+  margin-top: 19px;
+}
+.leaflet-tooltip-icon-lg.leaflet-tooltip-top {
+  margin-top: -19px;
+}
+.leaflet-tooltip-icon-lg.leaflet-tooltip-left {
+  margin-left: -19px;
+}
+.leaflet-tooltip-icon-lg.leaflet-tooltip-right {
+  margin-left: 19px;
+}
+
+.leaflet-tooltip-icon-xl.leaflet-tooltip-bottom {
+  margin-top: 24px;
+}
+.leaflet-tooltip-icon-xl.leaflet-tooltip-top {
+  margin-top: -24px;
+}
+.leaflet-tooltip-icon-xl.leaflet-tooltip-left {
+  margin-left: -24px;
+}
+.leaflet-tooltip-icon-xl.leaflet-tooltip-right {
+  margin-left: 24px;
+}
+
+/********************************************************************************
+
+leaflet-bootstrap-marker-circle.scss
+Style for bsMarkerCircle estimated to look like Google Maps
+
+The pulsate is a djusted version of leaflet-icon-pulse by Filip Zavadil
+https://github.com/mapshakers/leaflet-icon-pulse
+
+********************************************************************************/
+@keyframes pulsate {
+  0% {
+    transform: scale(0.56, 0.56);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1, 1);
+    opacity: 0;
+  }
+}
+.lbm-type-circle {
+  opacity: 1;
+  border: 2px solid black;
+  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.5);
+  background-color: #fff;
+  color: #000;
+  border-color: #000;
+}
+.lbm-type-circle.lbm-thickBorder {
+  border-width: 3px;
+}
+.lbm-type-circle.lbm-thinBorder {
+  border-width: 1px;
+}
+.lbm-type-circle.lbm-noBorder {
+  border: none;
+}
+.lbm-type-circle.lbm-round {
+  border-radius: 100%;
+}
+.lbm-type-circle.lbm-round:before {
+  border-radius: 100%;
+}
+.lbm-type-circle.lbm-transparent {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+.lbm-type-circle.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+.lbm-type-circle.lbm-shadow, .lbm-type-circle.leaflet-drag-target, .lbm-type-circle.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(255, 255, 255, 0.28);
+}
+.lbm-type-circle:before {
+  box-shadow: 0 0 6px 2px #fff;
+}
+.lbm-type-circle:before {
+  display: none;
+  position: absolute;
+  content: "";
+  height: calc(100% + 0.8em);
+  width: calc(100% + 0.8em);
+  margin: -0.4em 0 0 -0.4em;
+}
+.lbm-type-circle.lbm-puls:before {
+  display: block;
+  animation: pulsate 1s ease-out;
+  animation-iteration-count: infinite;
+}
+.lbm-type-circle .inner {
+  font-size: calc(0.7em - 4px);
+}
+
+.lbm-type-circle.lbm-color-pink {
+  background-color: pink;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-pink.lbm-transparent {
+  background-color: rgba(255, 192, 203, 0.7);
+}
+.lbm-type-circle.lbm-color-pink.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(255, 192, 203, 0.9);
+}
+.lbm-type-circle.lbm-color-pink.lbm-shadow, .lbm-type-circle.lbm-color-pink.leaflet-drag-target, .lbm-type-circle.lbm-color-pink.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(255, 192, 203, 0.28);
+}
+.lbm-type-circle.lbm-color-pink:before {
+  box-shadow: 0 0 6px 2px pink;
+}
+.lbm-type-circle.lbm-border-color-pink {
+  border-color: pink;
+}
+
+.lbm-type-circle.lbm-color-purple {
+  background-color: purple;
+  color: #fff;
+}
+.lbm-type-circle.lbm-color-purple.lbm-transparent {
+  background-color: rgba(128, 0, 128, 0.7);
+}
+.lbm-type-circle.lbm-color-purple.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(128, 0, 128, 0.9);
+}
+.lbm-type-circle.lbm-color-purple.lbm-shadow, .lbm-type-circle.lbm-color-purple.leaflet-drag-target, .lbm-type-circle.lbm-color-purple.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(128, 0, 128, 0.28);
+}
+.lbm-type-circle.lbm-color-purple:before {
+  box-shadow: 0 0 6px 2px purple;
+}
+.lbm-type-circle.lbm-border-color-purple {
+  border-color: purple;
+}
+
+.lbm-type-circle.lbm-color-red {
+  background-color: red;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-red.lbm-transparent {
+  background-color: rgba(255, 0, 0, 0.7);
+}
+.lbm-type-circle.lbm-color-red.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(255, 0, 0, 0.9);
+}
+.lbm-type-circle.lbm-color-red.lbm-shadow, .lbm-type-circle.lbm-color-red.leaflet-drag-target, .lbm-type-circle.lbm-color-red.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(255, 0, 0, 0.28);
+}
+.lbm-type-circle.lbm-color-red:before {
+  box-shadow: 0 0 6px 2px red;
+}
+.lbm-type-circle.lbm-border-color-red {
+  border-color: red;
+}
+
+.lbm-type-circle.lbm-color-orange {
+  background-color: orange;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-orange.lbm-transparent {
+  background-color: rgba(255, 165, 0, 0.7);
+}
+.lbm-type-circle.lbm-color-orange.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(255, 165, 0, 0.9);
+}
+.lbm-type-circle.lbm-color-orange.lbm-shadow, .lbm-type-circle.lbm-color-orange.leaflet-drag-target, .lbm-type-circle.lbm-color-orange.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(255, 165, 0, 0.28);
+}
+.lbm-type-circle.lbm-color-orange:before {
+  box-shadow: 0 0 6px 2px orange;
+}
+.lbm-type-circle.lbm-border-color-orange {
+  border-color: orange;
+}
+
+.lbm-type-circle.lbm-color-yellow {
+  background-color: yellow;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-yellow.lbm-transparent {
+  background-color: rgba(255, 255, 0, 0.7);
+}
+.lbm-type-circle.lbm-color-yellow.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(255, 255, 0, 0.9);
+}
+.lbm-type-circle.lbm-color-yellow.lbm-shadow, .lbm-type-circle.lbm-color-yellow.leaflet-drag-target, .lbm-type-circle.lbm-color-yellow.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(255, 255, 0, 0.28);
+}
+.lbm-type-circle.lbm-color-yellow:before {
+  box-shadow: 0 0 6px 2px yellow;
+}
+.lbm-type-circle.lbm-border-color-yellow {
+  border-color: yellow;
+}
+
+.lbm-type-circle.lbm-color-green {
+  background-color: green;
+  color: #fff;
+}
+.lbm-type-circle.lbm-color-green.lbm-transparent {
+  background-color: rgba(0, 128, 0, 0.7);
+}
+.lbm-type-circle.lbm-color-green.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(0, 128, 0, 0.9);
+}
+.lbm-type-circle.lbm-color-green.lbm-shadow, .lbm-type-circle.lbm-color-green.leaflet-drag-target, .lbm-type-circle.lbm-color-green.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(0, 128, 0, 0.28);
+}
+.lbm-type-circle.lbm-color-green:before {
+  box-shadow: 0 0 6px 2px green;
+}
+.lbm-type-circle.lbm-border-color-green {
+  border-color: green;
+}
+
+.lbm-type-circle.lbm-color-cyan {
+  background-color: cyan;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-cyan.lbm-transparent {
+  background-color: rgba(0, 255, 255, 0.7);
+}
+.lbm-type-circle.lbm-color-cyan.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(0, 255, 255, 0.9);
+}
+.lbm-type-circle.lbm-color-cyan.lbm-shadow, .lbm-type-circle.lbm-color-cyan.leaflet-drag-target, .lbm-type-circle.lbm-color-cyan.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(0, 255, 255, 0.28);
+}
+.lbm-type-circle.lbm-color-cyan:before {
+  box-shadow: 0 0 6px 2px cyan;
+}
+.lbm-type-circle.lbm-border-color-cyan {
+  border-color: cyan;
+}
+
+.lbm-type-circle.lbm-color-blue {
+  background-color: blue;
+  color: #fff;
+}
+.lbm-type-circle.lbm-color-blue.lbm-transparent {
+  background-color: rgba(0, 0, 255, 0.7);
+}
+.lbm-type-circle.lbm-color-blue.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(0, 0, 255, 0.9);
+}
+.lbm-type-circle.lbm-color-blue.lbm-shadow, .lbm-type-circle.lbm-color-blue.leaflet-drag-target, .lbm-type-circle.lbm-color-blue.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(0, 0, 255, 0.28);
+}
+.lbm-type-circle.lbm-color-blue:before {
+  box-shadow: 0 0 6px 2px blue;
+}
+.lbm-type-circle.lbm-border-color-blue {
+  border-color: blue;
+}
+
+.lbm-type-circle.lbm-color-brown {
+  background-color: brown;
+  color: #fff;
+}
+.lbm-type-circle.lbm-color-brown.lbm-transparent {
+  background-color: rgba(165, 42, 42, 0.7);
+}
+.lbm-type-circle.lbm-color-brown.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(165, 42, 42, 0.9);
+}
+.lbm-type-circle.lbm-color-brown.lbm-shadow, .lbm-type-circle.lbm-color-brown.leaflet-drag-target, .lbm-type-circle.lbm-color-brown.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(165, 42, 42, 0.28);
+}
+.lbm-type-circle.lbm-color-brown:before {
+  box-shadow: 0 0 6px 2px brown;
+}
+.lbm-type-circle.lbm-border-color-brown {
+  border-color: brown;
+}
+
+.lbm-type-circle.lbm-color-white {
+  background-color: white;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-white.lbm-transparent {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+.lbm-type-circle.lbm-color-white.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+.lbm-type-circle.lbm-color-white.lbm-shadow, .lbm-type-circle.lbm-color-white.leaflet-drag-target, .lbm-type-circle.lbm-color-white.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(255, 255, 255, 0.28);
+}
+.lbm-type-circle.lbm-color-white:before {
+  box-shadow: 0 0 6px 2px white;
+}
+.lbm-type-circle.lbm-border-color-white {
+  border-color: white;
+}
+
+.lbm-type-circle.lbm-color-grey {
+  background-color: grey;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-grey.lbm-transparent {
+  background-color: rgba(128, 128, 128, 0.7);
+}
+.lbm-type-circle.lbm-color-grey.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(128, 128, 128, 0.9);
+}
+.lbm-type-circle.lbm-color-grey.lbm-shadow, .lbm-type-circle.lbm-color-grey.leaflet-drag-target, .lbm-type-circle.lbm-color-grey.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(128, 128, 128, 0.28);
+}
+.lbm-type-circle.lbm-color-grey:before {
+  box-shadow: 0 0 6px 2px grey;
+}
+.lbm-type-circle.lbm-border-color-grey {
+  border-color: grey;
+}
+
+.lbm-type-circle.lbm-color-black {
+  background-color: black;
+  color: #fff;
+}
+.lbm-type-circle.lbm-color-black.lbm-transparent {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.lbm-type-circle.lbm-color-black.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+.lbm-type-circle.lbm-color-black.lbm-shadow, .lbm-type-circle.lbm-color-black.leaflet-drag-target, .lbm-type-circle.lbm-color-black.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.28);
+}
+.lbm-type-circle.lbm-color-black:before {
+  box-shadow: 0 0 6px 2px black;
+}
+.lbm-type-circle.lbm-border-color-black {
+  border-color: black;
+}
+
+.lbm-type-circle.lbm-color-indigo {
+  background-color: indigo;
+  color: #fff;
+}
+.lbm-type-circle.lbm-color-indigo.lbm-transparent {
+  background-color: rgba(75, 0, 130, 0.7);
+}
+.lbm-type-circle.lbm-color-indigo.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(75, 0, 130, 0.9);
+}
+.lbm-type-circle.lbm-color-indigo.lbm-shadow, .lbm-type-circle.lbm-color-indigo.leaflet-drag-target, .lbm-type-circle.lbm-color-indigo.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(75, 0, 130, 0.28);
+}
+.lbm-type-circle.lbm-color-indigo:before {
+  box-shadow: 0 0 6px 2px indigo;
+}
+.lbm-type-circle.lbm-border-color-indigo {
+  border-color: indigo;
+}
+
+.lbm-type-circle.lbm-color-teal {
+  background-color: teal;
+  color: #fff;
+}
+.lbm-type-circle.lbm-color-teal.lbm-transparent {
+  background-color: rgba(0, 128, 128, 0.7);
+}
+.lbm-type-circle.lbm-color-teal.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(0, 128, 128, 0.9);
+}
+.lbm-type-circle.lbm-color-teal.lbm-shadow, .lbm-type-circle.lbm-color-teal.leaflet-drag-target, .lbm-type-circle.lbm-color-teal.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(0, 128, 128, 0.28);
+}
+.lbm-type-circle.lbm-color-teal:before {
+  box-shadow: 0 0 6px 2px teal;
+}
+.lbm-type-circle.lbm-border-color-teal {
+  border-color: teal;
+}
+
+.lbm-type-circle.lbm-color-darkgray {
+  background-color: darkgray;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-darkgray.lbm-transparent {
+  background-color: rgba(169, 169, 169, 0.7);
+}
+.lbm-type-circle.lbm-color-darkgray.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(169, 169, 169, 0.9);
+}
+.lbm-type-circle.lbm-color-darkgray.lbm-shadow, .lbm-type-circle.lbm-color-darkgray.leaflet-drag-target, .lbm-type-circle.lbm-color-darkgray.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(169, 169, 169, 0.28);
+}
+.lbm-type-circle.lbm-color-darkgray:before {
+  box-shadow: 0 0 6px 2px darkgray;
+}
+.lbm-type-circle.lbm-border-color-darkgray {
+  border-color: darkgray;
+}
+
+.lbm-type-circle.lbm-color-primary {
+  background-color: #0d6efd;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-primary.lbm-transparent {
+  background-color: rgba(13, 110, 253, 0.7);
+}
+.lbm-type-circle.lbm-color-primary.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(13, 110, 253, 0.9);
+}
+.lbm-type-circle.lbm-color-primary.lbm-shadow, .lbm-type-circle.lbm-color-primary.leaflet-drag-target, .lbm-type-circle.lbm-color-primary.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(13, 110, 253, 0.28);
+}
+.lbm-type-circle.lbm-color-primary:before {
+  box-shadow: 0 0 6px 2px #0d6efd;
+}
+.lbm-type-circle.lbm-border-color-primary {
+  border-color: #0d6efd;
+}
+
+.lbm-type-circle.lbm-color-secondary {
+  background-color: #6c757d;
+  color: #fff;
+}
+.lbm-type-circle.lbm-color-secondary.lbm-transparent {
+  background-color: rgba(108, 117, 125, 0.7);
+}
+.lbm-type-circle.lbm-color-secondary.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(108, 117, 125, 0.9);
+}
+.lbm-type-circle.lbm-color-secondary.lbm-shadow, .lbm-type-circle.lbm-color-secondary.leaflet-drag-target, .lbm-type-circle.lbm-color-secondary.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(108, 117, 125, 0.28);
+}
+.lbm-type-circle.lbm-color-secondary:before {
+  box-shadow: 0 0 6px 2px #6c757d;
+}
+.lbm-type-circle.lbm-border-color-secondary {
+  border-color: #6c757d;
+}
+
+.lbm-type-circle.lbm-color-success {
+  background-color: #198754;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-success.lbm-transparent {
+  background-color: rgba(25, 135, 84, 0.7);
+}
+.lbm-type-circle.lbm-color-success.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(25, 135, 84, 0.9);
+}
+.lbm-type-circle.lbm-color-success.lbm-shadow, .lbm-type-circle.lbm-color-success.leaflet-drag-target, .lbm-type-circle.lbm-color-success.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(25, 135, 84, 0.28);
+}
+.lbm-type-circle.lbm-color-success:before {
+  box-shadow: 0 0 6px 2px #198754;
+}
+.lbm-type-circle.lbm-border-color-success {
+  border-color: #198754;
+}
+
+.lbm-type-circle.lbm-color-info {
+  background-color: #0dcaf0;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-info.lbm-transparent {
+  background-color: rgba(13, 202, 240, 0.7);
+}
+.lbm-type-circle.lbm-color-info.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(13, 202, 240, 0.9);
+}
+.lbm-type-circle.lbm-color-info.lbm-shadow, .lbm-type-circle.lbm-color-info.leaflet-drag-target, .lbm-type-circle.lbm-color-info.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(13, 202, 240, 0.28);
+}
+.lbm-type-circle.lbm-color-info:before {
+  box-shadow: 0 0 6px 2px #0dcaf0;
+}
+.lbm-type-circle.lbm-border-color-info {
+  border-color: #0dcaf0;
+}
+
+.lbm-type-circle.lbm-color-warning {
+  background-color: #ffc107;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-warning.lbm-transparent {
+  background-color: rgba(255, 193, 7, 0.7);
+}
+.lbm-type-circle.lbm-color-warning.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(255, 193, 7, 0.9);
+}
+.lbm-type-circle.lbm-color-warning.lbm-shadow, .lbm-type-circle.lbm-color-warning.leaflet-drag-target, .lbm-type-circle.lbm-color-warning.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(255, 193, 7, 0.28);
+}
+.lbm-type-circle.lbm-color-warning:before {
+  box-shadow: 0 0 6px 2px #ffc107;
+}
+.lbm-type-circle.lbm-border-color-warning {
+  border-color: #ffc107;
+}
+
+.lbm-type-circle.lbm-color-danger {
+  background-color: #dc3545;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-danger.lbm-transparent {
+  background-color: rgba(220, 53, 69, 0.7);
+}
+.lbm-type-circle.lbm-color-danger.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(220, 53, 69, 0.9);
+}
+.lbm-type-circle.lbm-color-danger.lbm-shadow, .lbm-type-circle.lbm-color-danger.leaflet-drag-target, .lbm-type-circle.lbm-color-danger.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(220, 53, 69, 0.28);
+}
+.lbm-type-circle.lbm-color-danger:before {
+  box-shadow: 0 0 6px 2px #dc3545;
+}
+.lbm-type-circle.lbm-border-color-danger {
+  border-color: #dc3545;
+}
+
+.lbm-type-circle.lbm-color-light {
+  background-color: #f8f9fa;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-light.lbm-transparent {
+  background-color: rgba(248, 249, 250, 0.7);
+}
+.lbm-type-circle.lbm-color-light.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(248, 249, 250, 0.9);
+}
+.lbm-type-circle.lbm-color-light.lbm-shadow, .lbm-type-circle.lbm-color-light.leaflet-drag-target, .lbm-type-circle.lbm-color-light.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(248, 249, 250, 0.28);
+}
+.lbm-type-circle.lbm-color-light:before {
+  box-shadow: 0 0 6px 2px #f8f9fa;
+}
+.lbm-type-circle.lbm-border-color-light {
+  border-color: #f8f9fa;
+}
+
+.lbm-type-circle.lbm-color-dark {
+  background-color: #212529;
+  color: #fff;
+}
+.lbm-type-circle.lbm-color-dark.lbm-transparent {
+  background-color: rgba(33, 37, 41, 0.7);
+}
+.lbm-type-circle.lbm-color-dark.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(33, 37, 41, 0.9);
+}
+.lbm-type-circle.lbm-color-dark.lbm-shadow, .lbm-type-circle.lbm-color-dark.leaflet-drag-target, .lbm-type-circle.lbm-color-dark.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(33, 37, 41, 0.28);
+}
+.lbm-type-circle.lbm-color-dark:before {
+  box-shadow: 0 0 6px 2px #212529;
+}
+.lbm-type-circle.lbm-border-color-dark {
+  border-color: #212529;
+}
+
+.lbm-type-circle.lbm-color-standard {
+  background-color: #4285F4;
+  color: #000;
+}
+.lbm-type-circle.lbm-color-standard.lbm-transparent {
+  background-color: rgba(66, 133, 244, 0.7);
+}
+.lbm-type-circle.lbm-color-standard.lbm-transparent.lbm-hover:hover {
+  background-color: rgba(66, 133, 244, 0.9);
+}
+.lbm-type-circle.lbm-color-standard.lbm-shadow, .lbm-type-circle.lbm-color-standard.leaflet-drag-target, .lbm-type-circle.lbm-color-standard.lbm-hover:hover {
+  box-shadow: 0px 0px 0px 5px rgba(66, 133, 244, 0.28);
+}
+.lbm-type-circle.lbm-color-standard:before {
+  box-shadow: 0 0 6px 2px #4285F4;
+}
+.lbm-type-circle.lbm-border-color-standard {
+  border-color: #4285F4;
+}
+
+/***********************************************
+
+_leaflet-bootstrap-marker-icon.scss,
+
+************************************************/
+@keyframes icon-pulsate {
+  0% {
+    transform: scale(1, 1);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.8, 1.8);
+    opacity: 0;
+  }
+}
+.lbm-type-icon .lbm-content-outer {
+  width: 100%;
+  height: 100%;
+}
+.lbm-type-icon .lbm-content-svg {
+  position: relative;
+}
+.lbm-type-icon .lbm-content {
+  display: block;
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.lbm-type-icon .lbm-content.lbm-content-puls {
+  font-size: 1em;
+  top: 0;
+  visibility: hidden;
+}
+.lbm-type-icon .lbm-content.lbm-content-shadow {
+  font-size: 1em;
+  top: -1em;
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.5);
+  -moz-text-stroke-color: rgba(255, 255, 255, 0.5);
+  -webkit-text-stroke-width: 2px;
+  -moz-text-stroke-width: 2px;
+}
+.lbm-type-icon .lbm-content.lbm-content-background {
+  font-size: 1em;
+  top: -2em;
+}
+.lbm-type-icon .lbm-content.lbm-content-border {
+  font-size: 1em;
+  top: -3em;
+}
+.lbm-type-icon .inner, .lbm-type-icon .inner2 {
+  position: relative;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  line-height: 2;
+  font-size: 0.5em;
+}
+.lbm-type-icon .inner {
+  top: calc(-4em / 0.5);
+}
+.lbm-type-icon .inner2 + .inner {
+  top: calc(-5em / 0.5);
+}
+.lbm-type-icon .inner2 {
+  top: calc(-4em / 0.5);
+}
+.lbm-type-icon.lbm-transparent .lbm-content-background {
+  opacity: 0.7;
+}
+.lbm-type-icon.lbm-transparent.lbm-hover:hover .lbm-content-background {
+  opacity: 0.9;
+}
+.lbm-type-icon.lbm-puls .lbm-content-puls {
+  visibility: visible;
+  animation: icon-pulsate 1s ease-out;
+  animation-iteration-count: infinite;
+}
+.lbm-type-icon.lbm-shadow .lbm-content-shadow, .lbm-type-icon.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.5);
+  -moz-text-stroke-color: rgba(255, 255, 255, 0.5);
+  -webkit-text-stroke-width: 10px;
+  -moz-text-stroke-width: 10px;
+}
+.lbm-type-icon.lbm-no-fill .lbm-content-border {
+  top: -2em;
+}
+.lbm-type-icon.lbm-scale-y-40 .lbm-content {
+  line-height: 0.4;
+}
+.lbm-type-icon.lbm-scale-y-40 .lbm-content.lbm-content-puls {
+  top: 0;
+}
+.lbm-type-icon.lbm-scale-y-40 .lbm-content.lbm-content-shadow {
+  top: -0.4em;
+}
+.lbm-type-icon.lbm-scale-y-40 .lbm-content.lbm-content-background {
+  top: -0.8em;
+}
+.lbm-type-icon.lbm-scale-y-40 .lbm-content.lbm-content-border {
+  top: -1.2em;
+}
+.lbm-type-icon.lbm-scale-y-50 .lbm-content {
+  line-height: 0.5;
+}
+.lbm-type-icon.lbm-scale-y-50 .lbm-content.lbm-content-puls {
+  top: 0;
+}
+.lbm-type-icon.lbm-scale-y-50 .lbm-content.lbm-content-shadow {
+  top: -0.5em;
+}
+.lbm-type-icon.lbm-scale-y-50 .lbm-content.lbm-content-background {
+  top: -1em;
+}
+.lbm-type-icon.lbm-scale-y-50 .lbm-content.lbm-content-border {
+  top: -1.5em;
+}
+.lbm-type-icon.lbm-scale-y-60 .lbm-content {
+  line-height: 0.6;
+}
+.lbm-type-icon.lbm-scale-y-60 .lbm-content.lbm-content-puls {
+  top: 0;
+}
+.lbm-type-icon.lbm-scale-y-60 .lbm-content.lbm-content-shadow {
+  top: -0.6em;
+}
+.lbm-type-icon.lbm-scale-y-60 .lbm-content.lbm-content-background {
+  top: -1.2em;
+}
+.lbm-type-icon.lbm-scale-y-60 .lbm-content.lbm-content-border {
+  top: -1.8em;
+}
+.lbm-type-icon.lbm-scale-y-70 .lbm-content {
+  line-height: 0.7;
+}
+.lbm-type-icon.lbm-scale-y-70 .lbm-content.lbm-content-puls {
+  top: 0;
+}
+.lbm-type-icon.lbm-scale-y-70 .lbm-content.lbm-content-shadow {
+  top: -0.7em;
+}
+.lbm-type-icon.lbm-scale-y-70 .lbm-content.lbm-content-background {
+  top: -1.4em;
+}
+.lbm-type-icon.lbm-scale-y-70 .lbm-content.lbm-content-border {
+  top: -2.1em;
+}
+.lbm-type-icon.lbm-scale-y-80 .lbm-content {
+  line-height: 0.8;
+}
+.lbm-type-icon.lbm-scale-y-80 .lbm-content.lbm-content-puls {
+  top: 0;
+}
+.lbm-type-icon.lbm-scale-y-80 .lbm-content.lbm-content-shadow {
+  top: -0.8em;
+}
+.lbm-type-icon.lbm-scale-y-80 .lbm-content.lbm-content-background {
+  top: -1.6em;
+}
+.lbm-type-icon.lbm-scale-y-80 .lbm-content.lbm-content-border {
+  top: -2.4em;
+}
+.lbm-type-icon.lbm-scale-y-90 .lbm-content {
+  line-height: 0.9;
+}
+.lbm-type-icon.lbm-scale-y-90 .lbm-content.lbm-content-puls {
+  top: 0;
+}
+.lbm-type-icon.lbm-scale-y-90 .lbm-content.lbm-content-shadow {
+  top: -0.9em;
+}
+.lbm-type-icon.lbm-scale-y-90 .lbm-content.lbm-content-background {
+  top: -1.8em;
+}
+.lbm-type-icon.lbm-scale-y-90 .lbm-content.lbm-content-border {
+  top: -2.7em;
+}
+.lbm-type-icon.lbm-scale-y-120 .lbm-content {
+  line-height: 1.2;
+}
+.lbm-type-icon.lbm-scale-y-120 .lbm-content.lbm-content-puls {
+  top: 0;
+}
+.lbm-type-icon.lbm-scale-y-120 .lbm-content.lbm-content-shadow {
+  top: -1.2em;
+}
+.lbm-type-icon.lbm-scale-y-120 .lbm-content.lbm-content-background {
+  top: -2.4em;
+}
+.lbm-type-icon.lbm-scale-y-120 .lbm-content.lbm-content-border {
+  top: -3.6em;
+}
+.lbm-type-icon.lbm-scale-y-130 .lbm-content {
+  line-height: 1.3;
+}
+.lbm-type-icon.lbm-scale-y-130 .lbm-content.lbm-content-puls {
+  top: 0;
+}
+.lbm-type-icon.lbm-scale-y-130 .lbm-content.lbm-content-shadow {
+  top: -1.3em;
+}
+.lbm-type-icon.lbm-scale-y-130 .lbm-content.lbm-content-background {
+  top: -2.6em;
+}
+.lbm-type-icon.lbm-scale-y-130 .lbm-content.lbm-content-border {
+  top: -3.9em;
+}
+.lbm-type-icon.lbm-scale-y-150 .lbm-content {
+  line-height: 1.5;
+}
+.lbm-type-icon.lbm-scale-y-150 .lbm-content.lbm-content-puls {
+  top: 0;
+}
+.lbm-type-icon.lbm-scale-y-150 .lbm-content.lbm-content-shadow {
+  top: -1.5em;
+}
+.lbm-type-icon.lbm-scale-y-150 .lbm-content.lbm-content-background {
+  top: -3em;
+}
+.lbm-type-icon.lbm-scale-y-150 .lbm-content.lbm-content-border {
+  top: -4.5em;
+}
+.lbm-type-icon.lbm-scale-y-180 .lbm-content {
+  line-height: 1.8;
+}
+.lbm-type-icon.lbm-scale-y-180 .lbm-content.lbm-content-puls {
+  top: 0;
+}
+.lbm-type-icon.lbm-scale-y-180 .lbm-content.lbm-content-shadow {
+  top: -1.8em;
+}
+.lbm-type-icon.lbm-scale-y-180 .lbm-content.lbm-content-background {
+  top: -3.6em;
+}
+.lbm-type-icon.lbm-scale-y-180 .lbm-content.lbm-content-border {
+  top: -5.4em;
+}
+.lbm-type-icon.lbm-scale-y-200 .lbm-content {
+  line-height: 2;
+}
+.lbm-type-icon.lbm-scale-y-200 .lbm-content.lbm-content-puls {
+  top: 0;
+}
+.lbm-type-icon.lbm-scale-y-200 .lbm-content.lbm-content-shadow {
+  top: -2em;
+}
+.lbm-type-icon.lbm-scale-y-200 .lbm-content.lbm-content-background {
+  top: -4em;
+}
+.lbm-type-icon.lbm-scale-y-200 .lbm-content.lbm-content-border {
+  top: -6em;
+}
+
+.lbm-type-icon.lbm-color-pink.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-pink.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-pink.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(255, 192, 203, 0.28);
+  -moz-text-stroke-color: rgba(255, 192, 203, 0.28);
+}
+
+.lbm-type-icon.lbm-color-purple.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-purple.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-purple.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(128, 0, 128, 0.28);
+  -moz-text-stroke-color: rgba(128, 0, 128, 0.28);
+}
+
+.lbm-type-icon.lbm-color-red.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-red.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-red.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(255, 0, 0, 0.28);
+  -moz-text-stroke-color: rgba(255, 0, 0, 0.28);
+}
+
+.lbm-type-icon.lbm-color-orange.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-orange.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-orange.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(255, 165, 0, 0.28);
+  -moz-text-stroke-color: rgba(255, 165, 0, 0.28);
+}
+
+.lbm-type-icon.lbm-color-yellow.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-yellow.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-yellow.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(255, 255, 0, 0.28);
+  -moz-text-stroke-color: rgba(255, 255, 0, 0.28);
+}
+
+.lbm-type-icon.lbm-color-green.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-green.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-green.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(0, 128, 0, 0.28);
+  -moz-text-stroke-color: rgba(0, 128, 0, 0.28);
+}
+
+.lbm-type-icon.lbm-color-cyan.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-cyan.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-cyan.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(0, 255, 255, 0.28);
+  -moz-text-stroke-color: rgba(0, 255, 255, 0.28);
+}
+
+.lbm-type-icon.lbm-color-blue.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-blue.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-blue.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(0, 0, 255, 0.28);
+  -moz-text-stroke-color: rgba(0, 0, 255, 0.28);
+}
+
+.lbm-type-icon.lbm-color-brown.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-brown.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-brown.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(165, 42, 42, 0.28);
+  -moz-text-stroke-color: rgba(165, 42, 42, 0.28);
+}
+
+.lbm-type-icon.lbm-color-white.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-white.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-white.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.28);
+  -moz-text-stroke-color: rgba(255, 255, 255, 0.28);
+}
+
+.lbm-type-icon.lbm-color-grey.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-grey.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-grey.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(128, 128, 128, 0.28);
+  -moz-text-stroke-color: rgba(128, 128, 128, 0.28);
+}
+
+.lbm-type-icon.lbm-color-black.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-black.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-black.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(0, 0, 0, 0.28);
+  -moz-text-stroke-color: rgba(0, 0, 0, 0.28);
+}
+
+.lbm-type-icon.lbm-color-indigo.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-indigo.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-indigo.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(75, 0, 130, 0.28);
+  -moz-text-stroke-color: rgba(75, 0, 130, 0.28);
+}
+
+.lbm-type-icon.lbm-color-teal.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-teal.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-teal.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(0, 128, 128, 0.28);
+  -moz-text-stroke-color: rgba(0, 128, 128, 0.28);
+}
+
+.lbm-type-icon.lbm-color-darkgray.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-darkgray.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-darkgray.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(169, 169, 169, 0.28);
+  -moz-text-stroke-color: rgba(169, 169, 169, 0.28);
+}
+
+.lbm-type-icon.lbm-color-primary.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-primary.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-primary.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(13, 110, 253, 0.28);
+  -moz-text-stroke-color: rgba(13, 110, 253, 0.28);
+}
+
+.lbm-type-icon.lbm-color-secondary.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-secondary.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-secondary.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(108, 117, 125, 0.28);
+  -moz-text-stroke-color: rgba(108, 117, 125, 0.28);
+}
+
+.lbm-type-icon.lbm-color-success.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-success.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-success.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(25, 135, 84, 0.28);
+  -moz-text-stroke-color: rgba(25, 135, 84, 0.28);
+}
+
+.lbm-type-icon.lbm-color-info.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-info.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-info.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(13, 202, 240, 0.28);
+  -moz-text-stroke-color: rgba(13, 202, 240, 0.28);
+}
+
+.lbm-type-icon.lbm-color-warning.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-warning.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-warning.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(255, 193, 7, 0.28);
+  -moz-text-stroke-color: rgba(255, 193, 7, 0.28);
+}
+
+.lbm-type-icon.lbm-color-danger.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-danger.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-danger.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(220, 53, 69, 0.28);
+  -moz-text-stroke-color: rgba(220, 53, 69, 0.28);
+}
+
+.lbm-type-icon.lbm-color-light.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-light.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-light.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(248, 249, 250, 0.28);
+  -moz-text-stroke-color: rgba(248, 249, 250, 0.28);
+}
+
+.lbm-type-icon.lbm-color-dark.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-dark.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-dark.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(33, 37, 41, 0.28);
+  -moz-text-stroke-color: rgba(33, 37, 41, 0.28);
+}
+
+.lbm-type-icon.lbm-color-standard.lbm-shadow .lbm-content-shadow, .lbm-type-icon.lbm-color-standard.leaflet-drag-target .lbm-content-shadow, .lbm-type-icon.lbm-color-standard.lbm-hover:hover .lbm-content-shadow {
+  -webkit-text-stroke-color: rgba(66, 133, 244, 0.28);
+  -moz-text-stroke-color: rgba(66, 133, 244, 0.28);
+}
+
+/***********************************************
+
+_leaflet-bootstrap-marker-standard.scss,
+
+Adjust font-size and top for .inner to fit inside a fa-map-marker icon
+************************************************/
+.lbm-type-icon-standard .lbm-content-outer .inner {
+  font-size: 0.4166666667em;
+  top: -9.84em;
+}
+
+/***********************************************
+
+_leaflet-bootstrap-marker-SVG.scss
+
+************************************************/
+.leaflet-marker-icon svg {
+  vertical-align: top;
+}
+
+.leaflet-marker-svg-container {
+  width: 100%;
+  height: 100%;
+  margin-top: -100%;
+}
+/***********************************************
+	leaflet-control-topcenter.scss, 
+
+	(c) 2016, FCOO
+
+	https://github.com/FCOO/leaflet-control-topcenter
+	https://github.com/FCOO
+
+
+************************************************/
+/* control positioning */
+.leaflet-center {
+  position: relative !important;
+  left: 0;
+  right: 0;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; }
+  .leaflet-center .leaflet-control {
+    bottom: 0; }
+
+.leaflet-control-container .leaflet-control-bottomcenter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0; }
+
+/*! =======================================================
+                      VERSION  11.0.2              
+========================================================= */
+/*! =========================================================
+ * bootstrap-slider.js
+ *
+ * Maintainers:
+ *		Kyle Kemp
+ *			- Twitter: @seiyria
+ *			- Github:  seiyria
+ *		Rohit Kalkur
+ *			- Twitter: @Rovolutionary
+ *			- Github:  rovolution
+ *
+ * =========================================================
+ *
+ * bootstrap-slider is released under the MIT License
+ * Copyright (c) 2019 Kyle Kemp, Rohit Kalkur, and contributors
+ * 
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * ========================================================= */
+.slider {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+
+.slider.slider-horizontal {
+  width: 210px;
+  height: 20px;
+}
+
+.slider.slider-horizontal .slider-track {
+  height: 10px;
+  width: 100%;
+  margin-top: -5px;
+  top: 50%;
+  left: 0;
+}
+
+.slider.slider-horizontal .slider-selection, .slider.slider-horizontal .slider-track-low, .slider.slider-horizontal .slider-track-high {
+  height: 100%;
+  top: 0;
+  bottom: 0;
+}
+
+.slider.slider-horizontal .slider-tick,
+.slider.slider-horizontal .slider-handle {
+  margin-left: -10px;
+}
+
+.slider.slider-horizontal .slider-tick.triangle,
+.slider.slider-horizontal .slider-handle.triangle {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 0 10px 10px 10px;
+  width: 0;
+  height: 0;
+  border-bottom-color: #036fa5;
+  margin-top: 0;
+}
+
+.slider.slider-horizontal .slider-tick-container {
+  white-space: nowrap;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.slider.slider-horizontal .slider-tick-label-container {
+  white-space: nowrap;
+  margin-top: 20px;
+}
+
+.slider.slider-horizontal .slider-tick-label-container .slider-tick-label {
+  display: inline-block;
+  text-align: center;
+}
+
+.slider.slider-horizontal.slider-rtl .slider-track {
+  left: initial;
+  right: 0;
+}
+
+.slider.slider-horizontal.slider-rtl .slider-tick,
+.slider.slider-horizontal.slider-rtl .slider-handle {
+  margin-left: initial;
+  margin-right: -10px;
+}
+
+.slider.slider-horizontal.slider-rtl .slider-tick-container {
+  left: initial;
+  right: 0;
+}
+
+.slider.slider-vertical {
+  height: 210px;
+  width: 20px;
+}
+
+.slider.slider-vertical .slider-track {
+  width: 10px;
+  height: 100%;
+  left: 25%;
+  top: 0;
+}
+
+.slider.slider-vertical .slider-selection {
+  width: 100%;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.slider.slider-vertical .slider-track-low, .slider.slider-vertical .slider-track-high {
+  width: 100%;
+  left: 0;
+  right: 0;
+}
+
+.slider.slider-vertical .slider-tick,
+.slider.slider-vertical .slider-handle {
+  margin-top: -10px;
+}
+
+.slider.slider-vertical .slider-tick.triangle,
+.slider.slider-vertical .slider-handle.triangle {
+  border-width: 10px 0 10px 10px;
+  width: 1px;
+  height: 1px;
+  border-left-color: #036fa5;
+  margin-left: 0;
+}
+
+.slider.slider-vertical .slider-tick-label-container {
+  white-space: nowrap;
+}
+
+.slider.slider-vertical .slider-tick-label-container .slider-tick-label {
+  padding-left: 4px;
+}
+
+.slider.slider-vertical.slider-rtl .slider-track {
+  left: initial;
+  right: 25%;
+}
+
+.slider.slider-vertical.slider-rtl .slider-selection {
+  left: initial;
+  right: 0;
+}
+
+.slider.slider-vertical.slider-rtl .slider-tick.triangle,
+.slider.slider-vertical.slider-rtl .slider-handle.triangle {
+  border-width: 10px 10px 10px 0;
+}
+
+.slider.slider-vertical.slider-rtl .slider-tick-label-container .slider-tick-label {
+  padding-left: initial;
+  padding-right: 4px;
+}
+
+.slider.slider-disabled .slider-handle {
+  background-color: #cfcfcf;
+  background-image: -moz-linear-gradient(top, #DFDFDF, #BEBEBE);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#DFDFDF), to(#BEBEBE));
+  background-image: -webkit-linear-gradient(top, #DFDFDF, #BEBEBE);
+  background-image: -o-linear-gradient(top, #DFDFDF, #BEBEBE);
+  background-image: linear-gradient(to bottom, #DFDFDF, #BEBEBE);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#DFDFDF', endColorstr='#BEBEBE',GradientType=0);
+}
+
+.slider.slider-disabled .slider-track {
+  background-color: #e7e7e7;
+  background-image: -moz-linear-gradient(top, #E5E5E5, #E9E9E9);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#E5E5E5), to(#E9E9E9));
+  background-image: -webkit-linear-gradient(top, #E5E5E5, #E9E9E9);
+  background-image: -o-linear-gradient(top, #E5E5E5, #E9E9E9);
+  background-image: linear-gradient(to bottom, #E5E5E5, #E9E9E9);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E5E5E5', endColorstr='#E9E9E9',GradientType=0);
+  cursor: not-allowed;
+}
+
+.slider input {
+  display: none;
+}
+
+.slider .tooltip-inner {
+  white-space: nowrap;
+  max-width: none;
+}
+
+.slider .bs-tooltip-top .tooltip-inner,
+.slider .bs-tooltip-bottom .tooltip-inner {
+  position: relative;
+  left: -50%;
+}
+
+.slider.bs-tooltip-left .tooltip-inner, .slider.bs-tooltip-right .tooltip-inner {
+  position: relative;
+  top: -100%;
+}
+
+.slider .tooltip {
+  pointer-events: none;
+}
+
+.slider .tooltip.bs-tooltip-top .arrow, .slider .tooltip.bs-tooltip-bottom .arrow {
+  left: -.4rem;
+}
+
+.slider .tooltip.bs-tooltip-top {
+  margin-top: -44px;
+}
+
+.slider .tooltip.bs-tooltip-bottom {
+  margin-top: 2px;
+}
+
+.slider .tooltip.bs-tooltip-left, .slider .tooltip.bs-tooltip-right {
+  margin-top: -14px;
+}
+
+.slider .tooltip.bs-tooltip-left .arrow, .slider .tooltip.bs-tooltip-right .arrow {
+  top: 8px;
+}
+
+.slider .hide {
+  display: none;
+}
+
+.slider-track {
+  background-color: #f7f7f7;
+  background-image: -moz-linear-gradient(top, #F5F5F5, #F9F9F9);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#F5F5F5), to(#F9F9F9));
+  background-image: -webkit-linear-gradient(top, #F5F5F5, #F9F9F9);
+  background-image: -o-linear-gradient(top, #F5F5F5, #F9F9F9);
+  background-image: linear-gradient(to bottom, #F5F5F5, #F9F9F9);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F5F5F5', endColorstr='#F9F9F9',GradientType=0);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  position: absolute;
+  cursor: pointer;
+}
+
+.slider-selection {
+  background-color: #f7f7f7;
+  background-image: -moz-linear-gradient(top, #F9F9F9, #F5F5F5);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#F9F9F9), to(#F5F5F5));
+  background-image: -webkit-linear-gradient(top, #F9F9F9, #F5F5F5);
+  background-image: -o-linear-gradient(top, #F9F9F9, #F5F5F5);
+  background-image: linear-gradient(to bottom, #F9F9F9, #F5F5F5);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F9F9F9', endColorstr='#F5F5F5',GradientType=0);
+  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  position: absolute;
+}
+
+.slider-selection.tick-slider-selection {
+  background-color: #46c1fe;
+  background-image: -moz-linear-gradient(top, #52c5ff, #3abcfd);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#52c5ff), to(#3abcfd));
+  background-image: -webkit-linear-gradient(top, #52c5ff, #3abcfd);
+  background-image: -o-linear-gradient(top, #52c5ff, #3abcfd);
+  background-image: linear-gradient(to bottom, #52c5ff, #3abcfd);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#52c5ff', endColorstr='#3abcfd',GradientType=0);
+}
+
+.slider-track-low, .slider-track-high {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  position: absolute;
+  background: transparent;
+}
+
+.slider-handle {
+  background-color: #0478b2;
+  background-image: -moz-linear-gradient(top, #0480BE, #036fa5);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0480BE), to(#036fa5));
+  background-image: -webkit-linear-gradient(top, #0480BE, #036fa5);
+  background-image: -o-linear-gradient(top, #0480BE, #036fa5);
+  background-image: linear-gradient(to bottom, #0480BE, #036fa5);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0480BE', endColorstr='#036fa5',GradientType=0);
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #0480BE;
+  border: 0px solid transparent;
+}
+
+.slider-handle:hover {
+  cursor: pointer;
+}
+
+.slider-handle.round {
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.slider-handle.triangle {
+  background: transparent none;
+}
+
+.slider-handle.custom {
+  background: transparent none;
+}
+
+.slider-handle.custom::before {
+  line-height: 20px;
+  font-size: 20px;
+  content: '\2605';
+  color: #726204;
+}
+
+.slider-tick {
+  background-color: #f7f7f7;
+  background-image: -moz-linear-gradient(top, #F5F5F5, #F9F9F9);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#F5F5F5), to(#F9F9F9));
+  background-image: -webkit-linear-gradient(top, #F5F5F5, #F9F9F9);
+  background-image: -o-linear-gradient(top, #F5F5F5, #F9F9F9);
+  background-image: linear-gradient(to bottom, #F5F5F5, #F9F9F9);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F5F5F5', endColorstr='#F9F9F9',GradientType=0);
+  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  filter: none;
+  opacity: 0.8;
+  border: 0px solid transparent;
+}
+
+.slider-tick.round {
+  border-radius: 50%;
+}
+
+.slider-tick.triangle {
+  background: transparent none;
+}
+
+.slider-tick.custom {
+  background: transparent none;
+}
+
+.slider-tick.custom::before {
+  line-height: 20px;
+  font-size: 20px;
+  content: '\2605';
+  color: #726204;
+}
+
+.slider-tick.in-selection {
+  background-color: #46c1fe;
+  background-image: -moz-linear-gradient(top, #52c5ff, #3abcfd);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#52c5ff), to(#3abcfd));
+  background-image: -webkit-linear-gradient(top, #52c5ff, #3abcfd);
+  background-image: -o-linear-gradient(top, #52c5ff, #3abcfd);
+  background-image: linear-gradient(to bottom, #52c5ff, #3abcfd);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#52c5ff', endColorstr='#3abcfd',GradientType=0);
+  opacity: 1;
+}
+
+/*# sourceMappingURL=bootstrap-slider.css.map */
+/***********************************************
+	leaflet-bootstrap.scss,
+
+	(c) 2017, FCOO
+
+	https://github.com/FCOO/leaflet-bootstrap
+	https://github.com/FCOO
+
+
+************************************************/
+/************************************************************
+INCLUDE-JQUERY-BOOTSTRAP-VARIABLES
+USED IN FOR OTHER PACKAGES TO INCLUDE ALL SCSS-FILES NEEDED
+TO HAVE ACCESS TO ALL BOOTSTRAP AND FCOO/JQUERY-BOOTSTRAP SCSS-VARIABLES
+************************************************************/
+/************************************************************
+FUNCTIONS
+************************************************************/
+/***********************************************
+FUNCTIONS TO CONVETRT FROM PX TO REM
+To make it easier to design and calculate dimensions
+the function rem defined
+************************************************/
+/************************************************************
+HEADER, TITLE, AND FOOTER PADDING AND FONT-SIZE
+Padding are set to button y-padding (moving text to the left)
+************************************************************/
+/************************************************************
+BOOTSTRAP_COLORSTEXT
+
+A copy of the colorws defined in bootstrap/scss_variables.scss
+************************************************************/
+/************************************************************
+VARIABLES-BOOTSTRAP
+Adjust Bootstrap 5 variables default values
+
+Variables should follow the `$component-state-property-size` formula for
+consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+All non-Bootstrap variables are prefixed with $jb-
+
+
+************************************************************/
+/***********************************************
+Customize Bootstrap
+See https://getbootstrap.com/docs/5.2/customize/options/ for description
+/star star/ = Differnet from default
+************************************************/
+/**/
+/**/
+/**/
+/***********************************************
+OPACITY
+************************************************/
+/***********************************************
+TEXT-COLOR
+************************************************/
+/***********************************************
+BACKGROUND-COLOR
+************************************************/
+/***********************************************
+BORDER-COLOR
+************************************************/
+/***********************************************
+CHECKBOX, RADIO, AND SELECT
+text-color and bg-color for selected item in <select> varies for different browsers.
+text-color = rgb(255, 255, 255)   for all
+    Browser     bg-color
+    Chrome      rgb( 30, 144, 255)
+    Firefox     rgb(  0, 120, 215)
+    Safari      rgb( 30, 144, 255)
+    Edge        rgb(195, 195, 195)  = gray
+
+For checkbox and radio default Bootstrap uses:
+text-color  = $form-check-input-checked-color    = $component-active-color = $white   = rgb(255, 25, 255);
+bg-color    = $form-check-input-checked-bg-color = $component-active-bg    = $primary = rgb(13, 110, 253);
+
+** BUT JQUERY-BOOTSTRAP USES SAME COLORS AS <SELECT> IN CHROME AND SAFARI **
+************************************************/
+/*
+indeterminate colors = checkbox or checkbox-button with semi-selected state
+Use $orange as bg-color and same bg-image as selected and standard border-color
+*/
+/***********************************************
+PADDING AND FONT-SIZE
+Padding and font-size for different sizes of
+    buttons,
+    accordion-, modal-, popup-, and tooltip-header/footer
+************************************************/
+/************************************************************
+Modal and popover header and content
+Bootstrap default = normal size
+************************************************************/
+/***********************************************
+Accordion
+***********************************************/
+/***********************************************
+Grid columns
+Set the number of columns and specify the width of the gutters.
+
+$grid-columns:                12 !default;
+$grid-gutter-width:           1.5rem !default;
+$grid-row-columns:            6 !default;
+
+// Container padding
+$container-padding-x: $grid-gutter-width !default;
+***********************************************/
+/***********************************************
+Card
+***********************************************/
+/***********************************************
+Form
+***********************************************/
+/***********************************************
+Toast
+***********************************************/
+/***********************************************
+Tables
+For some (unknown) reason the padding of table cells
+are done by scss-variables instead of var(...) ???
+***********************************************/
+/***********************************************
+Nav, Pills and Tabs
+***********************************************/
+/***********************************************
+BUTTONS
+************************************************
+SYNTAX AND RELATIONS IN BOOTSTRAP
+    $input-btn-padding-x[-sm|-lg] = A Value
+    $input-btn-padding-y[-sm|-lg] = A Value
+    $input-btn-font-size[-sm|-lg] = A Value
+    $border-radius[-sm|-lg]       = A Value
+
+Used for button:
+    $btn-padding-y[-sm|-lg]      : $input-btn-padding-y[-sm|-lg] !default;
+    $btn-padding-x[-sm|-lg]      : $input-btn-padding-x[-sm|-lg] !default;
+    $btn-font-size[-sm|-lg]      : $input-btn-font-size[-sm|-lg] !default;
+    $btn-border-radius[-sm|-lg]  : $border-radius[-sm|-lg]       !default;
+
+Used for input
+    $input-padding-y[-sm|-lg]    : $input-btn-padding-y[-sm|-lg] !default;
+    $input-padding-x[-sm|-lg]    : $input-btn-padding-x[-sm|-lg] !default;
+    $input-font-size[-sm|-lg]    : $input-btn-font-size[-sm|-lg] !default;
+    $input-border-radius[-sm|-lg]: $border-radius[-sm|-lg]       !default;
+
+BOOTSTRAP 5 DEFAULT
+    $input-btn-line-height  : 1.5
+*/
+/************************************************************
+Including "size" xs as in Bootstrap 5
+************************************************************/
+/***********************************************
+Adjust bootstrap-variables to only have dimensions
+in integer px from rem
+************************************************/
+/************************************************************
+Other adjustments
+************************************************************/
+/************************************************************
+Make all font-size and margin for header (<h1>, <h2>,...<h6>)
+releative to container (rem -> em)
+Default (not changed): $font-size-base = $spacer = 1rem
+************************************************************/
+/************************************************************
+Adjust dropdown-menu
+************************************************************/
+/************************************************************
+Adjust modal
+************************************************************/
+/***********************************************
+
+jquery-scroll-container-variables.scss
+
+************************************************/
+:root {
+  --jsc-scroll-size: 10px;
+  --jsc-scroll-padding: 10px;
+  --jsc-scroll-auto-padding: 10px;
+}
+
+/************************************************************
+VARIABLES
+
+Defines scss-variables used in jquery-bootstrap
+Some of these variables are based on Bootstrap variables
+************************************************************/
+/***********************************************
+Checkbox
+************************************************/
+/***********************************************
+Button
+************************************************/
+/***********************************************
+Modal
+************************************************/
+/***********************************************
+Button And Modal
+Opacity for semi-transparent and transparent content using color-mix
+************************************************/
+/***********************************************
+$type-2-alert-color
+Conections between "type" and Bootstrap color-class-names
+Used in _noty.scss and _modal.scss
+************************************************/
+/************************************************************
+MIXIN
+************************************************************/
+/************************************************************
+PROPERTY-VARIANT
+Varients of different properties
+************************************************************/
+/************************************************************
+HEADER and FOOTER-VARIANT
+Adjust padding and font-size for header and footer
+************************************************************/
+/************************************************************
+BUTTON-VARIANT
+button-text-color-variant
+button-border-color-variant
+button-background-color-variant
+Adjust text-, border-, and background-color for a button
+************************************************************/
+/************************************************************
+TABLE COLORS
+************************************************************/
+/*****************************************************************
+create-table-variant($postfix, $background, $default, $color)
+Adjusted copy of Bootstrap table-variant($state, $background) to
+create css-var to set colors in tables
+*****************************************************************/
+/*****************************************************************
+incl-table-variant($postfix)
+Include special version of Bootstrap table-var
+The var must have been created by create-table-variant first
+*****************************************************************/
+/*****************************************************************
+table-no-hover()
+Prevent any hover effect
+*****************************************************************/
+/***********************************************
+leaflet-bootstrap-variables.scss
+************************************************/
+/*********************************************************
+leaflet-bootstrap-fonts.scss
+
+**********************************************************/
+/***********************************************
+Use same font-family as Bootstrap via fcoo/jqury-bootstrap
+************************************************/
+.leaflet-container {
+  font: inherit !important;
+}
+
+/***********************************************
+Font-family for four icons used in leaflet-bootstrap
+************************************************/
+@font-face {
+  font-family: "leaflet-bootstrap";
+  src: url("fonts/leaflet-bootstrap.eot?jxmi9r");
+  src: url("fonts/leaflet-bootstrap.eot?jxmi9r#iefix") format("embedded-opentype"), url("fonts/leaflet-bootstrap.ttf?jxmi9r") format("truetype"), url("fonts/leaflet-bootstrap.woff?jxmi9r") format("woff"), url("fonts/leaflet-bootstrap.svg?jxmi9r#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+[class^=fa-lb-], [class*=" fa-lb-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "leaflet-bootstrap" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-lb-center-marker:before {
+  content: "\e900";
+}
+
+.fa-lb-mouse-left:before {
+  content: "\ea6e";
+}
+
+.fa-lb-mouse-right:before {
+  content: "\ea6f";
+}
+
+[class*=" fa-lb-mouse-"] {
+  font-size: 1.2em;
+  line-height: 0.8333333333em !important;
+  vertical-align: -0.0667em;
+  margin-right: 0 !important;
+}
+
+.fa-lb-contextmenu:before {
+  content: "\ead6";
+}
+
+/***********************************************
+Scale icons
+************************************************/
+.fa-scale-x-08 {
+  transform: scaleX(0.8);
+}
+
+/***********************************************
+leaflet-bootstrap-popup.scss,
+************************************************/
+.leaflet-popup-content {
+  width: 100px;
+}
+
+.modal-wrapper.leaflet-popup-content-wrapper {
+  background: transparent;
+  padding: 0;
+  box-shadow: var(--bs-box-shadow);
+}
+.modal-wrapper.leaflet-popup-content-wrapper .leaflet-popup-content {
+  margin: 0;
+  display: flex;
+}
+.modal-wrapper.leaflet-popup-content-wrapper + .leaflet-popup-tip-container {
+  margin-top: -1px;
+}
+.modal-wrapper.leaflet-popup-content-wrapper + .leaflet-popup-tip-container .leaflet-popup-tip {
+  box-shadow: var(--bs-box-shadow);
+  width: 13px;
+  height: 13px;
+  margin: -6px auto 0;
+  border: 2px solid var(--jb-container-border-color);
+}
+
+/***********************************************
+leaflet-bootstrap-tooltip.scss,
+************************************************/
+.leaflet-tooltip {
+  padding: 0.125rem 0.125rem;
+  background-color: var(--bs-body-bg);
+  border: var(--bs-border-width) solid var(--jb-container-border-color);
+  border-radius: var(--bs-border-radius);
+  color: var(--bs-body-color);
+  white-space: nowrap;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  box-shadow: var(--bs-box-shadow);
+  font-size: 0.6875rem;
+  opacity: 0.9;
+}
+
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+  display: none;
+}
+
+.leaflet-tooltip-bottom {
+  margin-top: 10px;
+}
+
+.leaflet-tooltip-top {
+  margin-top: -10px;
+}
+
+.leaflet-tooltip-left {
+  margin-left: -10px;
+}
+
+.leaflet-tooltip-right {
+  margin-left: 10px;
+}
+
+.leaflet-tooltip-icon-0.leaflet-tooltip-bottom {
+  margin-top: 10px;
+}
+.leaflet-tooltip-icon-0.leaflet-tooltip-top {
+  margin-top: -10px;
+}
+.leaflet-tooltip-icon-0.leaflet-tooltip-left {
+  margin-left: -10px;
+}
+.leaflet-tooltip-icon-0.leaflet-tooltip-right {
+  margin-left: 10px;
+}
+
+.leaflet-tooltip-icon-1.leaflet-tooltip-bottom {
+  margin-top: 13px;
+}
+.leaflet-tooltip-icon-1.leaflet-tooltip-top {
+  margin-top: -13px;
+}
+.leaflet-tooltip-icon-1.leaflet-tooltip-left {
+  margin-left: -13px;
+}
+.leaflet-tooltip-icon-1.leaflet-tooltip-right {
+  margin-left: 13px;
+}
+
+.leaflet-tooltip-icon-2.leaflet-tooltip-bottom {
+  margin-top: 15px;
+}
+.leaflet-tooltip-icon-2.leaflet-tooltip-top {
+  margin-top: -15px;
+}
+.leaflet-tooltip-icon-2.leaflet-tooltip-left {
+  margin-left: -15px;
+}
+.leaflet-tooltip-icon-2.leaflet-tooltip-right {
+  margin-left: 15px;
+}
+
+.no-mouse-hover .leaflet-tooltip:not(.leaflet-tooltip-permanent) {
+  display: none;
+}
+
+.leaflet-dragging .leaflet-tooltip.leaflet-tooltip-hide-when-dragging:not(.leaflet-tooltip-permanent) {
+  display: none;
+}
+
+.leaflet-control-container .leaflet-pane {
+  z-index: 1000;
+}
+
+/***********************************************
+	leaflet-bootstrap-modal.scss
+************************************************/
+.leaflet-control .modal-dialog {
+  margin: 0;
+}
+
+/***********************************************
+leaflet-bootstrap-control.scss
+************************************************/
+.leaflet-container a {
+  color: var(--bs-btn-color);
+}
+
+.leaflet-container:not(.has-control-attribution-bs) .leaflet-control-container .leaflet-bottom .leaflet-control {
+  margin-bottom: 10px;
+}
+
+.leaflet-container.has-control-attribution-bs .leaflet-control-container .leaflet-bottom.has-control-attribution-bs .leaflet-control:nth-last-child(2) {
+  margin-bottom: 2px;
+}
+.leaflet-container.has-control-attribution-bs .leaflet-control-container .leaflet-bottom:not(.has-control-attribution-bs) .leaflet-control:last-child {
+  margin-bottom: 13px;
+}
+
+div.leaflet-control.leaflet-control-hidden {
+  margin-top: 0;
+}
+div.leaflet-control.leaflet-control-hidden * {
+  display: none !important;
+}
+
+/***********************************************
+leaflet-bootstrap-control-attribution.scss
+************************************************/
+.leaflet-control-container .leaflet-control-attribution.leaflet-control-attribution-bs {
+  font-size: 11px;
+  line-height: 1;
+  height: 11px;
+  margin: 0 !important;
+  cursor: default;
+  background: color-mix(in srgb, var(--bs-body-bg), transparent 50%);
+}
+.mouse-hover .leaflet-control-container .leaflet-control-attribution.leaflet-control-attribution-bs:hover {
+  background: color-mix(in srgb, var(--bs-body-bg), transparent 75%);
+}
+.leaflet-control-container .leaflet-control-attribution.leaflet-control-attribution-bs:empty {
+  vissibility: hidden;
+}
+
+/***********************************************
+leaflet-bootstrap-control-button.scss
+************************************************/
+.leaflet-control.leaflet-button-box.extended .hide-for-extended {
+  display: none !important;
+}
+
+.leaflet-control.leaflet-button-box.no-extended .show-for-extended {
+  display: none !important;
+}
+
+/***********************************************
+leaflet-bootstrap-control-scale.scss
+************************************************/
+/*
+<div class="leaflet-bootstrap-control-scale">
+    <div class="leaflet-control-singlescale">
+        <div class="leaflet-control-singlescale-inner">...</div>
+    </div>
+    <div class="leaflet-control-singlescale">
+        <div class="leaflet-control-singlescale-inner">...</div>
+    </div>
+</div>
+
+*/
+.leaflet-button-box-scale {
+  margin-bottom: 0 !important;
+}
+
+.leaflet-bottom:not(.has-control-attribution-bs) .leaflet-button-box-scale {
+  min-height: calc(2.375rem + 10px);
+}
+.leaflet-bottom:not(.has-control-attribution-bs) .leaflet-button-box-scale-sm {
+  min-height: calc(1.9375rem + 10px);
+}
+
+.leaflet-bottom.has-control-attribution-bs .leaflet-button-box-scale {
+  min-height: calc(2.375rem + 13px);
+}
+.leaflet-bottom.has-control-attribution-bs .leaflet-button-box-scale-sm {
+  min-height: calc(1.9375rem + 13px);
+}
+
+.leaflet-bootstrap-control-scale {
+  overflow: hidden;
+}
+.leaflet-bootstrap-control-scale .modal-body {
+  padding: 2px !important;
+}
+
+.leaflet-control-singlescale {
+  position: relative;
+  z-index: 1;
+}
+.leaflet-control-singlescale.hidden {
+  display: none;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner {
+  font-size: 8px;
+  line-height: 1;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 6px;
+  margin-right: 0;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .units {
+  display: inline-block;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .label {
+  width: 80px;
+  text-align: center;
+  position: absolute;
+  opacity: 1;
+  font-size: 12px;
+  line-height: 1;
+  transition: opacity 0.4s linear;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner.labelPlacement-top {
+  margin-top: 12px;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner.labelPlacement-top .label {
+  bottom: 8px;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner.labelPlacement-bottom {
+  margin-bottom: 12px;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .divisionLabel {
+  right: 0;
+  margin-right: -40px;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .zeroLabel {
+  left: 0;
+  margin-left: -40px;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .division {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  transition: width 0.4s ease-in-out;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .division .line, .leaflet-control-singlescale .leaflet-control-singlescale-inner .division .line2 {
+  border-style: solid;
+  position: relative;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .division .line2 {
+  height: 0;
+  border-width: 0;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .division .line {
+  height: 8px;
+  border-width: 1px 1px 1px 0;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .units .division:first-child .line {
+  border-left-width: 1px;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .fill, .leaflet-control-singlescale .leaflet-control-singlescale-inner .fill2 {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .fill {
+  background-color: #000;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .fill2 {
+  background-color: #fff;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .division.hidden {
+  width: 0;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .division.hidden .line, .leaflet-control-singlescale .leaflet-control-singlescale-inner .division.hidden .line2 {
+  height: 0;
+  border-width: 0;
+}
+.leaflet-control-singlescale .leaflet-control-singlescale-inner .division.hidden .label {
+  opacity: 0;
+}
+
+/********************************************************************************
+L.Control.Reticle
+Leaflet control representning a reticle at map center
+
+Modified version of leaflet-reticle
+https://github.com/rwev/leaflet-reticle by https://github.com/rwev
+********************************************************************************/
+.leaflet-zoom-anim .icon-reticle {
+  display: none !important;
+}
+
+/***********************************************
+leaflet-bootstrap-control-zoom.scss
+************************************************/
+/*
+Overwrite style for bootstrap-slider
+*/
+.slider.slider-vertical {
+  width: 100%;
+  height: 120px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.slider.slider-vertical .slider-track {
+  width: 6px;
+  height: calc(100% + 20px);
+  top: -10px;
+  left: calc(50% - 3px);
+  border-left: 1px solid var(--jb-structure-border-color);
+  border-right: 1px solid var(--jb-structure-border-color);
+  border-radius: 0 !important;
+}
+.slider.slider-vertical .slider-track * {
+  border-radius: 0 !important;
+}
+.slider.slider-vertical .slider-handle {
+  position: absolute !important;
+  margin-top: -10px;
+  width: 100%;
+  height: 20px !important;
+}
+.slider.slider-vertical .slider-handle hr {
+  border: none;
+  border-bottom: 6px double #6c757d;
+  height: 25%;
+  width: 50%;
+}
+
+.history .hide-for-history {
+  display: none !important;
+}
+
+.no-history .show-for-history {
+  display: none !important;
+}
+
+/***********************************************
+leaflet-bootstrap-control-legend.scss
+************************************************/
+.modal-header.bsl-working .hide-for-bsl-working {
+  display: none !important;
+}
+
+.modal-header.no-bsl-working .show-for-bsl-working {
+  display: none !important;
+}
+
+.fa-map-margin-right {
+  margin-right: 0.4rem;
+}
+
+/***********************************************
+leaflet-bootstrap-control-compass.scss
+************************************************/
+@media screen and (orientation: landscape) {
+  .lb-compass-btn .compass-device-portrait {
+    visibility: hidden !important;
+  }
+  .lb-compass-btn .compass-device-landscape {
+    transform: rotate(90deg) translateX(-0.1em) scale(0.7) !important;
+  }
+  html.orientation-secondary .lb-compass-btn .compass-device-landscape {
+    transform: rotate(-90deg) translateX(0.1em) scale(0.7) !important;
+  }
+  .lb-compass-btn .compass-arrow {
+    transform: rotate(90deg) translateY(-0.5em) scale(0.7) !important;
+  }
+  html.orientation-secondary .lb-compass-btn .compass-arrow {
+    transform: rotate(-90deg) translateY(-0.5em) scale(0.7) !important;
+  }
+  .lb-compass-btn .compass-device {
+    transform: rotate(0deg);
+  }
+  .lb-compass-btn.fixed {
+    transform: rotate(-90deg) !important;
+  }
+  html.orientation-secondary .lb-compass-btn.fixed {
+    transform: rotate(90deg) !important;
+  }
+  .rotate-compass .the-compass {
+    transform: rotate(270deg) !important;
+  }
+  html.orientation-secondary .rotate-compass .the-compass {
+    transform: rotate(90deg) !important;
+  }
+}
+@media screen and (orientation: portrait) {
+  .lb-compass-btn .compass-device-landscape {
+    visibility: hidden !important;
+  }
+  .lb-compass-btn .compass-device-portrait {
+    transform: rotate(0deg) translateY(0em) scale(0.7) !important;
+  }
+  html.orientation-secondary .lb-compass-btn .compass-device-portrait {
+    transform: rotate(180deg) translateY(0.2em) scale(0.7) !important;
+  }
+  .lb-compass-btn .compass-arrow {
+    transform: rotate(0deg) translateY(-0.6em) scale(0.7) !important;
+  }
+  html.orientation-secondary .lb-compass-btn .compass-arrow {
+    transform: rotate(180deg) translateY(-0.6em) scale(0.7) !important;
+  }
+  .lb-compass-btn .compass-device {
+    transform: translateY(0.1em);
+  }
+  html.orientation-secondary .lb-compass-btn .compass-device {
+    transform: translateY(-0.1em);
+  }
+  html.orientation-secondary .lb-compass-btn.fixed {
+    transform: rotate(180deg) !important;
+  }
+  .rotate-compass .the-compass {
+    transform: rotate(0deg) !important;
+  }
+  html.orientation-secondary .rotate-compass .the-compass {
+    transform: rotate(180deg) !important;
+  }
+}
+.no-device-orientation-slash {
+  visibility: hidden;
+  transform: rotate(0deg);
+}
+
+.lb-compass-adjust {
+  transform: rotate(-45deg);
+}
+
+.lb-conpass-content > div {
+  width: 2.96875rem;
+  height: 2.96875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.lb-conpass-content > div:nth-child(2), .lb-conpass-content > div:nth-child(5) {
+  border-left: 1px solid var(--jb-structure-border-color);
+  border-right: 1px solid var(--jb-structure-border-color);
+}
+
+.no-device-orientation .lb-compass-btn {
+  transform: rotate(0deg) !important;
+}
+.no-device-orientation .lb-compass-btn .no-device-orientation-slash {
+  visibility: inherit;
+}
+.no-device-orientation .lb-compass-btn .compass-device {
+  transform: none;
+}
+.no-device-orientation .lb-compass-btn .compass-arrow, .no-device-orientation .lb-compass-btn .compass-device-landscape, .no-device-orientation .lb-compass-btn .compass-device-portrait {
+  visibility: hidden;
+}
+.no-device-orientation .lb-compass-btn * i:not(.no-device-orientation-slash) {
+  opacity: 0.5;
+}
+.no-device-orientation .lb-conpass-content {
+  display: none !important;
+}
+.no-device-orientation .lb-conpass-content-error {
+  display: block !important;
+}
+
+/***********************************************
+leaflet-bootstrap-contextmenu.scss
+************************************************/
+.leaflet-popup-contextmenu .modal-content {
+  padding: 0 !important;
+}
+.leaflet-popup-contextmenu .modal-content .modal-body {
+  padding: 1px !important;
+}
+.leaflet-popup-contextmenu .modal-content .modal-footer:empty {
+  display: none !important;
+}
+
+.leaflet-popup-content .modal-body > .contextmenu-item-group:not(:first-child) {
+  margin-top: 4px;
+}
+
+/***********************************************
+leaflet-bootstrap-control-position.scss
+************************************************/
+.leaflet-position-marker {
+  background: url(images/leaflet-position-marker.svg) 50% 50% no-repeat;
+  content: "";
+}
+.leaflet-position-marker.inside-other-map {
+  opacity: 0.5;
+}
+.leaflet-zoom-anim .leaflet-position-marker, .hide-control-position-map-center .leaflet-position-marker {
+  display: none !important;
+}
+
+.leaflet-control-container .input-group div.bsPosition-content {
+  text-align: center;
+  line-height: 1;
+  padding: 0 0.25rem;
+  padding-top: 1px;
+}
+.leaflet-control-container .input-group div.bsPosition-content > * {
+  font-size: 13px;
+}
+
+.control-position-cursor .hide-for-control-position-cursor {
+  display: none !important;
+}
+.control-position-cursor .show-for-no-control-position-cursor {
+  display: none !important;
+}
+
+.no-control-position-cursor .show-for-control-position-cursor {
+  display: none !important;
+}
+.no-control-position-cursor .hide-for-no-control-position-cursor {
+  display: none !important;
+}
+
+.control-position-map-center .hide-for-control-position-map-center {
+  display: none !important;
+}
+.control-position-map-center .show-for-no-control-position-map-center {
+  display: none !important;
+}
+
+.no-control-position-map-center .show-for-control-position-map-center {
+  display: none !important;
+}
+.no-control-position-map-center .hide-for-no-control-position-map-center {
+  display: none !important;
+}
+
+.control-position-cursor .no-cursor-on-map .hide-for-no-cursor-on-map {
+  color: transparent;
+}
+.control-position-cursor .no-cursor-on-map .hide-for-no-cursor-on-map > *:not(.show-for-no-cursor-on-map) {
+  visibility: hidden !important;
+}
+/***********************************************
+	leaflet-marker-vessel.scss, 
+
+	(c) 2018, FCOO
+
+	https://github.com/FCOO/leaflet-marker-vessel
+	https://github.com/FCOO
+
+
+************************************************/
+
+/***********************************************
     leaflet-polyline.scss
 
 	(c) 2018, FCOO
@@ -44681,4 +47535,2305 @@ This is fixed by overwriting the last size with "inherit"
 .lpl-base.lpl-border-none,
 .lpl-shadow.lpl-border-none {
   stroke: none;
+}
+/***********************************************
+	leaflet-bootstrap-draw.scss,
+
+	(c) 2018, FCOO
+
+	https://github.com/FCOO/leaflet-bootstrap-draw
+	https://github.com/FCOO
+************************************************/
+.leaflet-dragging .hide-for-leaflet-dragging {
+  display: none; }
+
+/***********************************************
+leaflet-map-sync.scss, Sync two or more maps with regard to center, zoom and pan
+
+    (c) 2015, FCOO
+
+    https://github.com/fcoo/leaflet-map-sync
+    https://github.com/fcoo
+
+
+************************************************/
+/***********************************************
+leaflet-map-sync-cursor
+************************************************/
+@font-face {
+  font-family: 'leaflet-map-sync';
+  src: url("./fonts/leaflet-map-sync.eot?90468428");
+  src: url("./fonts/leaflet-map-sync.eot?90468428#iefix") format("embedded-opentype"), url("./fonts/leaflet-map-sync.woff?90468428") format("woff"), url("./fonts/leaflet-map-sync.ttf?90468428") format("truetype"), url("./fonts/leaflet-map-sync.svg?90468428#leaflet-map-sync") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+.leaflet-map-sync-cursor .hide-for-leaflet-map-sync-cursor {
+  display: none !important; }
+
+.no-leaflet-map-sync-cursor .show-for-leaflet-map-sync-cursor {
+  display: none !important; }
+
+.map-sync-cursor-icon {
+  width: 22px;
+  height: 26px;
+  padding: 0;
+  z-index: 10000;
+  position: absolute;
+  display: none;
+  cursor: inherit !important;
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+  background-position: left top;
+  background-image: none;
+  font-family: "leaflet-map-sync";
+  font-size: 18px;
+  color: black;
+  text-align: center;
+  text-shadow: -1px -1px 0 red, 1px -1px 0 red, -1px 1px 0 red, 1px 1px 0 red;
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  text-decoration: none;
+  text-align: center;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 19px;
+  /* .icon-move          */
+  /* .icon-plus          */
+  /* .icon-plus3         */
+  /* .icon-spinner2      */
+  /* .icon-zoom-in3      */
+  /* .icon-zoom-out3     */
+  /* .icon-cursor22       */
+  /* .icon-blocked       */
+  /* .icon-arrow-resize8 */
+  /* .icon-arrow-resize6 */
+  /* .icon-arrow-resize7 */
+  /* icon-arrow-resize5  */
+  /*                     */ }
+  .map-sync-passive .map-sync-cursor-icon {
+    background-color: transparent !important;
+    display: inline-block; }
+  .map-sync-cursor-icon.icon-grab {
+    Background-image: url("images/hand-gray-16x16.png"); }
+  .map-sync-cursor-icon.icon-grabbing {
+    Background-image: url("images/grab-gray-16x16.png"); }
+  .map-sync-cursor-icon.icon-pointer {
+    background-size: 21px 26px;
+    Background-image: url("images/pointer-gray-21x26.png"); }
+  .map-sync-cursor-icon.icon-col-resize {
+    background-size: 23px 17px;
+    background-image: url("images/col-resize.png"); }
+  .map-sync-cursor-icon.icon-row-resize {
+    background-size: 17px 23px;
+    background-image: url("images/row-resize.png"); }
+  .map-sync-cursor-icon.icon-text {
+    background-size: 9px 18px;
+    background-image: url("images/text.png"); }
+  .map-sync-cursor-icon.icon-vertical-text {
+    background-size: 18px 9px;
+    background-image: url("images/vertical-text.png"); }
+  .map-sync-cursor-icon:before {
+    color: #C3C3C3;
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black; }
+  .map-sync-cursor-icon.icon-move:before {
+    content: '\e804'; }
+  .map-sync-cursor-icon.icon-cell:before {
+    content: '\e805';
+    font-size: 0.70em; }
+  .map-sync-cursor-icon.icon-crosshair:before {
+    content: '\e806'; }
+  .map-sync-cursor-icon.icon-wait:before {
+    content: '\e808'; }
+  .map-sync-cursor-icon.icon-zoom-in:before {
+    content: '\e809';
+    font-size: 0.75em; }
+  .map-sync-cursor-icon.icon-zoom-out:before {
+    content: '\e80a';
+    font-size: 0.75em; }
+  .map-sync-cursor-icon.icon-cursor:before {
+    content: '\e80b'; }
+  .map-sync-cursor-icon.icon-not-allowed:before {
+    content: '\e80e';
+    font-size: 0.80em; }
+  .map-sync-cursor-icon.icon-ns-resize:before {
+    content: '\e807'; }
+  .map-sync-cursor-icon.icon-nw-resize:before {
+    content: '\e80f';
+    font-size: 0.88em; }
+  .map-sync-cursor-icon.icon-ew-resize:before {
+    content: '\e810'; }
+  .map-sync-cursor-icon.icon-ne-resize:before {
+    content: '\e811';
+    font-size: 0.88em; }
+  .map-sync-cursor-icon.icon-none:before {
+    content: ''; }
+
+/***********************************************
+leaflet-map-sync-outline-color
+Variable with the color and style of outline
+************************************************/
+/***********************************************
+leaflet-map-sync-outline
+************************************************/
+.leaflet-map-sync-outline .hide-for-leaflet-map-sync-outline {
+  display: none !important; }
+
+.no-leaflet-map-sync-outline .show-for-leaflet-map-sync-outline {
+  display: none !important; }
+
+/*
+A map will have one of four state
+1: Main    = The first map added to MapSync. Can not be disabled. Its outline color is $main-map-outline ("blue")
+2: Normal  = The not-first map added to MapSync and enabled. Its outline color is $map-outline ("yellow")
+3: Visible = Disabled when MapSync.options.inclDisabled = true => Not sync but it outline are show in other maps and visa versa. Its outline is color $visible-map-outline ("gray")
+4: Hidden  = Disabled when MapSync.options.inclDisabled = false => No outline is displayed
+
+When a map is being dragged all maps with start 1-3 get a border in the same color as the outline
+The map being dragged is the 'active' map and the map and it outlines get a full border
+All other maps and there outlins get a dotted border
+
+html.[no-]leaflet-map-sync-outline.[no-]leaflet-map-sync-dragging
+    .map-container.map-sync-container(.map-sync-main | .map-sync-normal | .map-sync-visible | .map-sync-hidden)[map-sync-dragging][map-sync-outline]
+        div.map-sync-outline(.map-sync-main | .map-sync-normal | .map-sync-visible)[.map-sync-outline-show]
+*/
+.map-sync-container {
+  /****************************************************
+    MAP-CONTAINER
+    *****************************************************/
+  border: 2px solid #909090;
+  /****************************************************
+    OUTLINE
+    *****************************************************/ }
+  .leaflet-map-sync-outline.leaflet-map-sync-dragging .map-sync-container.map-sync-outline.map-sync-main {
+    border: 2px dotted #3216B0; }
+  .leaflet-map-sync-outline.leaflet-map-sync-dragging .map-sync-container.map-sync-outline.map-sync-normal {
+    border: 2px dotted #ff7800; }
+  .leaflet-map-sync-outline.leaflet-map-sync-dragging .map-sync-container.map-sync-outline.map-sync-visible {
+    border: 2px dotted #808080; }
+  .leaflet-map-sync-outline.leaflet-map-sync-dragging .map-sync-container.map-sync-outline.map-sync-hidden {
+    border: 2px dotted #909090; }
+  .leaflet-map-sync-outline.leaflet-map-sync-dragging .map-sync-container.map-sync-outline.map-sync-dragging {
+    border-style: solid; }
+  .map-sync-container div.map-sync-outline {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    box-sizing: border-box;
+    display: none;
+    border: 2px dotted #ff7800; }
+    .map-sync-container div.map-sync-outline > div {
+      width: 100%;
+      height: 100%;
+      background-color: #ff7800;
+      opacity: 0.2; }
+  .map-sync-container path.map-sync-outline {
+    display: none;
+    stroke-width: 2px;
+    stroke: #ff7800;
+    fill: #ff7800;
+    stroke-dasharray: 0 4;
+    fill-opacity: 0.2; }
+  .map-sync-container div.map-sync-outline.map-sync-outline-show {
+    display: block;
+    transition-duration: 100ms;
+    transition-timing-function: ease-out; }
+  .map-sync-container path.map-sync-outline.map-sync-outline-show {
+    display: block; }
+  .map-sync-container div.map-sync-outline.map-sync-outline-dragging {
+    border-style: solid; }
+  .map-sync-container path.map-sync-outline.map-sync-outline-dragging {
+    stroke-dasharray: none; }
+  .map-sync-container div.map-sync-outline.map-sync-main {
+    border-color: #3216B0; }
+    .map-sync-container div.map-sync-outline.map-sync-main > div {
+      background-color: #3216B0; }
+  .map-sync-container path.map-sync-outline.map-sync-main {
+    stroke: #3216B0;
+    fill: #3216B0; }
+  .map-sync-container div.map-sync-outline.map-sync-normal {
+    border-color: #ff7800; }
+    .map-sync-container div.map-sync-outline.map-sync-normal > div {
+      background-color: #ff7800; }
+  .map-sync-container path.map-sync-outline.map-sync-normal {
+    stroke: #ff7800;
+    fill: #ff7800; }
+  .map-sync-container div.map-sync-outline.map-sync-visible {
+    border-color: #808080; }
+    .map-sync-container div.map-sync-outline.map-sync-visible > div {
+      background-color: #808080; }
+  .map-sync-container path.map-sync-outline.map-sync-visible {
+    stroke: #808080;
+    fill: #808080; }
+
+@charset "UTF-8";
+/***********************************************
+    leaflet-multi-maps.scss,
+
+    (c) 2016, FCOO
+
+    https://github.com/FCOO/leaflet-multi-maps
+    https://github.com/FCOO
+
+
+************************************************/
+/*
+css for different setups of maps.
+In landscape mode it is by columns. In portrait mode it is by rows.
+The order of the columns is changed when class 'multi-map-reverse' is added
+1. col     : 2-4 small maps
+2. - 4. col: 1 map
+5. col     : 2 small maps
+
+There are 17 different setups
+NAME  col#1  col#2  col#3  col#4  col#5
+----- ------ ------ ------ ------ ------
+1            show
+1-1          show   show
+1-1-1        show   show   show
+2-1   show 2 show
+3-1   show 3 show
+2-2   show 2                      show
+2-1-1 show 2 show   show
+2-1-2 show 2 show                 show
+3-1-1 show 3 show   show
+3-2   show 3                      show 2
+4-1   show 4 show
+
+
+1-2   = 2-1 + multi-map-reverse
+1-3   = 3-1 + multi-map-reverse
+1-1-2 = 2-1-1 + multi-map-reverse
+1-1-3 = 3-1-1 + multi-map-reverse
+2-3   = 3-2 + multi-map-reverse
+1-4   = 4-1 + multi-map-reverse
+
+The selected setup is set by adding the class "multi-map-[NAME]" to body. E.g. <body class="multi-map-3-1">
+
+
+<html class="landscape OR portrait">
+    <body class="multi-map-[NAME]">
+        <div class="multi-map-outer-container">
+            <div class="multi-map-sub-container multi-map-1">
+                <div class="multi-map-container multi-map-1-1"></div>
+                <div class="multi-map-container multi-map-1-2"></div>
+                <div class="multi-map-container multi-map-1-3"></div>
+                <div class="multi-map-container multi-map-1-4"></div>
+            </div>
+            <div class="multi-map-container multi-map-2"></div>
+            <div class="multi-map-container multi-map-3"></div>
+            <div class="multi-map-container multi-map-4"></div>
+
+            <div class="multi-map-sub-container multi-map-5">
+                <div class="multi-map-container multi-map-5-1"></div>
+                <div class="multi-map-container multi-map-5-2"></div>
+            </div>
+        </div>
+    </body>
+</html
+
+
+*/
+.multi-map-outer-container,
+.multi-map-sub-container {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden; }
+  .multi-map-outer-container:before, .multi-map-outer-container:after,
+  .multi-map-sub-container:before,
+  .multi-map-sub-container:after {
+    content: "";
+    display: block;
+    overflow: hidden; }
+  .multi-map-outer-container:after,
+  .multi-map-sub-container:after {
+    clear: both; }
+
+html.landscape body .multi-map-outer-container[class*="global-"] {
+  flex-direction: row; }
+
+html.landscape body.multi-map-reverse .multi-map-outer-container[class*="global-"] {
+  flex-direction: row-reverse; }
+
+html.portrait body .multi-map-outer-container[class*="global-"] {
+  flex-direction: column; }
+
+html.portrait body.multi-map-reverse .multi-map-outer-container[class*="global-"] {
+  flex-direction: column-reverse; }
+
+html.landscape .multi-map-body .multi-map-outer-container[class*="local-"] {
+  flex-direction: row; }
+
+html.landscape .multi-map-body.multi-map-reverse .multi-map-outer-container[class*="local-"] {
+  flex-direction: row-reverse; }
+
+html.portrait .multi-map-body .multi-map-outer-container[class*="local-"] {
+  flex-direction: column; }
+
+html.portrait .multi-map-body.multi-map-reverse .multi-map-outer-container[class*="local-"] {
+  flex-direction: column-reverse; }
+
+html.landscape .multi-map-sub-container {
+  flex-direction: column; }
+
+html.portrait .multi-map-sub-container {
+  flex-direction: row; }
+
+.multi-map-container, .multi-map-sub-container {
+  box-sizing: border-box;
+  flex: 0 0 auto; }
+
+.multi-map-container .leaflet-container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+
+html.landscape .multi-map-sub-container .multi-map-container {
+  width: 100%;
+  height: 50%; }
+
+html.portrait .multi-map-sub-container .multi-map-container {
+  width: 50%;
+  height: 100%; }
+
+html.landscape body[class*="global-multi-map-3"] .multi-map-sub-container .multi-map-container[class*="global-multi-map-1"] {
+  height: 33.3333333333%; }
+
+html.landscape .multi-map-body[class*="local-multi-map-3"] .multi-map-sub-container .multi-map-container[class*="local-multi-map-1"] {
+  height: 33.3333333333%; }
+
+html.portrait body[class*="global-multi-map-3"] .multi-map-sub-container .multi-map-container[class*="global-multi-map-1"] {
+  width: 33.3333333333%; }
+
+html.portrait .multi-map-body[class*="local-multi-map-3"] .multi-map-sub-container .multi-map-container[class*="local-multi-map-1"] {
+  width: 33.3333333333%; }
+
+html.landscape body[class*="global-multi-map-4"] .multi-map-sub-container .multi-map-container[class*="global-multi-map-1"] {
+  height: 25%; }
+
+html.landscape .multi-map-body[class*="local-multi-map-4"] .multi-map-sub-container .multi-map-container[class*="local-multi-map-1"] {
+  height: 25%; }
+
+html.portrait body[class*="global-multi-map-4"] .multi-map-sub-container .multi-map-container[class*="global-multi-map-1"] {
+  width: 25%; }
+
+html.portrait .multi-map-body[class*="local-multi-map-4"] .multi-map-sub-container .multi-map-container[class*="local-multi-map-1"] {
+  width: 25%; }
+
+.multi-map-sub-container:first-child .multi-map-container:nth-child(n + 3) {
+  display: none; }
+  body[class*="global-multi-map-3-"] .multi-map-sub-container:first-child .multi-map-container:nth-child(n + 3):nth-child(3),
+  .multi-map-body[class*="local-multi-map-3-"] .multi-map-sub-container:first-child .multi-map-container:nth-child(n + 3):nth-child(3),
+  body[class*="global-multi-map-4-"] .multi-map-sub-container:first-child .multi-map-container:nth-child(n + 3),
+  .multi-map-body[class*="local-multi-map-4-"] .multi-map-sub-container:first-child .multi-map-container:nth-child(n + 3) {
+    display: block; }
+
+html.landscape .multi-map-outer-container > .multi-map-container, html.landscape .multi-map-outer-container > .multi-map-sub-container {
+  height: 100%; }
+
+html.portrait .multi-map-outer-container > .multi-map-container, html.portrait .multi-map-outer-container > .multi-map-sub-container {
+  width: 100%; }
+
+html.landscape body.global-multi-map-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.landscape body.global-multi-map-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  width: 100%; }
+
+html.landscape .multi-map-body.local-multi-map-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.landscape .multi-map-body.local-multi-map-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  width: 100%; }
+
+html.portrait body.global-multi-map-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.portrait body.global-multi-map-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  height: 100%; }
+
+html.portrait .multi-map-body.local-multi-map-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.portrait .multi-map-body.local-multi-map-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  height: 100%; }
+
+html.landscape body.global-multi-map-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.landscape body.global-multi-map-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  width: 50%; }
+
+html.landscape .multi-map-body.local-multi-map-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.landscape .multi-map-body.local-multi-map-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  width: 50%; }
+
+html.portrait body.global-multi-map-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.portrait body.global-multi-map-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  height: 50%; }
+
+html.portrait .multi-map-body.local-multi-map-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.portrait .multi-map-body.local-multi-map-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  height: 50%; }
+
+html.landscape body.global-multi-map-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-3, html.landscape body.global-multi-map-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-3 {
+  width: 50%; }
+
+html.landscape .multi-map-body.local-multi-map-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-3, html.landscape .multi-map-body.local-multi-map-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-3 {
+  width: 50%; }
+
+html.portrait body.global-multi-map-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-3, html.portrait body.global-multi-map-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-3 {
+  height: 50%; }
+
+html.portrait .multi-map-body.local-multi-map-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-3, html.portrait .multi-map-body.local-multi-map-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-3 {
+  height: 50%; }
+
+html.landscape body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.landscape body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  width: 33.3333333333%; }
+
+html.landscape .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.landscape .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  width: 33.3333333333%; }
+
+html.portrait body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.portrait body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  height: 33.3333333333%; }
+
+html.portrait .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.portrait .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  height: 33.3333333333%; }
+
+html.landscape body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-3, html.landscape body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-3 {
+  width: 33.3333333333%; }
+
+html.landscape .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-3, html.landscape .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-3 {
+  width: 33.3333333333%; }
+
+html.portrait body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-3, html.portrait body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-3 {
+  height: 33.3333333333%; }
+
+html.portrait .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-3, html.portrait .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-3 {
+  height: 33.3333333333%; }
+
+html.landscape body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-4, html.landscape body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-4 {
+  width: 33.3333333333%; }
+
+html.landscape .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-4, html.landscape .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-4 {
+  width: 33.3333333333%; }
+
+html.portrait body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-4, html.portrait body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-4 {
+  height: 33.3333333333%; }
+
+html.portrait .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-4, html.portrait .multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-4 {
+  height: 33.3333333333%; }
+
+html.landscape body.global-multi-map-2-1 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.landscape body.global-multi-map-2-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  width: 33.3333333333%; }
+
+html.landscape .multi-map-body.local-multi-map-2-1 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.landscape .multi-map-body.local-multi-map-2-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  width: 33.3333333333%; }
+
+html.portrait body.global-multi-map-2-1 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.portrait body.global-multi-map-2-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  height: 33.3333333333%; }
+
+html.portrait .multi-map-body.local-multi-map-2-1 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.portrait .multi-map-body.local-multi-map-2-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  height: 33.3333333333%; }
+
+html.landscape body.global-multi-map-2-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.landscape body.global-multi-map-2-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  width: 66.6666666667%; }
+
+html.landscape .multi-map-body.local-multi-map-2-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.landscape .multi-map-body.local-multi-map-2-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  width: 66.6666666667%; }
+
+html.portrait body.global-multi-map-2-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.portrait body.global-multi-map-2-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  height: 66.6666666667%; }
+
+html.portrait .multi-map-body.local-multi-map-2-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.portrait .multi-map-body.local-multi-map-2-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  height: 66.6666666667%; }
+
+html.landscape body.global-multi-map-3-1 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.landscape body.global-multi-map-3-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  width: 25%; }
+
+html.landscape .multi-map-body.local-multi-map-3-1 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.landscape .multi-map-body.local-multi-map-3-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  width: 25%; }
+
+html.portrait body.global-multi-map-3-1 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.portrait body.global-multi-map-3-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  height: 25%; }
+
+html.portrait .multi-map-body.local-multi-map-3-1 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.portrait .multi-map-body.local-multi-map-3-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  height: 25%; }
+
+html.landscape body.global-multi-map-3-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.landscape body.global-multi-map-3-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  width: 75%; }
+
+html.landscape .multi-map-body.local-multi-map-3-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.landscape .multi-map-body.local-multi-map-3-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  width: 75%; }
+
+html.portrait body.global-multi-map-3-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.portrait body.global-multi-map-3-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  height: 75%; }
+
+html.portrait .multi-map-body.local-multi-map-3-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.portrait .multi-map-body.local-multi-map-3-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  height: 75%; }
+
+html.landscape body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.landscape body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  width: 50%; }
+
+html.landscape .multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.landscape .multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  width: 50%; }
+
+html.portrait body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.portrait body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  height: 50%; }
+
+html.portrait .multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.portrait .multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  height: 50%; }
+
+html.landscape body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-container.global-multi-map-5, html.landscape body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-5 {
+  width: 50%; }
+
+html.landscape .multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-container.local-multi-map-5, html.landscape .multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-5 {
+  width: 50%; }
+
+html.portrait body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-container.global-multi-map-5, html.portrait body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-5 {
+  height: 50%; }
+
+html.portrait .multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-container.local-multi-map-5, html.portrait .multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-5 {
+  height: 50%; }
+
+html.landscape body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.landscape body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  width: 20%; }
+
+html.landscape .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.landscape .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  width: 20%; }
+
+html.portrait body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.portrait body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  height: 20%; }
+
+html.portrait .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.portrait .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  height: 20%; }
+
+html.landscape body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.landscape body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  width: 40%; }
+
+html.landscape .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.landscape .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  width: 40%; }
+
+html.portrait body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.portrait body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  height: 40%; }
+
+html.portrait .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.portrait .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  height: 40%; }
+
+html.landscape body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-3, html.landscape body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-3 {
+  width: 40%; }
+
+html.landscape .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-3, html.landscape .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-3 {
+  width: 40%; }
+
+html.portrait body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-3, html.portrait body.global-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-3 {
+  height: 40%; }
+
+html.portrait .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-3, html.portrait .multi-map-body.local-multi-map-2-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-3 {
+  height: 40%; }
+
+html.landscape body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.landscape body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  width: 25%; }
+
+html.landscape .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.landscape .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  width: 25%; }
+
+html.portrait body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.portrait body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  height: 25%; }
+
+html.portrait .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.portrait .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  height: 25%; }
+
+html.landscape body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.landscape body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  width: 50%; }
+
+html.landscape .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.landscape .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  width: 50%; }
+
+html.portrait body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.portrait body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  height: 50%; }
+
+html.portrait .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.portrait .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  height: 50%; }
+
+html.landscape body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.global-multi-map-5, html.landscape body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-5 {
+  width: 25%; }
+
+html.landscape .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.local-multi-map-5, html.landscape .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-5 {
+  width: 25%; }
+
+html.portrait body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.global-multi-map-5, html.portrait body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-5 {
+  height: 25%; }
+
+html.portrait .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.local-multi-map-5, html.portrait .multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-5 {
+  height: 25%; }
+
+html.landscape body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.landscape body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  width: 14.2857142857%; }
+
+html.landscape .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.landscape .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  width: 14.2857142857%; }
+
+html.portrait body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.portrait body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  height: 14.2857142857%; }
+
+html.portrait .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.portrait .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  height: 14.2857142857%; }
+
+html.landscape body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.landscape body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  width: 42.8571428571%; }
+
+html.landscape .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.landscape .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  width: 42.8571428571%; }
+
+html.portrait body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.portrait body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  height: 42.8571428571%; }
+
+html.portrait .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.portrait .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  height: 42.8571428571%; }
+
+html.landscape body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-3, html.landscape body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-3 {
+  width: 42.8571428571%; }
+
+html.landscape .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-3, html.landscape .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-3 {
+  width: 42.8571428571%; }
+
+html.portrait body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-3, html.portrait body.global-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-3 {
+  height: 42.8571428571%; }
+
+html.portrait .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-3, html.portrait .multi-map-body.local-multi-map-3-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-3 {
+  height: 42.8571428571%; }
+
+html.landscape body.global-multi-map-4-1 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.landscape body.global-multi-map-4-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  width: 20%; }
+
+html.landscape .multi-map-body.local-multi-map-4-1 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.landscape .multi-map-body.local-multi-map-4-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  width: 20%; }
+
+html.portrait body.global-multi-map-4-1 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.portrait body.global-multi-map-4-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  height: 20%; }
+
+html.portrait .multi-map-body.local-multi-map-4-1 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.portrait .multi-map-body.local-multi-map-4-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  height: 20%; }
+
+html.landscape body.global-multi-map-4-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.landscape body.global-multi-map-4-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  width: 80%; }
+
+html.landscape .multi-map-body.local-multi-map-4-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.landscape .multi-map-body.local-multi-map-4-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  width: 80%; }
+
+html.portrait body.global-multi-map-4-1 .multi-map-outer-container > .multi-map-container.global-multi-map-2, html.portrait body.global-multi-map-4-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2 {
+  height: 80%; }
+
+html.portrait .multi-map-body.local-multi-map-4-1 .multi-map-outer-container > .multi-map-container.local-multi-map-2, html.portrait .multi-map-body.local-multi-map-4-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  height: 80%; }
+
+html.landscape body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.landscape body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  width: 33.3333333333%; }
+
+html.landscape .multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.landscape .multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  width: 33.3333333333%; }
+
+html.portrait body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-container.global-multi-map-1, html.portrait body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1 {
+  height: 33.3333333333%; }
+
+html.portrait .multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-container.local-multi-map-1, html.portrait .multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  height: 33.3333333333%; }
+
+html.landscape body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-container.global-multi-map-5, html.landscape body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-5 {
+  width: 66.6666666667%; }
+
+html.landscape .multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-container.local-multi-map-5, html.landscape .multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-5 {
+  width: 66.6666666667%; }
+
+html.portrait body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-container.global-multi-map-5, html.portrait body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-5 {
+  height: 66.6666666667%; }
+
+html.portrait .multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-container.local-multi-map-5, html.portrait .multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-5 {
+  height: 66.6666666667%; }
+
+body[class*='global-multi-map-1'] .multi-map-outer-container > .multi-map-container.global-multi-map-1,
+.multi-map-body[class*='local-multi-map-1'] .multi-map-outer-container > .multi-map-container.local-multi-map-1, body[class*='global-multi-map-1'] .multi-map-outer-container > .multi-map-sub-container.global-multi-map-1,
+.multi-map-body[class*='local-multi-map-1'] .multi-map-outer-container > .multi-map-sub-container.local-multi-map-1 {
+  display: none; }
+
+body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-container.global-multi-map-2,
+.multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-container.local-multi-map-2,
+body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-container.global-multi-map-2,
+.multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-container.local-multi-map-2, body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2,
+.multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2,
+body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-2,
+.multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-2 {
+  display: none; }
+
+.multi-map-outer-container > .multi-map-container.global-multi-map-3, .multi-map-outer-container > .multi-map-container.local-multi-map-3, .multi-map-outer-container > .multi-map-sub-container.global-multi-map-3, .multi-map-outer-container > .multi-map-sub-container.local-multi-map-3 {
+  display: none; }
+
+body[class*='global-multi-map-'][class*='1-1'] .multi-map-outer-container > .multi-map-container.global-multi-map-3,
+.multi-map-body[class*='local-multi-map-'][class*='1-1'] .multi-map-outer-container > .multi-map-container.local-multi-map-3, body[class*='global-multi-map-'][class*='1-1'] .multi-map-outer-container > .multi-map-sub-container.global-multi-map-3,
+.multi-map-body[class*='local-multi-map-'][class*='1-1'] .multi-map-outer-container > .multi-map-sub-container.local-multi-map-3 {
+  display: block; }
+
+.multi-map-outer-container > .multi-map-container.global-multi-map-4, .multi-map-outer-container > .multi-map-container.local-multi-map-4, .multi-map-outer-container > .multi-map-sub-container.global-multi-map-4, .multi-map-outer-container > .multi-map-sub-container.local-multi-map-4 {
+  display: none; }
+
+body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.global-multi-map-4,
+.multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-container.local-multi-map-4, body.global-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-4,
+.multi-map-body.local-multi-map-1-1-1 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-4 {
+  display: block; }
+
+.multi-map-outer-container > .multi-map-container.global-multi-map-5, .multi-map-outer-container > .multi-map-container.local-multi-map-5, .multi-map-outer-container > .multi-map-sub-container.global-multi-map-5, .multi-map-outer-container > .multi-map-sub-container.local-multi-map-5 {
+  display: none; }
+
+body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-container.global-multi-map-5,
+.multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-container.local-multi-map-5,
+body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.global-multi-map-5,
+.multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-container.local-multi-map-5,
+body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-container.global-multi-map-5,
+.multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-container.local-multi-map-5, body.global-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-5,
+.multi-map-body.local-multi-map-2-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-5,
+body.global-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-5,
+.multi-map-body.local-multi-map-2-1-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-5,
+body.global-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.global-multi-map-5,
+.multi-map-body.local-multi-map-3-2 .multi-map-outer-container > .multi-map-sub-container.local-multi-map-5 {
+  display: flex; }
+
+.multi-map-outer-container .leaflet-container {
+  box-sizing: border-box; }
+
+.multi-map-outer-container:not(.no-border) {
+  border: 1px solid black; }
+  html.landscape body:not(.multi-map-reverse) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container:not(:first-child), html.landscape body:not(.multi-map-reverse) .multi-map-outer-container:not(.no-border) > .multi-map-container[class*='global-']:not(.global-multi-map-2):not(:first-child) {
+    border-left: 1px solid black; }
+  html.landscape body.multi-map-reverse .multi-map-outer-container:not(.no-border) > .multi-map-sub-container:not(:first-child), html.landscape body.multi-map-reverse .multi-map-outer-container:not(.no-border) > .multi-map-container[class*='global-']:not(.global-multi-map-2):not(:first-child) {
+    border-right: 1px solid black; }
+  html.portrait body:not(.multi-map-reverse) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container:not(:first-child), html.portrait body:not(.multi-map-reverse) .multi-map-outer-container:not(.no-border) > .multi-map-container[class*='global-']:not(.global-multi-map-2):not(:first-child) {
+    border-top: 1px solid black; }
+  html.portrait body.multi-map-reverse .multi-map-outer-container:not(.no-border) > .multi-map-sub-container:not(:first-child), html.portrait body.multi-map-reverse .multi-map-outer-container:not(.no-border) > .multi-map-container[class*='global-']:not(.global-multi-map-2):not(:first-child) {
+    border-bottom: 1px solid black; }
+  html.landscape .multi-map-body:not(.multi-map-reverse) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container:not(:first-child), html.landscape .multi-map-body:not(.multi-map-reverse) .multi-map-outer-container:not(.no-border) > .multi-map-container:not(.local-multi-map-2):not(:first-child) {
+    border-left: 1px solid black; }
+  html.landscape .multi-map-body.multi-map-reverse .multi-map-outer-container:not(.no-border) > .multi-map-sub-container:not(:first-child), html.landscape .multi-map-body.multi-map-reverse .multi-map-outer-container:not(.no-border) > .multi-map-container:not(.local-multi-map-2):not(:first-child) {
+    border-right: 1px solid black; }
+  html.portrait .multi-map-body:not(.multi-map-reverse) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container:not(:first-child), html.portrait .multi-map-body:not(.multi-map-reverse) .multi-map-outer-container:not(.no-border) > .multi-map-container:not(.local-multi-map-2):not(:first-child) {
+    border-top: 1px solid black; }
+  html.portrait .multi-map-body.multi-map-reverse .multi-map-outer-container:not(.no-border) > .multi-map-sub-container:not(:first-child), html.portrait .multi-map-body.multi-map-reverse .multi-map-outer-container:not(.no-border) > .multi-map-container:not(.local-multi-map-2):not(:first-child) {
+    border-bottom: 1px solid black; }
+  html.landscape body:not(.multi-map-reverse):not(.global-multi-map-2-2):not(.global-multi-map-3-2) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container.global-multi-map-1 {
+    border-right: 1px solid black; }
+  html.landscape body.multi-map-reverse:not(.global-multi-map-3-2) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container.global-multi-map-1 {
+    border-left: 1px solid black; }
+  html.portrait body:not(.multi-map-reverse):not(.global-multi-map-2-2):not(.global-multi-map-3-2) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container.global-multi-map-1 {
+    border-bottom: 1px solid black; }
+  html.portrait body.multi-map-reverse:not(.global-multi-map-3-2) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container.global-multi-map-1 {
+    border-top: 1px solid black; }
+  html.landscape .multi-map-body:not(.multi-map-reverse):not(.local-multi-map-2-2):not(.local-multi-map-3-2) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container.local-multi-map-1 {
+    border-right: 1px solid black; }
+  html.landscape .multi-map-body.multi-map-reverse:not(.local-multi-map-3-2) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container.local-multi-map-1 {
+    border-left: 1px solid black; }
+  html.portrait .multi-map-body:not(.multi-map-reverse):not(.local-multi-map-2-2):not(.local-multi-map-3-2) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container.local-multi-map-1 {
+    border-bottom: 1px solid black; }
+  html.portrait .multi-map-body.multi-map-reverse:not(.local-multi-map-3-2) .multi-map-outer-container:not(.no-border) > .multi-map-sub-container.local-multi-map-1 {
+    border-top: 1px solid black; }
+  html.landscape .multi-map-outer-container:not(.no-border) .multi-map-sub-container .multi-map-container:not(:first-child) {
+    border-top: 1px solid black; }
+  html.portrait .multi-map-outer-container:not(.no-border) .multi-map-sub-container .multi-map-container:not(:first-child) {
+    border-left: 1px solid black; }
+
+/*******************************************************************
+********************************************************************
+ICON-FONT WITH MULTI-MAPS
+Copyed from _iconmoon/style.css
+********************************************************************
+********************************************************************/
+/*
+@font-face {
+  font-family: 'leaflet-multi-maps';
+  src:
+    url('fonts/leaflet-multi-maps.ttf?3279cz') format('truetype'),
+    url('fonts/leaflet-multi-maps.woff?3279cz') format('woff'),
+    url('fonts/leaflet-multi-maps.svg?3279cz#leaflet-multi-maps') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="famm-"], [class*=" famm-"] {
+  font-family: 'leaflet-multi-maps' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+*/
+@font-face {
+  font-family: "leaflet-multi-maps";
+  src: url("fonts/leaflet-multi-maps.ttf?3279cz") format("truetype"), url("fonts/leaflet-multi-maps.woff?3279cz") format("woff"), url("fonts/leaflet-multi-maps.svg?3279cz#leaflet-multi-maps") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block; }
+
+[class^="famm-"], [class*=" famm-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "leaflet-multi-maps" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.famm-4-1-p:before, html.portrait .famm-4-1:before {
+  content: ""; }
+
+.famm-1-4-p:before, html.portrait .famm-1-4:before {
+  content: ""; }
+
+.famm-1-4:before {
+  content: ""; }
+
+.famm-4-1:before {
+  content: ""; }
+
+.famm-3-2-p:before, html.portrait .famm-3-2:before {
+  content: ""; }
+
+.famm-2-3-p:before, html.portrait .famm-2-3:before {
+  content: ""; }
+
+.famm-2-3:before {
+  content: ""; }
+
+.famm-3-2:before {
+  content: ""; }
+
+.famm-3-1-1:before {
+  content: ""; }
+
+.famm-3-1-1-p:before, html.portrait .famm-3-1-1:before {
+  content: ""; }
+
+.famm-1-1-3-p:before, html.portrait .famm-1-1-3:before {
+  content: ""; }
+
+.famm-1-1-3:before {
+  content: ""; }
+
+.famm-1:before {
+  content: ""; }
+
+.famm-1-p:before, html.portrait .famm-1:before {
+  content: ""; }
+
+.famm-1-1:before {
+  content: ""; }
+
+.famm-1-1-p:before, html.portrait .famm-1-1:before {
+  content: ""; }
+
+.famm-1-1-1:before {
+  content: ""; }
+
+.famm-1-1-1-p:before, html.portrait .famm-1-1-1:before {
+  content: ""; }
+
+.famm-2-1:before {
+  content: ""; }
+
+.famm-1-2:before {
+  content: ""; }
+
+.famm-1-2-p:before, html.portrait .famm-1-2:before {
+  content: ""; }
+
+.famm-2-1-p:before, html.portrait .famm-2-1:before {
+  content: ""; }
+
+.famm-2-1-1:before {
+  content: ""; }
+
+.famm-1-1-2:before {
+  content: ""; }
+
+.famm-1-1-2-p:before, html.portrait .famm-1-1-2:before {
+  content: ""; }
+
+.famm-2-1-1-p:before, html.portrait .famm-2-1-1:before {
+  content: ""; }
+
+.famm-2-1-2:before {
+  content: ""; }
+
+.famm-2-1-2-p:before, html.portrait .famm-2-1-2:before {
+  content: ""; }
+
+.famm-2-2:before {
+  content: ""; }
+
+.famm-2-2-p:before, html.portrait .famm-2-2:before {
+  content: ""; }
+
+.famm-3-1:before {
+  content: ""; }
+
+.famm-1-3:before {
+  content: ""; }
+
+.famm-1-3-p:before, html.portrait .famm-1-3:before {
+  content: ""; }
+
+.famm-3-1-p:before, html.portrait .famm-3-1:before {
+  content: ""; }
+
+/***********************************************
+	fcoo-maps.scss,
+
+	(c) 2020, FCOO
+
+	https://github.com/FCOO/fcoo-maps
+	https://github.com/FCOO
+
+
+************************************************/
+/***********************************************
+leaflet-map-sync-outline-color
+Variable with the color and style of outline
+************************************************/
+/************************************************************
+INCLUDE-JQUERY-BOOTSTRAP-VARIABLES
+USED IN FOR OTHER PACKAGES TO INCLUDE ALL SCSS-FILES NEEDED
+TO HAVE ACCESS TO ALL BOOTSTRAP AND FCOO/JQUERY-BOOTSTRAP SCSS-VARIABLES
+************************************************************/
+/************************************************************
+FUNCTIONS
+************************************************************/
+/***********************************************
+FUNCTIONS TO CONVETRT FROM PX TO REM
+To make it easier to design and calculate dimensions
+the function rem defined
+************************************************/
+/************************************************************
+HEADER, TITLE, AND FOOTER PADDING AND FONT-SIZE
+Padding are set to button y-padding (moving text to the left)
+************************************************************/
+/************************************************************
+BOOTSTRAP_COLORSTEXT
+
+A copy of the colorws defined in bootstrap/scss_variables.scss
+************************************************************/
+/************************************************************
+VARIABLES-BOOTSTRAP
+Adjust Bootstrap 5 variables default values
+
+Variables should follow the `$component-state-property-size` formula for
+consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+
+All non-Bootstrap variables are prefixed with $jb-
+
+
+************************************************************/
+/***********************************************
+Customize Bootstrap
+See https://getbootstrap.com/docs/5.2/customize/options/ for description
+/star star/ = Differnet from default
+************************************************/
+/**/
+/**/
+/**/
+/***********************************************
+OPACITY
+************************************************/
+/***********************************************
+TEXT-COLOR
+************************************************/
+/***********************************************
+BACKGROUND-COLOR
+************************************************/
+/***********************************************
+BORDER-COLOR
+************************************************/
+/***********************************************
+CHECKBOX, RADIO, AND SELECT
+text-color and bg-color for selected item in <select> varies for different browsers.
+text-color = rgb(255, 255, 255)   for all
+    Browser     bg-color
+    Chrome      rgb( 30, 144, 255)
+    Firefox     rgb(  0, 120, 215)
+    Safari      rgb( 30, 144, 255)
+    Edge        rgb(195, 195, 195)  = gray
+
+For checkbox and radio default Bootstrap uses:
+text-color  = $form-check-input-checked-color    = $component-active-color = $white   = rgb(255, 25, 255);
+bg-color    = $form-check-input-checked-bg-color = $component-active-bg    = $primary = rgb(13, 110, 253);
+
+** BUT JQUERY-BOOTSTRAP USES SAME COLORS AS <SELECT> IN CHROME AND SAFARI **
+************************************************/
+/*
+indeterminate colors = checkbox or checkbox-button with semi-selected state
+Use $orange as bg-color and same bg-image as selected and standard border-color
+*/
+/***********************************************
+PADDING AND FONT-SIZE
+Padding and font-size for different sizes of
+    buttons,
+    accordion-, modal-, popup-, and tooltip-header/footer
+************************************************/
+/************************************************************
+Modal and popover header and content
+Bootstrap default = normal size
+************************************************************/
+/***********************************************
+Accordion
+***********************************************/
+/***********************************************
+Grid columns
+Set the number of columns and specify the width of the gutters.
+
+$grid-columns:                12 !default;
+$grid-gutter-width:           1.5rem !default;
+$grid-row-columns:            6 !default;
+
+// Container padding
+$container-padding-x: $grid-gutter-width !default;
+***********************************************/
+/***********************************************
+Card
+***********************************************/
+/***********************************************
+Form
+***********************************************/
+/***********************************************
+Toast
+***********************************************/
+/***********************************************
+Tables
+For some (unknown) reason the padding of table cells
+are done by scss-variables instead of var(...) ???
+***********************************************/
+/***********************************************
+Nav, Pills and Tabs
+***********************************************/
+/***********************************************
+BUTTONS
+************************************************
+SYNTAX AND RELATIONS IN BOOTSTRAP
+    $input-btn-padding-x[-sm|-lg] = A Value
+    $input-btn-padding-y[-sm|-lg] = A Value
+    $input-btn-font-size[-sm|-lg] = A Value
+    $border-radius[-sm|-lg]       = A Value
+
+Used for button:
+    $btn-padding-y[-sm|-lg]      : $input-btn-padding-y[-sm|-lg] !default;
+    $btn-padding-x[-sm|-lg]      : $input-btn-padding-x[-sm|-lg] !default;
+    $btn-font-size[-sm|-lg]      : $input-btn-font-size[-sm|-lg] !default;
+    $btn-border-radius[-sm|-lg]  : $border-radius[-sm|-lg]       !default;
+
+Used for input
+    $input-padding-y[-sm|-lg]    : $input-btn-padding-y[-sm|-lg] !default;
+    $input-padding-x[-sm|-lg]    : $input-btn-padding-x[-sm|-lg] !default;
+    $input-font-size[-sm|-lg]    : $input-btn-font-size[-sm|-lg] !default;
+    $input-border-radius[-sm|-lg]: $border-radius[-sm|-lg]       !default;
+
+BOOTSTRAP 5 DEFAULT
+    $input-btn-line-height  : 1.5
+*/
+/************************************************************
+Including "size" xs as in Bootstrap 5
+************************************************************/
+/***********************************************
+Adjust bootstrap-variables to only have dimensions
+in integer px from rem
+************************************************/
+/************************************************************
+Other adjustments
+************************************************************/
+/************************************************************
+Make all font-size and margin for header (<h1>, <h2>,...<h6>)
+releative to container (rem -> em)
+Default (not changed): $font-size-base = $spacer = 1rem
+************************************************************/
+/************************************************************
+Adjust dropdown-menu
+************************************************************/
+/************************************************************
+Adjust modal
+************************************************************/
+/***********************************************
+
+jquery-scroll-container-variables.scss
+
+************************************************/
+:root {
+  --jsc-scroll-size: 10px;
+  --jsc-scroll-padding: 10px;
+  --jsc-scroll-auto-padding: 10px;
+}
+
+/************************************************************
+VARIABLES
+
+Defines scss-variables used in jquery-bootstrap
+Some of these variables are based on Bootstrap variables
+************************************************************/
+/***********************************************
+Checkbox
+************************************************/
+/***********************************************
+Button
+************************************************/
+/***********************************************
+Modal
+************************************************/
+/***********************************************
+Button And Modal
+Opacity for semi-transparent and transparent content using color-mix
+************************************************/
+/***********************************************
+$type-2-alert-color
+Conections between "type" and Bootstrap color-class-names
+Used in _noty.scss and _modal.scss
+************************************************/
+/************************************************************
+MIXIN
+************************************************************/
+/************************************************************
+PROPERTY-VARIANT
+Varients of different properties
+************************************************************/
+/************************************************************
+HEADER and FOOTER-VARIANT
+Adjust padding and font-size for header and footer
+************************************************************/
+/************************************************************
+BUTTON-VARIANT
+button-text-color-variant
+button-border-color-variant
+button-background-color-variant
+Adjust text-, border-, and background-color for a button
+************************************************************/
+/************************************************************
+TABLE COLORS
+************************************************************/
+/*****************************************************************
+create-table-variant($postfix, $background, $default, $color)
+Adjusted copy of Bootstrap table-variant($state, $background) to
+create css-var to set colors in tables
+*****************************************************************/
+/*****************************************************************
+incl-table-variant($postfix)
+Include special version of Bootstrap table-var
+The var must have been created by create-table-variant first
+*****************************************************************/
+/*****************************************************************
+table-no-hover()
+Prevent any hover effect
+*****************************************************************/
+/***********************************************
+    _leaflet-zoom-modernizr.scss,
+
+    (c) 2016, FCOO
+
+    https://github.com/FCOO/leaflet-zoom-modernizr
+    https://github.com/FCOO
+
+
+************************************************/
+/**********************************************************
+LEAFLET MAPS
+**********************************************************/
+html, body {
+  height: 100%;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#map {
+  height: 100%;
+}
+
+body .leaflet-grab {
+  cursor: default;
+}
+body.leaflet-dragging .leaflet-grab,
+body.leaflet-dragging .leaflet-grab .leaflet-interactive,
+body.leaflet-dragging .leaflet-marker-draggable {
+  cursor: move;
+}
+
+/**********************************************************
+DIVERSE
+**********************************************************/
+.font-size-1-2rem {
+  font-size: 1.2rem !important;
+}
+
+.transform-scale-0-5 {
+  transform: scale(0.5);
+}
+
+.transform-scale-0-65 {
+  transform: scale(0.65);
+}
+
+.transform-scale-1-2 {
+  transform: scale(1.2);
+}
+
+.transform-scale-1-5 {
+  transform: scale(1.5);
+}
+
+.icon-active {
+  color: #0d6efd;
+}
+
+/**********************************************************
+POPUP
+**********************************************************/
+.popover {
+  --jb-header-color: var(--fcoo-app-text-color-50);
+  --jb-header-bg: var(--fcoo-app-bg-color-50);
+}
+
+/****************************************************************************
+Style for edit settings for graticule
+****************************************************************************/
+.graticule-label .hide-for-graticule-label {
+  display: none !important;
+}
+
+.no-graticule-label .show-for-graticule-label {
+  display: none !important;
+}
+
+/**********************************************************
+HIDE/SHOW WHEN SINGLE OR MULTI-MAPS SELECTED
+**********************************************************/
+.multi-maps-selected .hide-for-multi-maps-selected {
+  display: none !important;
+}
+
+.no-multi-maps-selected .show-for-multi-maps-selected {
+  display: none !important;
+}
+
+.single-maps-selected .hide-for-single-maps-selected {
+  display: none !important;
+}
+
+.no-single-maps-selected .show-for-single-maps-selected {
+  display: none !important;
+}
+
+/**********************************************************
+EDIT MULTI MAPS SETTINGS
+**********************************************************/
+.multi-maps-current {
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
+  text-align: center;
+  padding: 0;
+  font-size: 137.5px;
+  height: 115.5px;
+}
+.multi-maps-current i {
+  position: relative;
+  width: 100%;
+  top: -11px;
+}
+
+/**********************************************************
+EDIT SYNC MAPS SETTINGS
+**********************************************************/
+.text-multi-maps-current {
+  color: #ff7800;
+}
+
+.bg-multi-maps-current {
+  background-color: #ff7800;
+}
+
+.text-multi-maps-main {
+  color: #3216B0;
+}
+
+.bg-multi-maps-main {
+  background-color: #3216B0;
+}
+
+.border-multi-maps-main {
+  border: 1px solid #3216B0 !important;
+}
+
+.map-sync-zoom-offset {
+  margin: auto;
+}
+.map-sync-zoom-offset .multi-map-container .outline {
+  display: none;
+}
+.map-sync-zoom-offset .multi-map-container.current-map {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background-color: #ff7800;
+}
+.map-sync-zoom-offset .multi-map-container.current-map .outline {
+  display: block;
+  border: 2px dotted #3216B0;
+  width: 50%;
+  height: 50%;
+}
+.map-sync-zoom-offset .multi-map-container.main-map {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #3216B0 !important;
+}
+.map-sync-zoom-offset .multi-map-container.main-map .outline {
+  display: block;
+  border: 2px dotted #ff7800;
+  width: 50%;
+  height: 50%;
+}
+
+.container-stacked-icons .stacked-icon {
+  /*
+  fa-2xs	0.625em	10px
+  fa-xs	0.75em	12px
+  fa-sm	0.875em	14px
+  fa-lg	1.25em	20px
+  fa-xl	1.5em	24px
+  fa-2xl	2em	32px
+  */
+}
+.container-stacked-icons .stacked-icon.fa-1xzoom {
+  font-size: 0.8em;
+  margin-left: -1.125em;
+  vertical-align: 0.05em;
+}
+.container-stacked-icons .stacked-icon.fa-2xzoom {
+  font-size: 0.625em;
+  margin-left: -1.3em;
+  vertical-align: 0.2em;
+}
+
+/**********************************************************
+EDIT BACKGROUND MAP SETTINGS
+**********************************************************/
+.background-image-container {
+  margin: auto;
+  width: 220px;
+  height: 50px;
+}
+.background-image-container img {
+  width: 220px;
+  height: 50px;
+}
+.background-image-container img:not(:first-child) {
+  margin-top: -50px;
+}
+.background-image-container img.coastline {
+  border: 1px solid black;
+  position: relative;
+  z-index: 10;
+}
+
+/**********************************************************
+STYLE FOR ICONS IN BUTTONS
+Using fcoo.iconSub = function(mainIcon, subIcon, subClassPostfix, square) from fcoo-application
+Each of the sub-icons may need a individual class to adjust size and position
+**********************************************************/
+.fa-sync-small-right-bottom {
+  position: relative;
+  right: -0.3125em;
+  bottom: -0.4375em;
+  font-size: 0.9em;
+}
+
+.fa-tally-small-right-bottom {
+  position: relative;
+  right: -0.1875em;
+  bottom: -0.4375em;
+  font-size: 0.85em;
+}
+
+/**********************************************************
+STYLE FOR MAPLAYER MENU
+**********************************************************/
+/**********************************************************
+STYLE FOR SEARCH RESULTS
+**********************************************************/
+.search-result-row {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+.search-result-row .search-result-type {
+  font-size: 0.65625rem;
+  text-transform: capitalize;
+}
+.search-result-row .search-result-name {
+  white-space: normal !important;
+  font-weight: 500;
+  font-size: 1.1em;
+}
+.search-result-row .search-result-display {
+  white-space: normal !important;
+  font-size: 0.85em;
+}
+
+/**********************************************************
+ZOOM MODERNIZR https://github.com/fcoo/leaflet-zoom-modernizr
+**********************************************************/
+.leaflet-zoom-3 .show-for-leaflet-zoom-3 {
+  display: initial !important;
+}
+.leaflet-zoom-3 .hide-for-leaflet-zoom-3 {
+  display: none !important;
+}
+
+.no-leaflet-zoom-3 .hide-for-leaflet-zoom-3 {
+  display: initial !important;
+}
+.no-leaflet-zoom-3 .show-for-leaflet-zoom-3 {
+  display: none !important;
+}
+
+.leaflet-zoom-3-up .show-for-leaflet-zoom-3-up {
+  display: initial !important;
+}
+.leaflet-zoom-3-up .hide-for-leaflet-zoom-3-up {
+  display: none !important;
+}
+
+.no-leaflet-zoom-3-up .hide-for-leaflet-zoom-3-up {
+  display: initial !important;
+}
+.no-leaflet-zoom-3-up .show-for-leaflet-zoom-3-up {
+  display: none !important;
+}
+
+.leaflet-zoom-3-down .show-for-leaflet-zoom-3-down {
+  display: initial !important;
+}
+.leaflet-zoom-3-down .hide-for-leaflet-zoom-3-down {
+  display: none !important;
+}
+
+.no-leaflet-zoom-3-down .hide-for-leaflet-zoom-3-down {
+  display: initial !important;
+}
+.no-leaflet-zoom-3-down .show-for-leaflet-zoom-3-down {
+  display: none !important;
+}
+
+.leaflet-zoom-4 .show-for-leaflet-zoom-4 {
+  display: initial !important;
+}
+.leaflet-zoom-4 .hide-for-leaflet-zoom-4 {
+  display: none !important;
+}
+
+.no-leaflet-zoom-4 .hide-for-leaflet-zoom-4 {
+  display: initial !important;
+}
+.no-leaflet-zoom-4 .show-for-leaflet-zoom-4 {
+  display: none !important;
+}
+
+.leaflet-zoom-4-up .show-for-leaflet-zoom-4-up {
+  display: initial !important;
+}
+.leaflet-zoom-4-up .hide-for-leaflet-zoom-4-up {
+  display: none !important;
+}
+
+.no-leaflet-zoom-4-up .hide-for-leaflet-zoom-4-up {
+  display: initial !important;
+}
+.no-leaflet-zoom-4-up .show-for-leaflet-zoom-4-up {
+  display: none !important;
+}
+
+.leaflet-zoom-4-down .show-for-leaflet-zoom-4-down {
+  display: initial !important;
+}
+.leaflet-zoom-4-down .hide-for-leaflet-zoom-4-down {
+  display: none !important;
+}
+
+.no-leaflet-zoom-4-down .hide-for-leaflet-zoom-4-down {
+  display: initial !important;
+}
+.no-leaflet-zoom-4-down .show-for-leaflet-zoom-4-down {
+  display: none !important;
+}
+
+.leaflet-zoom-5 .show-for-leaflet-zoom-5 {
+  display: initial !important;
+}
+.leaflet-zoom-5 .hide-for-leaflet-zoom-5 {
+  display: none !important;
+}
+
+.no-leaflet-zoom-5 .hide-for-leaflet-zoom-5 {
+  display: initial !important;
+}
+.no-leaflet-zoom-5 .show-for-leaflet-zoom-5 {
+  display: none !important;
+}
+
+.leaflet-zoom-5-up .show-for-leaflet-zoom-5-up {
+  display: initial !important;
+}
+.leaflet-zoom-5-up .hide-for-leaflet-zoom-5-up {
+  display: none !important;
+}
+
+.no-leaflet-zoom-5-up .hide-for-leaflet-zoom-5-up {
+  display: initial !important;
+}
+.no-leaflet-zoom-5-up .show-for-leaflet-zoom-5-up {
+  display: none !important;
+}
+
+.leaflet-zoom-5-down .show-for-leaflet-zoom-5-down {
+  display: initial !important;
+}
+.leaflet-zoom-5-down .hide-for-leaflet-zoom-5-down {
+  display: none !important;
+}
+
+.no-leaflet-zoom-5-down .hide-for-leaflet-zoom-5-down {
+  display: initial !important;
+}
+.no-leaflet-zoom-5-down .show-for-leaflet-zoom-5-down {
+  display: none !important;
+}
+
+.leaflet-zoom-6 .show-for-leaflet-zoom-6 {
+  display: initial !important;
+}
+.leaflet-zoom-6 .hide-for-leaflet-zoom-6 {
+  display: none !important;
+}
+
+.no-leaflet-zoom-6 .hide-for-leaflet-zoom-6 {
+  display: initial !important;
+}
+.no-leaflet-zoom-6 .show-for-leaflet-zoom-6 {
+  display: none !important;
+}
+
+.leaflet-zoom-6-up .show-for-leaflet-zoom-6-up {
+  display: initial !important;
+}
+.leaflet-zoom-6-up .hide-for-leaflet-zoom-6-up {
+  display: none !important;
+}
+
+.no-leaflet-zoom-6-up .hide-for-leaflet-zoom-6-up {
+  display: initial !important;
+}
+.no-leaflet-zoom-6-up .show-for-leaflet-zoom-6-up {
+  display: none !important;
+}
+
+.leaflet-zoom-6-down .show-for-leaflet-zoom-6-down {
+  display: initial !important;
+}
+.leaflet-zoom-6-down .hide-for-leaflet-zoom-6-down {
+  display: none !important;
+}
+
+.no-leaflet-zoom-6-down .hide-for-leaflet-zoom-6-down {
+  display: initial !important;
+}
+.no-leaflet-zoom-6-down .show-for-leaflet-zoom-6-down {
+  display: none !important;
+}
+
+.leaflet-zoom-7 .show-for-leaflet-zoom-7 {
+  display: initial !important;
+}
+.leaflet-zoom-7 .hide-for-leaflet-zoom-7 {
+  display: none !important;
+}
+
+.no-leaflet-zoom-7 .hide-for-leaflet-zoom-7 {
+  display: initial !important;
+}
+.no-leaflet-zoom-7 .show-for-leaflet-zoom-7 {
+  display: none !important;
+}
+
+.leaflet-zoom-7-up .show-for-leaflet-zoom-7-up {
+  display: initial !important;
+}
+.leaflet-zoom-7-up .hide-for-leaflet-zoom-7-up {
+  display: none !important;
+}
+
+.no-leaflet-zoom-7-up .hide-for-leaflet-zoom-7-up {
+  display: initial !important;
+}
+.no-leaflet-zoom-7-up .show-for-leaflet-zoom-7-up {
+  display: none !important;
+}
+
+.leaflet-zoom-7-down .show-for-leaflet-zoom-7-down {
+  display: initial !important;
+}
+.leaflet-zoom-7-down .hide-for-leaflet-zoom-7-down {
+  display: none !important;
+}
+
+.no-leaflet-zoom-7-down .hide-for-leaflet-zoom-7-down {
+  display: initial !important;
+}
+.no-leaflet-zoom-7-down .show-for-leaflet-zoom-7-down {
+  display: none !important;
+}
+
+.leaflet-zoom-8 .show-for-leaflet-zoom-8 {
+  display: initial !important;
+}
+.leaflet-zoom-8 .hide-for-leaflet-zoom-8 {
+  display: none !important;
+}
+
+.no-leaflet-zoom-8 .hide-for-leaflet-zoom-8 {
+  display: initial !important;
+}
+.no-leaflet-zoom-8 .show-for-leaflet-zoom-8 {
+  display: none !important;
+}
+
+.leaflet-zoom-8-up .show-for-leaflet-zoom-8-up {
+  display: initial !important;
+}
+.leaflet-zoom-8-up .hide-for-leaflet-zoom-8-up {
+  display: none !important;
+}
+
+.no-leaflet-zoom-8-up .hide-for-leaflet-zoom-8-up {
+  display: initial !important;
+}
+.no-leaflet-zoom-8-up .show-for-leaflet-zoom-8-up {
+  display: none !important;
+}
+
+.leaflet-zoom-8-down .show-for-leaflet-zoom-8-down {
+  display: initial !important;
+}
+.leaflet-zoom-8-down .hide-for-leaflet-zoom-8-down {
+  display: none !important;
+}
+
+.no-leaflet-zoom-8-down .hide-for-leaflet-zoom-8-down {
+  display: initial !important;
+}
+.no-leaflet-zoom-8-down .show-for-leaflet-zoom-8-down {
+  display: none !important;
+}
+
+.leaflet-zoom-9 .show-for-leaflet-zoom-9 {
+  display: initial !important;
+}
+.leaflet-zoom-9 .hide-for-leaflet-zoom-9 {
+  display: none !important;
+}
+
+.no-leaflet-zoom-9 .hide-for-leaflet-zoom-9 {
+  display: initial !important;
+}
+.no-leaflet-zoom-9 .show-for-leaflet-zoom-9 {
+  display: none !important;
+}
+
+.leaflet-zoom-9-up .show-for-leaflet-zoom-9-up {
+  display: initial !important;
+}
+.leaflet-zoom-9-up .hide-for-leaflet-zoom-9-up {
+  display: none !important;
+}
+
+.no-leaflet-zoom-9-up .hide-for-leaflet-zoom-9-up {
+  display: initial !important;
+}
+.no-leaflet-zoom-9-up .show-for-leaflet-zoom-9-up {
+  display: none !important;
+}
+
+.leaflet-zoom-9-down .show-for-leaflet-zoom-9-down {
+  display: initial !important;
+}
+.leaflet-zoom-9-down .hide-for-leaflet-zoom-9-down {
+  display: none !important;
+}
+
+.no-leaflet-zoom-9-down .hide-for-leaflet-zoom-9-down {
+  display: initial !important;
+}
+.no-leaflet-zoom-9-down .show-for-leaflet-zoom-9-down {
+  display: none !important;
+}
+
+.leaflet-zoom-10 .show-for-leaflet-zoom-10 {
+  display: initial !important;
+}
+.leaflet-zoom-10 .hide-for-leaflet-zoom-10 {
+  display: none !important;
+}
+
+.no-leaflet-zoom-10 .hide-for-leaflet-zoom-10 {
+  display: initial !important;
+}
+.no-leaflet-zoom-10 .show-for-leaflet-zoom-10 {
+  display: none !important;
+}
+
+.leaflet-zoom-10-up .show-for-leaflet-zoom-10-up {
+  display: initial !important;
+}
+.leaflet-zoom-10-up .hide-for-leaflet-zoom-10-up {
+  display: none !important;
+}
+
+.no-leaflet-zoom-10-up .hide-for-leaflet-zoom-10-up {
+  display: initial !important;
+}
+.no-leaflet-zoom-10-up .show-for-leaflet-zoom-10-up {
+  display: none !important;
+}
+
+.leaflet-zoom-10-down .show-for-leaflet-zoom-10-down {
+  display: initial !important;
+}
+.leaflet-zoom-10-down .hide-for-leaflet-zoom-10-down {
+  display: none !important;
+}
+
+.no-leaflet-zoom-10-down .hide-for-leaflet-zoom-10-down {
+  display: initial !important;
+}
+.no-leaflet-zoom-10-down .show-for-leaflet-zoom-10-down {
+  display: none !important;
+}
+
+.leaflet-zoom-11 .show-for-leaflet-zoom-11 {
+  display: initial !important;
+}
+.leaflet-zoom-11 .hide-for-leaflet-zoom-11 {
+  display: none !important;
+}
+
+.no-leaflet-zoom-11 .hide-for-leaflet-zoom-11 {
+  display: initial !important;
+}
+.no-leaflet-zoom-11 .show-for-leaflet-zoom-11 {
+  display: none !important;
+}
+
+.leaflet-zoom-11-up .show-for-leaflet-zoom-11-up {
+  display: initial !important;
+}
+.leaflet-zoom-11-up .hide-for-leaflet-zoom-11-up {
+  display: none !important;
+}
+
+.no-leaflet-zoom-11-up .hide-for-leaflet-zoom-11-up {
+  display: initial !important;
+}
+.no-leaflet-zoom-11-up .show-for-leaflet-zoom-11-up {
+  display: none !important;
+}
+
+.leaflet-zoom-11-down .show-for-leaflet-zoom-11-down {
+  display: initial !important;
+}
+.leaflet-zoom-11-down .hide-for-leaflet-zoom-11-down {
+  display: none !important;
+}
+
+.no-leaflet-zoom-11-down .hide-for-leaflet-zoom-11-down {
+  display: initial !important;
+}
+.no-leaflet-zoom-11-down .show-for-leaflet-zoom-11-down {
+  display: none !important;
+}
+
+.leaflet-zoom-12 .show-for-leaflet-zoom-12 {
+  display: initial !important;
+}
+.leaflet-zoom-12 .hide-for-leaflet-zoom-12 {
+  display: none !important;
+}
+
+.no-leaflet-zoom-12 .hide-for-leaflet-zoom-12 {
+  display: initial !important;
+}
+.no-leaflet-zoom-12 .show-for-leaflet-zoom-12 {
+  display: none !important;
+}
+
+.leaflet-zoom-12-up .show-for-leaflet-zoom-12-up {
+  display: initial !important;
+}
+.leaflet-zoom-12-up .hide-for-leaflet-zoom-12-up {
+  display: none !important;
+}
+
+.no-leaflet-zoom-12-up .hide-for-leaflet-zoom-12-up {
+  display: initial !important;
+}
+.no-leaflet-zoom-12-up .show-for-leaflet-zoom-12-up {
+  display: none !important;
+}
+
+.leaflet-zoom-12-down .show-for-leaflet-zoom-12-down {
+  display: initial !important;
+}
+.leaflet-zoom-12-down .hide-for-leaflet-zoom-12-down {
+  display: none !important;
+}
+
+.no-leaflet-zoom-12-down .hide-for-leaflet-zoom-12-down {
+  display: initial !important;
+}
+.no-leaflet-zoom-12-down .show-for-leaflet-zoom-12-down {
+  display: none !important;
+}
+
+.leaflet-zoom-3-up .show-for-leaflet-zoom-3-up-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-3-up .hide-for-leaflet-zoom-3-up-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-3-up .hide-for-leaflet-zoom-3-up-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-3-up .show-for-leaflet-zoom-3-up-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-3-down .show-for-leaflet-zoom-3-down-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-3-down .hide-for-leaflet-zoom-3-down-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-3-down .hide-for-leaflet-zoom-3-down-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-3-down .show-for-leaflet-zoom-3-down-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-4-up .show-for-leaflet-zoom-4-up-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-4-up .hide-for-leaflet-zoom-4-up-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-4-up .hide-for-leaflet-zoom-4-up-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-4-up .show-for-leaflet-zoom-4-up-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-4-down .show-for-leaflet-zoom-4-down-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-4-down .hide-for-leaflet-zoom-4-down-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-4-down .hide-for-leaflet-zoom-4-down-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-4-down .show-for-leaflet-zoom-4-down-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-5-up .show-for-leaflet-zoom-5-up-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-5-up .hide-for-leaflet-zoom-5-up-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-5-up .hide-for-leaflet-zoom-5-up-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-5-up .show-for-leaflet-zoom-5-up-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-5-down .show-for-leaflet-zoom-5-down-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-5-down .hide-for-leaflet-zoom-5-down-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-5-down .hide-for-leaflet-zoom-5-down-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-5-down .show-for-leaflet-zoom-5-down-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-6-up .show-for-leaflet-zoom-6-up-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-6-up .hide-for-leaflet-zoom-6-up-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-6-up .hide-for-leaflet-zoom-6-up-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-6-up .show-for-leaflet-zoom-6-up-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-6-down .show-for-leaflet-zoom-6-down-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-6-down .hide-for-leaflet-zoom-6-down-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-6-down .hide-for-leaflet-zoom-6-down-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-6-down .show-for-leaflet-zoom-6-down-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-7-up .show-for-leaflet-zoom-7-up-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-7-up .hide-for-leaflet-zoom-7-up-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-7-up .hide-for-leaflet-zoom-7-up-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-7-up .show-for-leaflet-zoom-7-up-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-7-down .show-for-leaflet-zoom-7-down-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-7-down .hide-for-leaflet-zoom-7-down-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-7-down .hide-for-leaflet-zoom-7-down-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-7-down .show-for-leaflet-zoom-7-down-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-8-up .show-for-leaflet-zoom-8-up-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-8-up .hide-for-leaflet-zoom-8-up-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-8-up .hide-for-leaflet-zoom-8-up-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-8-up .show-for-leaflet-zoom-8-up-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-8-down .show-for-leaflet-zoom-8-down-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-8-down .hide-for-leaflet-zoom-8-down-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-8-down .hide-for-leaflet-zoom-8-down-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-8-down .show-for-leaflet-zoom-8-down-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-9-up .show-for-leaflet-zoom-9-up-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-9-up .hide-for-leaflet-zoom-9-up-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-9-up .hide-for-leaflet-zoom-9-up-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-9-up .show-for-leaflet-zoom-9-up-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-9-down .show-for-leaflet-zoom-9-down-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-9-down .hide-for-leaflet-zoom-9-down-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-9-down .hide-for-leaflet-zoom-9-down-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-9-down .show-for-leaflet-zoom-9-down-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-10-up .show-for-leaflet-zoom-10-up-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-10-up .hide-for-leaflet-zoom-10-up-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-10-up .hide-for-leaflet-zoom-10-up-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-10-up .show-for-leaflet-zoom-10-up-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-10-down .show-for-leaflet-zoom-10-down-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-10-down .hide-for-leaflet-zoom-10-down-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-10-down .hide-for-leaflet-zoom-10-down-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-10-down .show-for-leaflet-zoom-10-down-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-11-up .show-for-leaflet-zoom-11-up-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-11-up .hide-for-leaflet-zoom-11-up-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-11-up .hide-for-leaflet-zoom-11-up-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-11-up .show-for-leaflet-zoom-11-up-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-11-down .show-for-leaflet-zoom-11-down-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-11-down .hide-for-leaflet-zoom-11-down-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-11-down .hide-for-leaflet-zoom-11-down-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-11-down .show-for-leaflet-zoom-11-down-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-12-up .show-for-leaflet-zoom-12-up-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-12-up .hide-for-leaflet-zoom-12-up-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-12-up .hide-for-leaflet-zoom-12-up-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-12-up .show-for-leaflet-zoom-12-up-visibility {
+  visibility: hidden !important;
+}
+
+.leaflet-zoom-12-down .show-for-leaflet-zoom-12-down-visibility {
+  visibility: initial !important;
+}
+.leaflet-zoom-12-down .hide-for-leaflet-zoom-12-down-visibility {
+  visibility: hidden !important;
+}
+
+.no-leaflet-zoom-12-down .hide-for-leaflet-zoom-12-down-visibility {
+  visibility: initial !important;
+}
+.no-leaflet-zoom-12-down .show-for-leaflet-zoom-12-down-visibility {
+  visibility: hidden !important;
+}
+
+/**********************************************************
+HIDE/SHOW LAYER
+**********************************************************/
+.layer-visible .hide-for-layer-visible {
+  display: none !important;
+}
+
+.no-layer-visible .show-for-layer-visible {
+  display: none !important;
+}
+
+.no-layer-visible .hide-for-layer-visible {
+  display: initial !important;
+}
+
+.no-layer-visible .modal-body.show-for-modal-extended > * {
+  visibility: hidden;
+}
+
+/**********************************************************
+POSITION-CONTROL
+InfoBox in bsPositionControl: (bsp = bsPosition)
+
+Style to show/hide contents and icons
+when the cursor/map-center is over land or over water or
+when loading or not visible
+**********************************************************/
+.no-bsPosition-on-land .show-for-bsPosition-on-land,
+.no-bsPosition-on-water .show-for-bsPosition-on-water {
+  display: none !important;
+}
+
+.bsp-color-info-outer {
+  height: 4em;
+  display: flex;
+  padding: 0;
+}
+.bsp-color-info-outer *.header {
+  color: initial;
+}
+.bsp-color-info-outer .bsp-color-info-outer-container {
+  height: 100%;
+  width: 100%;
+}
+.bsp-color-info-outer .bsp-color-info-outer-container .bsp-color-info-header {
+  flex-shrink: 0;
+  flex-grow: 0;
+  text-align: center;
+  border: none;
+}
+.bsp-color-info-outer .bsp-color-info-outer-container .bsp-color-info-header-sm {
+  --bs-modal-content-font-size: 0.875rem;
+  --bs-modal-padding-x: 0.25rem;
+  --bs-modal-padding-y: 0.25rem;
+  --bs-modal-padding: 0.25rem;
+}
+.bsp-color-info-outer .bsp-color-info-outer-container .bsp-color-info-header-sm .header-content {
+  --bs-modal-header-padding-x: 0.25rem;
+  --bs-modal-header-padding-y: 0.25rem;
+  --bs-modal-header-padding: 0.25rem;
+}
+.bsp-color-info-outer .bsp-color-info-outer-container .bsp-color-info-header-sm .footer-content {
+  --bs-footer-font-size: 0.75rem;
+  --bs-footer-padding-y: 0.25rem;
+  --bs-footer-padding-x: 0.25rem;
+}
+.bsp-color-info-outer .bsp-color-info-outer-container .bsp-color-info-header-xs {
+  --bs-modal-content-font-size: 0.75rem;
+  --bs-modal-padding-x: 0.125rem;
+  --bs-modal-padding-y: 0.125rem;
+  --bs-modal-padding: 0.125rem;
+}
+.bsp-color-info-outer .bsp-color-info-outer-container .bsp-color-info-header-xs .header-content {
+  --bs-modal-header-padding-x: 0.125rem;
+  --bs-modal-header-padding-y: 0.125rem;
+  --bs-modal-header-padding: 0.125rem;
+}
+.bsp-color-info-outer .bsp-color-info-outer-container .bsp-color-info-header-xs .footer-content {
+  --bs-footer-font-size: 0.6875rem;
+  --bs-footer-padding-y: 0.125rem;
+  --bs-footer-padding-x: 0.125rem;
+}
+
+.bsl-working .hide-for-bsl-working {
+  display: none !important;
+}
+.bsl-working .show-for-no-bsl-working {
+  display: none !important;
+}
+
+.no-bsl-working .show-for-bsl-working {
+  display: none !important;
+}
+.no-bsl-working .hide-for-no-bsl-working {
+  display: none !important;
+}
+
+/**********************************************************
+COMPASS-CONTROL
+Style for icons in bsCompassControl
+Adjusted for new icons set in src/leaflet/leaflet.js
+**********************************************************/
+@media screen and (orientation: landscape) {
+  .lb-compass-btn i.compass-device-landscape {
+    transform: rotate(90deg) translateX(-0.2em) scale(0.4) !important;
+  }
+  html.orientation-secondary .lb-compass-btn i.compass-device-landscape {
+    transform: rotate(-90deg) translateX(0.1em) scale(0.4) !important;
+  }
+  .lb-compass-btn i.compass-arrow {
+    transform: rotate(90deg) translateY(-0.45em) scale(0.7) !important;
+  }
+  html.orientation-secondary .lb-compass-btn i.compass-arrow {
+    transform: rotate(-90deg) translateY(-0.45em) scale(0.7) !important;
+  }
+}
+@media screen and (orientation: portrait) {
+  .lb-compass-btn i.compass-device-portrait {
+    transform: rotate(0deg) translateY(-0.05em) scale(0.5) !important;
+  }
+  html.orientation-secondary .lb-compass-btn i.compass-device-portrait {
+    transform: rotate(180deg) translateY(0.25em) scale(0.5) !important;
+  }
+  .lb-compass-btn i.compass-arrow {
+    transform: rotate(0deg) translateY(-0.5em) scale(0.7) !important;
+  }
+  html.orientation-secondary .lb-compass-btn i.compass-arrow {
+    transform: rotate(180deg) translateY(-0.5em) scale(0.7) !important;
+  }
+}
+.no-device-orientation .lb-compass-btn .no-device-orientation-slash {
+  transform: translateX(-0.1em) scaleX(0.75);
+}
+
+/**********************************************************
+DATASET-VALUE
+Style for elements created by Dataset and DatasetValue
+See src/common/dataset.js
+**********************************************************/
+.show-for-dataset-value-is-null {
+  display: none !important;
+}
+
+.dataset-value-is-null.hide-for-dataset-value-is-null {
+  display: none !important;
+}
+.dataset-value-is-null .hide-for-dataset-value-is-null {
+  display: none !important;
+}
+.dataset-value-is-null .show-for-dataset-value-is-null {
+  display: block !important;
 }

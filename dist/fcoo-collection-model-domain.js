@@ -494,6 +494,7 @@ Create collections and datasets
 
     //Create fcoo-namespace
     let ns = window.fcoo = window.fcoo || {},
+        nsMap = ns.map = ns.map || {},
         nsCollection = ns.collection = ns.collection || {},
         nsParameter  = ns.parameter = ns.parameter || {};
 
@@ -528,38 +529,10 @@ Create collections and datasets
 
         //css for container holding the map in the info-modal
         mapContainerCss: {
-            'width'             : '100%',
-            'background-color'  : '#C9E9F7',
-            'border'            : '3px solid transparent'
+            width : '100%',
+            border: '3px solid transparent'
         },
 
-        //getMapLayers - Return a array of layers for the map in the modal
-        getMapLayers: function(){
-            return [
-                L.tileLayer.wms('https://{s}.fcoo.dk/mapproxy/service', {
-                    layers: "land-iho_latest",
-                    styles: "",
-                    errorTileUrl: "https://tiles.fcoo.dk/tiles/empty_512.png",
-                    format: "image/png",
-                    subdomains: ["wms01", "wms02", "wms03", "wms04"],
-                    tileSize: 512,
-                    transparent: true,
-                    zIndex: 800
-                }),
-
-                // Top layer (coastline + place names)
-                L.tileLayer.wms('https://{s}.fcoo.dk/mapproxy/service', {
-                    layers: 'top-dark_latest',
-                    styles: "",
-                    errorTileUrl: "https://tiles.fcoo.dk/tiles/empty_512.png",
-                    format: "image/png",
-                    subdomains: ["wms01", "wms02", "wms03", "wms04"],
-                    tileSize: 512,
-                    transparent: true,
-                    zIndex: 1000
-                })
-            ];
-        }
 
     }, nsCollection.options || {} );
 
@@ -591,6 +564,7 @@ Create collections and datasets
     nsCollection.globalMax       = null;
     nsCollection.globalMinMoment = null;
     nsCollection.globalMaxMoment = null;
+
 
     /****************************************************************************
     nsCollection.setTimeRange(start, end)
@@ -857,16 +831,22 @@ Create collections and datasets
         /*********************************************
         asModal - Show info and status for the datasetss in the Collection
         options = {
-            header    : {icon, text}
-            asStatic  : BOOLEAN   - if true only static model/domain info are shown
-            mapCenter : LATLNG    - The initial center of the map (optional)
-            mapZoom   : NUMBER    - The initial zoom of the map (optional)
-            parameter : PARAMETER - The Parameter that are being displayed (optional)
+            header      : {icon, text}
+            asStatic    : BOOLEAN   - if true only static model/domain info are shown
+            mapCenter   : LATLNG    - The initial center of the map (optional)
+            mapZoom     : NUMBER    - The initial zoom of the map (optional)
+            parameter   : PARAMETER - The Parameter that are being displayed (optional)
+            backgroundId: STRING (optional) 'strandard', 'charts', 'gray', or 'retro'
+            bounds      : BOUNDS (optional), Draw a box on the map
+            timeRange   : [INTEGER, INTEGER] (optional) Range for time-slider with dataset for each timestamp
+            time        : INTEGER (optional) Start time
         *********************************************/
         asModal: function(options = {}){
             this.modalOptions   = options;
             this.modalAsStatic  = !!options.asStatic;
             this.modalParameter = options.parameter;
+
+            this.timeRange = options.timeRange;
 
             if (this.modalParameter)
                 this.modalHeaderText = this.modalParameter.getName();
@@ -894,7 +874,11 @@ Create collections and datasets
                 if (options.bounds)
                     map.fitBounds(options.bounds);
             }
+
+            this.updateTimeRangeInfo();
+
         },
+
 
         /*********************************************
         _modalOnHide
@@ -927,8 +911,10 @@ Create collections and datasets
             }
             //The 'open' domain (if any) is set in second status
             let currentIndex = null;
-            if (status && status[1])
-                status[1].forEach( (open, index) => {
+            let statusIndex = this.hasTimeRange ? 2 : 1;
+
+            if (status && status[statusIndex])
+                status[statusIndex].forEach( (open, index) => {
                     if (open)
                         currentIndex = index;
                 });
@@ -954,9 +940,75 @@ Create collections and datasets
         },
 
         /*********************************************
+        _timeSlider_onBuild
+        Connect the different datasets with there <span>
+        with there color in the time-slider
+        *********************************************/
+        _timeSlider_onBuild: function( result ){
+            let $grid = result.slider.cache.$grid;
+            this.list.forEach( dataset => dataset._createGridSpan($grid) );
+            this._updateTimeRangeInfo();
+        },
+
+        /*********************************************
+        _timeSlider_onChange
+        Hide/showw the time-info for the different datasets
+        *********************************************/
+        _timeSlider_onChange: function( timeSlider ){
+            if (!timeSlider) return;
+
+            this.currentTimeValue = timeSlider.value;
+
+            let currentDatasetFound = false;
+            this.list.forEach( dataset => {
+                if (currentDatasetFound)
+                    dataset._toggleTimeInfo(false);
+                else
+                    currentDatasetFound = dataset._updateTimeInfo();
+            });
+        },
+
+
+
+        /*********************************************
+        updateTimeRangeInfo
+        *********************************************/
+        updateTimeRangeInfo: function(){
+            if (this.timeoutId)
+                window.clearTimeout(this.timeoutId);
+
+            this.timeoutId = window.setTimeout(this._updateTimeRangeInfo.bind(this), 20);
+        },
+
+        /*********************************************
+        updateTimeRangeInfo
+        *********************************************/
+        _updateTimeRangeInfo: function(){
+            this.timeoutId = null;
+
+            if (!this.timeSlider) return;
+
+            let map        = this.elements.map,
+                latLng     = map ? map.getCenter() : null,
+                isOverLand = map ? map.isOverLand(latLng) : null;
+
+            if (map){
+                this.list.forEach( dataset => dataset._updateGridSpan(latLng, isOverLand) );
+                this._timeSlider_onChange(this.timeSlider.result);
+            }
+        },
+
+        /*********************************************
         _modalContent
         *********************************************/
         _modalContent: function(options = {}){
+
+            if (this.timeSlider){
+                this.timeSlider.remove();
+                this.timeSlider = null;
+            }
+
+
             this.accordionStatus = this.accordionStatus || [true, true];
 
             let e = this.elements = {}; //Object holding different elements in the modal
@@ -966,25 +1018,33 @@ Create collections and datasets
                 megaWidth  = extraWidth && (Math.min(ns.modernizrMediaquery.screen_height, ns.modernizrMediaquery.screen_width) >= 920),
                 mapHeight  = 300 + (extraWidth ? 100 : 0) + (megaWidth ? 100 : 0);
 
-
-            //Create map-container and map-element
-            //Create the info-map. NB: Hard-coded color for the sea!!!
+            //Create map-container and map-element and the info-map
             e.$mapContainer = $('<div/>').css(nsCollection.options.mapContainerCss).height(mapHeight);
-            e.map = L.map(e.$mapContainer.get(0), nsCollection.options.modalMapOptions);
 
-if (options.bounds)
-    L.rectangle(options.bounds, {color: "var(--cmd-current-map)", weight: 2, fill: false}).addTo(e.map);
+            e.map = L.map(e.$mapContainer.get(0), $.extend(true, {},
+                        nsCollection.options.modalMapOptions, {
+                            bsPositionControl: !!options.timeRange,
+                            bsPositionOptions: {isExtended: true, mode: 'MAPCENTER'}
+                        })
+                    );
 
+            if (e.map.bsPositionControl)
+                e.map.bsPositionControl.$container.hide();
+
+            if (options.bounds)
+                L.rectangle(options.bounds, {color: "var(--cmd-current-map)", weight: 2, fill: false}).addTo(e.map);
 
             e.$mapContainer.resize( e.map.invalidateSize.bind(e.map) );
-
             e.map.setView(options.mapCenter || this.mapCenter || [56.2, 11.5], options.mapZoom || this.mapZoom || 6);
 
-            //Gets the layers for the map in the modal
-            let layerList = nsCollection.options.getMapLayers();
-            layerList = Array.isArray(layerList) ? layerList : [layerList];
-            layerList.forEach( layer => layer.addTo(e.map) );
+            //Set default wms-options if not set
+            if (!nsMap.wmsStatic)
+                nsMap.standard.wms({});
 
+            //Create background-layer and use the color-event to update time-range info
+            e.map.setBackground(options.backgroundId || 'standard');
+
+            e.map.backgroundLandLayer.on('color', this.updateTimeRangeInfo.bind(this) );
 
             //Create layerGroup to hole all polygons
             e.layerGroup = L.layerGroup().addTo(e.map);
@@ -1012,12 +1072,15 @@ if (options.bounds)
             });
 
             let accordionItems = [];
+            let datasetVisible = 0;
             this.list.forEach( (dataset, index) => {
                 dataset.include = true;
                 if (this.modalParameter){
                     //@todo Check if the dataset contains data from Parameter (if any)
                 }
                 if (dataset.include){
+                    if (!dataset.displayStatus.disabled)
+                        datasetVisible++;
                     let accordionContent = dataset.accordionContent(options);
                     if (this.accordionStatus && Array.isArray(this.accordionStatus[1]) &&  this.accordionStatus[1][index])
                         accordionContent.isOpen = true;
@@ -1043,6 +1106,80 @@ if (options.bounds)
                 footer =  `<div class="cmd-current-map-container"><div style="width:${w}px; height:${h}px;" class="cmd-current-map"></div><span>&nbsp;:&nbsp;${txt}</span></div>`;
             }
 
+            let accordionChildren = [{
+                    header  : {icon:'fa-map', text:{da: 'Oversigtskort', en:'Overview map'}},
+                    isOpen  : this.accordionStatus[0],
+                    content : e.$mapContainer,
+                    footer  : footer
+                }];
+
+
+
+            //Add content to hold time-range info
+            this.hasTimeRange = options.timeRange && (datasetVisible > 0);
+            if (this.hasTimeRange){
+                let $timeContainer      = $('<div></div>'),
+                    $timeInfoContainer  = $('<div></div>').addClass('d-flex align-items-end justify-content-center').height(20).appendTo( $timeContainer ),
+                    $timeRangeContainer = $('<div></div>').appendTo( $timeContainer ),
+                    $input = $('<input type="text"/>').appendTo( $timeRangeContainer ),
+                    tMin = options.timeRange[0],
+                    tMax = options.timeRange[1],
+                    timeSliderOptions = {
+                        resizable       : true,
+                        ticksOnLine     : true,
+                        valueDistances  : 16,
+                        grid            : true,
+                        handleFixed     : true,
+                        slider          :"fixed",
+                        mousewheel      : true,
+                        showLine        : false,
+                        showLineColor   : false,
+                        extendLine      : true,
+
+                        min  : tMin,
+                        max  : tMax,
+                        value: options.time || 0,
+
+                        onBuild      : this._timeSlider_onBuild,
+                        onChange     : this._timeSlider_onChange,
+                        context      : this
+
+                    };
+
+                //Add time-info and set grid-colors according to the different dataset
+                let gridColors = [];
+                this.list.forEach( dataset => {
+                    if (dataset.include){
+                        $timeInfoContainer.append( dataset._createTimeInfo() );
+                        gridColors.push({fromValue: 0, value: 1, color: dataset.colorName, className: 'data-set-grid-color-'+dataset.options.sequence_id});
+                    }
+                });
+
+                if (gridColors.length)
+                    timeSliderOptions.gridColors = gridColors;
+
+
+                this.timeSlider = $input.timeSlider(timeSliderOptions).data('timeSlider');
+
+                accordionChildren.push({
+                    icon   : 'fa-plus-large',
+                    text   : {da:'Hvilke prognoser dækker kortcenter', en: 'Witch forecasts covers map center'},
+                    isOpen : true,
+                    content: $timeContainer
+                });
+            } //if (this.hasTimeRange){...
+
+
+            accordionChildren.push({
+                header  : {icon:'far fa-circle-info', text: {da:'Prognoser', en:'Forecasts'}},
+                isOpen  : this.accordionStatus[1],
+                content: {
+                    type     : 'accordion',
+                    children: accordionItems
+                }
+            });
+
+
             var result = {
                     flexWidth : true,
                     extraWidth: extraWidth,
@@ -1058,23 +1195,14 @@ if (options.bounds)
                         type     : 'accordion',
                         onChange : this._accordion_onChange.bind(this),
                         multiOpen: true,
-                        children: [{
-                            header  : {icon:'fa-map', text:{da: 'Oversigtskort', en:'Overview map'}},
-                            isOpen  : this.accordionStatus[0],
-                            content : e.$mapContainer,
-                            footer  : footer
-                        }, {
-                            header  : {icon:'far fa-circle-info', text: {da:'Prognoser', en:'Forecasts'}},
-                            isOpen  : this.accordionStatus[1],
-                            content: {
-                                type     : 'accordion',
-                                children: accordionItems
-                            }
-                        }]
+                        children : accordionChildren
                     },
                     helpId    : this.options.helpId,
                     helpButton: true
                 };
+
+            this.updateTimeRangeInfo();
+
             return result;
         },
     };
@@ -1092,7 +1220,7 @@ Create Datasets
     "use strict";
 
     //Create fcoo-namespace
-    let ns = window.fcoo = window.fcoo || {},
+    let ns           = window.fcoo = window.fcoo || {},
         nsModel      = ns.model = ns.model || {},
         nsCollection = ns.collection = ns.collection || {};
 
@@ -1137,8 +1265,8 @@ Create Datasets
         this.domain = domain || createDummyDomain();
 
         this.isGlobal = this.domain.isGlobal;
-this.isPrimary = this.isGlobal || !!options.primary;
-        this.isOcean = this.domain.options.type == 'ocean';
+        this.isPrimary = this.isGlobal || !!options.primary;
+        this.isOcean = ns.FCMD_FORCE_OCEAN ? true : (this.domain.options.type == 'ocean');
 
         this.update( options );
     };
@@ -1181,6 +1309,7 @@ this.isPrimary = this.isGlobal || !!options.primary;
             //Time-ranges in o.extent.temporal.interval = [][start,end]
             let timeRangeList = o.extent && o.extent.temporal ? o.extent.temporal.interval : null;
             let start, end;
+            let now = window.__jbs_getNowMoment();
             if (timeRangeList)
                 timeRangeList.forEach( startEnd => {
                     let nextStart = moment(startEnd[0]), nextEnd = moment(startEnd[1]);
@@ -1192,6 +1321,11 @@ this.isPrimary = this.isGlobal || !!options.primary;
             s.start = start;
             s.end   = end;
 
+            s.timeRange = [
+                start ? start.diff(now, 'hour') : null,
+                end   ? end.diff  (now, 'hour') : null
+            ];
+
             //expectedNextUpdate
             if (s.epoch && d.period){
                 let nextEpoch = moment(s.epoch).add(d.period, 'hour');
@@ -1199,7 +1333,6 @@ this.isPrimary = this.isGlobal || !!options.primary;
                                             .add(d.process || 0, 'hour')  //Expected process-time
                                             .add(45, 'minutes')           //Rounding
                                             .startOf('hour');
-                let now = window.__jbs_getNowMoment();
                 s.delayed = s.expectedNextUpdate.isBefore( now );
                 s.delayedHours = now.diff(s.expectedNextUpdate, 'hour');
                 ADD('Delayed=', s.delayed, 'Next update=', s.expectedNextUpdate.toString(), 'Delayed hours=', s.delayedHours );
@@ -1223,14 +1356,12 @@ this.isPrimary = this.isGlobal || !!options.primary;
 
                 }
 
-
-
             //Create displayStatus = status but with correction relative to globalMinMoment and globalMaxMoment
             let ds = this.displayStatus = {};
             $.each(s, (id, value) => ds[id] = value instanceof moment ? moment(value) : value );
 
             //Set state based on the time range of the dataset compared with the global time range
-            let now      = window.__jbs_getNowMoment(),
+            let /*now      = window.__jbs_getNowMoment(),*/
                 dsMin = ds.start ? ds.start.diff(now, 'hour') : null,
                 dsMax = ds.end   ? ds.end.diff  (now, 'hour') : null,
                 glMin = nsCollection.globalMin,
@@ -1264,6 +1395,15 @@ this.isPrimary = this.isGlobal || !!options.primary;
         },
 
         /*********************************************
+        getIcon
+        Global: square, not Global: full square
+        *********************************************/
+        getIcon: function(){
+            return this.isGlobal ? 'far fa-square-full text-'+this.colorName : ['fas fa-square-full text-'+this.colorName, 'fal fa-square-full'];
+        },
+
+
+        /*********************************************
         accordionContent
         *********************************************/
         accordionContent: function(options = {}){
@@ -1277,16 +1417,8 @@ this.isPrimary = this.isGlobal || !!options.primary;
             if (options.asStatic || !this.displayStatus.disabled){
                 if (this.errorLoadingMask)
                     icons.push(['far fa-square fa-sm', 'far fa-slash']);
-                else {
-                    //Global: square, not Global: full square
-                    if (this.isGlobal)
-                        icons.push('far fa-square-full text-'+this.colorName);
-                    else
-                        icons.push([
-                            'fas fa-square-full text-'+this.colorName,
-                            'fal fa-square-full'
-                        ]);
-                }
+                else
+                    icons.push( this.getIcon() );
             }
             else
                 icons.push('far fa-eye-slash');
@@ -1319,7 +1451,6 @@ this.isPrimary = this.isGlobal || !!options.primary;
             let e = this.collection.elements;
 
             if (this.isGlobal){
-
                 e.$mapContainer.css({
                     'cursor'      : 'pointer',
                     'border-color': this.colorName
@@ -1387,7 +1518,7 @@ this.isPrimary = this.isGlobal || !!options.primary;
                 shadow          : false,
                 hover           : true,
                 interactive     : true,
-                pane            : this.isOcean ? 'oceanPane' : 'overlayPane',
+                pane            : (this.isOcean ? 'oceanPane' : 'overlayPane')
             })
                 .addTo(this.collection.elements.layerGroup)
                 .bringToFront();
@@ -1439,10 +1570,120 @@ this.isPrimary = this.isGlobal || !!options.primary;
                         if (selected)
                             map.fitBounds(this.polygon.getBounds(), {_maxZoom: map.getZoom()});
                     }
-        }
+        },
+
+        /*********************************************
+        **********************************************
+        TIME-SLIDER IN MODEL WITH INFO ON DATASET AT LATLNG
+        **********************************************
+        *********************************************/
+
+        /*********************************************
+        _createGridSpan
+        Connect the dataset with its <span> in the time-slider grid
+        *********************************************/
+        _createGridSpan: function($grid){
+            let cTimeRange = this.collection.timeRange;
+
+            this.showColorSpan = null;
+
+            if (this.include){
+                let $colorSpan = $grid.find('.grid-color.data-set-grid-color-'+this.options.sequence_id);
+                this.$colorSpan = $colorSpan.get(0) ? $colorSpan : null;
+            }
+            else
+                this.$colorSpan = null;
+
+            if (this.$colorSpan){
+                //Check if the dataset has a valid time-range
+                let start = null,
+                    end   = null,
+                    keep  = false;
+                if (this.status.timeRange){
+                    start = this.status.timeRange[0];
+                    end   = this.status.timeRange[1];
+                    keep = (start !== null) && (end !== null) && (start < cTimeRange[1]) && (end > cTimeRange[0]);
+                }
+
+                if (keep){
+                    //Set z-index to correspond to sequence and relative position and length
+                    let range = cTimeRange[1] - cTimeRange[0];
+                    start = Math.max(start, cTimeRange[0]);
+                    end   = Math.min(end, cTimeRange[1]);
+
+                    this.$colorSpan.css({
+                        'left'   : 100*(start - cTimeRange[0])/range +'%',
+                        'width'  : 100*(end - start)/range + '%',
+                        'z-index': 1000 - this.options.sequence_id
+                    });
+                }
+                else {
+                    this.$colorSpan.remove();
+                    this.$colorSpan = null;
+                }
+            }
+        },
+
+        /*********************************************
+        _updateGridSpan
+        Update the color-bar in the time-slider
+        *********************************************/
+        _updateGridSpan: function(latLng, isOverLand){
+            let show = this.isGlobal && (!isOverLand || !this.isOcean);
+
+            if (!show){
+                if (this.isOcean && isOverLand)
+                    show = false;
+                else
+                    show = this.polygon && this.polygon.contains(latLng);
+            }
+
+            if (this.showColorSpan !== show){
+                this.showColorSpan = show;
+                this.$colorSpan ? this.$colorSpan.toggle(show) : null;
+            }
+        },
 
 
+        /*********************************************
+        _createTimeInfo
+        Create a <div> with info about the dataset
+        *********************************************/
+        _createTimeInfo: function(){
+            this.$timeInfo =
+                $('<div></div>')
+                    .addClass('d-inline-block')
+                    .css('cursor', 'pointer')
+                    .on('click', this._polygon_onClick.bind(this))
+                    ._bsAddHtml({
+                        icon: [this.getIcon()],
+                        text: this.domain.fullNameSimple(),
+                    });
+            return this.$timeInfo;
+        },
 
+        /*********************************************
+        _toggleTimeInfo
+        Show/hide the <div> Update the color-bar in the time-slider
+        *********************************************/
+        _toggleTimeInfo: function( show ){
+            this.$timeInfo.toggleClass('d-none', !show);
+        },
+
+        /*********************************************
+        _updateTimeInfo
+        Show/hide the <div> Update the color-bar in the time-slider
+        *********************************************/
+        _updateTimeInfo: function(){
+            let time   = this.collection.currentTimeValue,
+                tRange = this.status.timeRange,
+                start  = tRange ? tRange[0] : null,
+                end    = tRange ? tRange[1] : null,
+                show   = this.showColorSpan && tRange && (start <= time) && (end >= time);
+
+            this._toggleTimeInfo( show );
+            return show;
+        },
 
 
     };

@@ -24,18 +24,21 @@
     </script>
 
 	<script src="bower_components.js"></script>
-	<!-- <script src="../src/05-wms-getCapabilities.js"></script> -->
+
+
 	<script src="../src/10-model-domain.js"></script>
 	<script src="../src/20-collections.js"></script>
 	<script src="../src/30-datasets.js"></script>
 
-    <!-- <script src="../src/fcoo-metoc-model-domain-group.js"></script> -->
-	<script src="../src/50-load.js"></script>
+    <script src="../src/50-load.js"></script>
 	<script src="../src/60-parameter-unit-extend.js"></script>
 	<script>
+
 //HER           window.fcoo.LOCAL_DATA = true;
 
 
+    //window.fcoo.FCMD_FORCE_OCEAN = true;
+    window.fcoo.FCMD_FORCE_OCEAN = window.fcoo.FCMD_FORCE_OCEAN || (window.location.search =='?ocean');
 
     //TEMP: No access to data-files on AWS. Read from old location instead
     window.fcoo.path.setPath({host: 'bal.fcoo.dk'});
@@ -68,19 +71,26 @@
         fcoo.collection._onNowChanged();
         let $body = $('body');
 
-        let  bounds = L.latLngBounds([[61.52269494598361, -4.833984375000001], [53.08082737207479, -11.667480468750002]]);
+        let  bounds = L.latLngBounds([[61.52269494598361, 14.833984375000001], [53.08082737207479, -1.667480468750002]]);
 
+        let asModalOptions = {
+                backgroundId: 'retro', //'strandard', 'charts', 'gray', 'retro'
+                bounds   :  bounds,
+                timeRange: [-2*24, 5*24],
+                time : 9,
+            }
 
         fcoo.collection.collectionList.list.forEach( collection => {
             $body.append('<hr>');
-            $.bsButton({text: collection.options.title, onClick: function(){collection.asModal()}}).appendTo($body);
+            $.bsButton({
+                text    : collection.options.title,
+                onClick : () => collection.asModal(asModalOptions)
+            }).appendTo($body);
             $.each(collection.parameters, (id,parameter) => {
                 $body.append('<br>');
                 $.bsButton({
-                    text: parameter.name,
-                    onClick: function(){
-                        parameter.collectionAsModal({ bounds:  bounds});
-                    }
+                    text   : parameter.name,
+                    onClick: () => parameter.collectionAsModal(asModalOptions)
                 }).appendTo($body);
             });
         });

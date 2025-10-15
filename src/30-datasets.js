@@ -8,7 +8,7 @@ Create Datasets
     "use strict";
 
     //Create fcoo-namespace
-    let ns = window.fcoo = window.fcoo || {},
+    let ns           = window.fcoo = window.fcoo || {},
         nsModel      = ns.model = ns.model || {},
         nsCollection = ns.collection = ns.collection || {};
 
@@ -53,8 +53,8 @@ Create Datasets
         this.domain = domain || createDummyDomain();
 
         this.isGlobal = this.domain.isGlobal;
-this.isPrimary = this.isGlobal || !!options.primary;
-        this.isOcean = this.domain.options.type == 'ocean';
+        this.isPrimary = this.isGlobal || !!options.primary;
+        this.isOcean = ns.FCMD_FORCE_OCEAN ? true : (this.domain.options.type == 'ocean');
 
         this.update( options );
     };
@@ -97,6 +97,7 @@ this.isPrimary = this.isGlobal || !!options.primary;
             //Time-ranges in o.extent.temporal.interval = [][start,end]
             let timeRangeList = o.extent && o.extent.temporal ? o.extent.temporal.interval : null;
             let start, end;
+            let now = window.__jbs_getNowMoment();
             if (timeRangeList)
                 timeRangeList.forEach( startEnd => {
                     let nextStart = moment(startEnd[0]), nextEnd = moment(startEnd[1]);
@@ -108,6 +109,11 @@ this.isPrimary = this.isGlobal || !!options.primary;
             s.start = start;
             s.end   = end;
 
+            s.timeRange = [
+                start ? start.diff(now, 'hour') : null,
+                end   ? end.diff  (now, 'hour') : null
+            ];
+
             //expectedNextUpdate
             if (s.epoch && d.period){
                 let nextEpoch = moment(s.epoch).add(d.period, 'hour');
@@ -115,7 +121,6 @@ this.isPrimary = this.isGlobal || !!options.primary;
                                             .add(d.process || 0, 'hour')  //Expected process-time
                                             .add(45, 'minutes')           //Rounding
                                             .startOf('hour');
-                let now = window.__jbs_getNowMoment();
                 s.delayed = s.expectedNextUpdate.isBefore( now );
                 s.delayedHours = now.diff(s.expectedNextUpdate, 'hour');
                 ADD('Delayed=', s.delayed, 'Next update=', s.expectedNextUpdate.toString(), 'Delayed hours=', s.delayedHours );
@@ -139,14 +144,12 @@ this.isPrimary = this.isGlobal || !!options.primary;
 
                 }
 
-
-
             //Create displayStatus = status but with correction relative to globalMinMoment and globalMaxMoment
             let ds = this.displayStatus = {};
             $.each(s, (id, value) => ds[id] = value instanceof moment ? moment(value) : value );
 
             //Set state based on the time range of the dataset compared with the global time range
-            let now      = window.__jbs_getNowMoment(),
+            let /*now      = window.__jbs_getNowMoment(),*/
                 dsMin = ds.start ? ds.start.diff(now, 'hour') : null,
                 dsMax = ds.end   ? ds.end.diff  (now, 'hour') : null,
                 glMin = nsCollection.globalMin,
@@ -180,6 +183,15 @@ this.isPrimary = this.isGlobal || !!options.primary;
         },
 
         /*********************************************
+        getIcon
+        Global: square, not Global: full square
+        *********************************************/
+        getIcon: function(){
+            return this.isGlobal ? 'far fa-square-full text-'+this.colorName : ['fas fa-square-full text-'+this.colorName, 'fal fa-square-full'];
+        },
+
+
+        /*********************************************
         accordionContent
         *********************************************/
         accordionContent: function(options = {}){
@@ -193,16 +205,8 @@ this.isPrimary = this.isGlobal || !!options.primary;
             if (options.asStatic || !this.displayStatus.disabled){
                 if (this.errorLoadingMask)
                     icons.push(['far fa-square fa-sm', 'far fa-slash']);
-                else {
-                    //Global: square, not Global: full square
-                    if (this.isGlobal)
-                        icons.push('far fa-square-full text-'+this.colorName);
-                    else
-                        icons.push([
-                            'fas fa-square-full text-'+this.colorName,
-                            'fal fa-square-full'
-                        ]);
-                }
+                else
+                    icons.push( this.getIcon() );
             }
             else
                 icons.push('far fa-eye-slash');
@@ -235,7 +239,6 @@ this.isPrimary = this.isGlobal || !!options.primary;
             let e = this.collection.elements;
 
             if (this.isGlobal){
-
                 e.$mapContainer.css({
                     'cursor'      : 'pointer',
                     'border-color': this.colorName
@@ -303,7 +306,7 @@ this.isPrimary = this.isGlobal || !!options.primary;
                 shadow          : false,
                 hover           : true,
                 interactive     : true,
-                pane            : this.isOcean ? 'oceanPane' : 'overlayPane',
+                pane            : (this.isOcean ? 'oceanPane' : 'overlayPane')
             })
                 .addTo(this.collection.elements.layerGroup)
                 .bringToFront();
@@ -355,10 +358,120 @@ this.isPrimary = this.isGlobal || !!options.primary;
                         if (selected)
                             map.fitBounds(this.polygon.getBounds(), {_maxZoom: map.getZoom()});
                     }
-        }
+        },
+
+        /*********************************************
+        **********************************************
+        TIME-SLIDER IN MODEL WITH INFO ON DATASET AT LATLNG
+        **********************************************
+        *********************************************/
+
+        /*********************************************
+        _createGridSpan
+        Connect the dataset with its <span> in the time-slider grid
+        *********************************************/
+        _createGridSpan: function($grid){
+            let cTimeRange = this.collection.timeRange;
+
+            this.showColorSpan = null;
+
+            if (this.include){
+                let $colorSpan = $grid.find('.grid-color.data-set-grid-color-'+this.options.sequence_id);
+                this.$colorSpan = $colorSpan.get(0) ? $colorSpan : null;
+            }
+            else
+                this.$colorSpan = null;
+
+            if (this.$colorSpan){
+                //Check if the dataset has a valid time-range
+                let start = null,
+                    end   = null,
+                    keep  = false;
+                if (this.status.timeRange){
+                    start = this.status.timeRange[0];
+                    end   = this.status.timeRange[1];
+                    keep = (start !== null) && (end !== null) && (start < cTimeRange[1]) && (end > cTimeRange[0]);
+                }
+
+                if (keep){
+                    //Set z-index to correspond to sequence and relative position and length
+                    let range = cTimeRange[1] - cTimeRange[0];
+                    start = Math.max(start, cTimeRange[0]);
+                    end   = Math.min(end, cTimeRange[1]);
+
+                    this.$colorSpan.css({
+                        'left'   : 100*(start - cTimeRange[0])/range +'%',
+                        'width'  : 100*(end - start)/range + '%',
+                        'z-index': 1000 - this.options.sequence_id
+                    });
+                }
+                else {
+                    this.$colorSpan.remove();
+                    this.$colorSpan = null;
+                }
+            }
+        },
+
+        /*********************************************
+        _updateGridSpan
+        Update the color-bar in the time-slider
+        *********************************************/
+        _updateGridSpan: function(latLng, isOverLand){
+            let show = this.isGlobal && (!isOverLand || !this.isOcean);
+
+            if (!show){
+                if (this.isOcean && isOverLand)
+                    show = false;
+                else
+                    show = this.polygon && this.polygon.contains(latLng);
+            }
+
+            if (this.showColorSpan !== show){
+                this.showColorSpan = show;
+                this.$colorSpan ? this.$colorSpan.toggle(show) : null;
+            }
+        },
 
 
+        /*********************************************
+        _createTimeInfo
+        Create a <div> with info about the dataset
+        *********************************************/
+        _createTimeInfo: function(){
+            this.$timeInfo =
+                $('<div></div>')
+                    .addClass('d-inline-block')
+                    .css('cursor', 'pointer')
+                    .on('click', this._polygon_onClick.bind(this))
+                    ._bsAddHtml({
+                        icon: [this.getIcon()],
+                        text: this.domain.fullNameSimple(),
+                    });
+            return this.$timeInfo;
+        },
 
+        /*********************************************
+        _toggleTimeInfo
+        Show/hide the <div> Update the color-bar in the time-slider
+        *********************************************/
+        _toggleTimeInfo: function( show ){
+            this.$timeInfo.toggleClass('d-none', !show);
+        },
+
+        /*********************************************
+        _updateTimeInfo
+        Show/hide the <div> Update the color-bar in the time-slider
+        *********************************************/
+        _updateTimeInfo: function(){
+            let time   = this.collection.currentTimeValue,
+                tRange = this.status.timeRange,
+                start  = tRange ? tRange[0] : null,
+                end    = tRange ? tRange[1] : null,
+                show   = this.showColorSpan && tRange && (start <= time) && (end >= time);
+
+            this._toggleTimeInfo( show );
+            return show;
+        },
 
 
     };
