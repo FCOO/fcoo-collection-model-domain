@@ -1023,13 +1023,15 @@ Create collections and datasets
 
             e.map = L.map(e.$mapContainer.get(0), $.extend(true, {},
                         nsCollection.options.modalMapOptions, {
-                            bsPositionControl: !!options.timeRange,
-                            bsPositionOptions: {isExtended: true, mode: 'MAPCENTER'}
+                            bsPositionControl: true,
+                            bsPositionOptions: {
+                                isExtended: true,
+                                mode      : options.timeRange ? 'MAPCENTER' : 'CURSOR'
+                            }
                         })
                     );
 
-            if (e.map.bsPositionControl)
-                e.map.bsPositionControl.$container.hide();
+            e.map.bsPositionControl.$container.hide();
 
             if (options.bounds)
                 L.rectangle(options.bounds, {color: "var(--cmd-current-map)", weight: 2, fill: false}).addTo(e.map);
@@ -1044,7 +1046,8 @@ Create collections and datasets
             //Create background-layer and use the color-event to update time-range info
             e.map.setBackground(options.backgroundId || 'standard');
 
-            e.map.backgroundLandLayer.on('color', this.updateTimeRangeInfo.bind(this) );
+            if (options.timeRange)
+                e.map.backgroundLandLayer.on('color', this.updateTimeRangeInfo.bind(this) );
 
             //Create layerGroup to hole all polygons
             e.layerGroup = L.layerGroup().addTo(e.map);
@@ -1112,8 +1115,6 @@ Create collections and datasets
                     content : e.$mapContainer,
                     footer  : footer
                 }];
-
-
 
             //Add content to hold time-range info
             this.hasTimeRange = options.timeRange && (datasetVisible > 0);
@@ -1201,7 +1202,7 @@ Create collections and datasets
                     helpButton: true
                 };
 
-            this.updateTimeRangeInfo();
+//HER               this.updateTimeRangeInfo();
 
             return result;
         },
