@@ -402,7 +402,8 @@ Create Datasets
                     this.$colorSpan.css({
                         'left'   : 100*(start - cTimeRange[0])/range +'%',
                         'width'  : 100*(end - start)/range + '%',
-                        'z-index': 1000 - this.options.sequence_id
+                        'z-index': 1000 - this.options.sequence_id,
+'top': '-' + this.$colorSpan.height() + 'px'
                     });
                 }
                 else {

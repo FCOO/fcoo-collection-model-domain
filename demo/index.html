@@ -77,7 +77,13 @@
                 backgroundId: 'retro', //'strandard', 'charts', 'gray', 'retro'
                 bounds   :  bounds,
                 timeRange: [-2*24, 5*24],
+                timeColor: {
+                    past  : 'pink',
+                    now   : 'green',
+                    future: 'lightblue'
+                },
                 time : 9,
+
             }
 
         fcoo.collection.collectionList.list.forEach( collection => {

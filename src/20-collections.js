@@ -649,6 +649,7 @@ Create collections and datasets
                         valueDistances  : 16,
                         grid            : true,
                         handleFixed     : true,
+handle: 'down',
                         slider          :"fixed",
                         mousewheel      : true,
                         showLine        : false,
@@ -674,6 +675,18 @@ Create collections and datasets
                     }
                 });
 
+
+                if (options.timeColor){
+                    //Add past, now and future colors
+                    if (options.timeColor.past)
+                        gridColors.push( {fromValue: options.timeRange[0], value: 0, color: options.timeColor.past});
+                    if (options.timeColor.now)
+                        timeSliderOptions.labelColors = [{value:0, backgroundColor: options.timeColor.now, color: options.timeColor.nowText || 'black'}];
+                    if (options.timeColor.future)
+                        gridColors.push( {fromValue: 0, value: options.timeRange[1], color: options.timeColor.future });
+                }
+
+
                 if (gridColors.length)
                     timeSliderOptions.gridColors = gridColors;
 
@@ -681,8 +694,8 @@ Create collections and datasets
                 this.timeSlider = $input.timeSlider(timeSliderOptions).data('timeSlider');
 
                 accordionChildren.push({
-                    icon   : 'fa-plus-large',
-                    text   : {da:'Hvilke prognoser dækker kortcenter', en: 'Witch forecasts covers map center'},
+                    icon   : 'fas fa-plus-large',
+                    text   : {da:'Prognoser der dækker kortets midtpunkt', en: 'Forecasts covering the map center'},
                     isOpen : true,
                     content: $timeContainer
                 });
