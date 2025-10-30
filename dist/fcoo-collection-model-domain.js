@@ -683,7 +683,9 @@ Create collections and datasets
         resolveCollections: function(data){
             //Create all the Collections
             $.each( data.collections, function(id, options){
-                this.list.push( new nsCollection.Collection(id, options, this) );
+                new nsCollection.Collection(id, options, this);
+                //let collection = new nsCollection.Collection(id, options, this);
+                //this.list.push( collection );
             }.bind(this));
         },
 
@@ -706,7 +708,6 @@ Create collections and datasets
         this.onUpdate       = [];
 
         //Get meta-data
-        //ns.promiseList.appendLast({
         ns.promiseList.append({
             fileName: this.fullPath,
             resolve : this.resolve.bind(this)
@@ -721,7 +722,7 @@ Create collections and datasets
             if (this.firstTime){
                 //Link Parameter to Collection
                 this.parameters = {};
-                let cp = data['varray:variables']; //cp = collection-parameters
+                let cp = data['varray:variables'] || []; //cp = collection-parameters
                 nsParameter.visitAllParameters( function(param){
                     if (cp[param.id])
                         this.parameters[param.id] = param;
@@ -740,19 +741,30 @@ Create collections and datasets
                 $.each( this.parameters, function(id, param){ param.collection = this; }.bind(this) );
 
                 //Get list of datasets / domains
+                this.hasDatasets = false;
                 this.datasets = {};
 
             }
 
             //Update datasets
             (data['varray:datasets'] || []).forEach( options => {
-                let datasetId = options.attrs.name.toUpperCase(),
-                    dataset = this.datasets[datasetId];
+                let datasetId = options.attrs && options.attrs.name ? options.attrs.name.toUpperCase() : null,
+                    dataset   = datasetId ? this.datasets[datasetId] : null;
+                this.hasDatasets = this.hasDatasets || !!datasetId || !!dataset;
+
                 if (dataset)
                     dataset.update(options);
                 else
-                    this.datasets[datasetId] = new nsCollection.Dataset( options, this );
+                    if (datasetId)
+                        this.datasets[datasetId] = new nsCollection.Dataset( options, this );
             }, this);
+
+
+            if (!this.hasDatasets)
+                return;
+
+            if (this.firstTime)
+                this.collectionList.list.push( this );
 
             this.update();
 
@@ -896,6 +908,11 @@ Create collections and datasets
             this.accordionStatus = this.$accordion.bsAccordionStatus();
             this.elements = null;
             this.bsModal = null;
+
+            if (this.timeSlider)
+                this.timeSlider.destroy();
+            this.timeSlider = null;
+
             return true;
         },
 
@@ -1131,7 +1148,7 @@ Create collections and datasets
                         valueDistances  : 16,
                         grid            : true,
                         handleFixed     : true,
-handle: 'down',
+                        handle          : 'down',
                         slider          :"fixed",
                         mousewheel      : true,
                         showLine        : false,
@@ -1172,7 +1189,6 @@ handle: 'down',
                 if (gridColors.length)
                     timeSliderOptions.gridColors = gridColors;
 
-
                 this.timeSlider = $input.timeSlider(timeSliderOptions).data('timeSlider');
 
                 accordionChildren.push({
@@ -1211,11 +1227,11 @@ handle: 'down',
                         multiOpen: true,
                         children : accordionChildren
                     },
+
+remove: true,
                     helpId    : this.options.helpId,
                     helpButton: true
                 };
-
-//HER               this.updateTimeRangeInfo();
 
             return result;
         },

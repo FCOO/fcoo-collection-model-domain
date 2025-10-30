@@ -201,9 +201,8 @@ Create collections and datasets
         resolveCollections: function(data){
             //Create all the Collections
             $.each( data.collections, function(id, options){
-                new nsCollection.Collection(id, options, this);
-                //let collection = new nsCollection.Collection(id, options, this);
-                //this.list.push( collection );
+                let collection = new nsCollection.Collection(id, options, this);
+                this.list.push( collection );
             }.bind(this));
         },
 
@@ -278,11 +277,12 @@ Create collections and datasets
             }, this);
 
 
-            if (!this.hasDatasets)
-                return;
+//HER               if (!this.hasDatasets)
+//HER                   return;
 
-            if (this.firstTime)
-                this.collectionList.list.push( this );
+            if (this.firstTime){
+                this.list.push( this );
+            }
 
             this.update();
 
@@ -427,9 +427,7 @@ Create collections and datasets
             this.elements = null;
             this.bsModal = null;
 
-            if (this.timeSlider)
-                this.timeSlider.destroy();
-            this.timeSlider = null;
+console.log(this.timeSlider);
 
             return true;
         },
@@ -707,7 +705,13 @@ Create collections and datasets
                 if (gridColors.length)
                     timeSliderOptions.gridColors = gridColors;
 
+
                 this.timeSlider = $input.timeSlider(timeSliderOptions).data('timeSlider');
+
+window.NIELS  = window.NIELS || 0;
+this.timeSlider._NIELS = window.NIELS++;
+console.log($input);
+
 
                 accordionChildren.push({
                     icon   : 'fas fa-plus-large',
