@@ -48806,6 +48806,41 @@ Style for edit settings for graticule
 }
 
 /**********************************************************
+ICON-CLASSES FOR LAND and WATER COLOR FROM map-layer-background
+**********************************************************/
+.fa-map-standard-land {
+  color: var(--map-standard-land);
+}
+
+.fa-map-standard-water {
+  color: var(--map-standard-water);
+}
+
+.fa-map-charts-land {
+  color: var(--map-charts-land);
+}
+
+.fa-map-charts-water {
+  color: var(--map-charts-water);
+}
+
+.fa-map-gray-land {
+  color: var(--map-gray-land);
+}
+
+.fa-map-gray-water {
+  color: var(--map-gray-water);
+}
+
+.fa-map-retro-land {
+  color: var(--map-retro-land);
+}
+
+.fa-map-retro-water {
+  color: var(--map-retro-water);
+}
+
+/**********************************************************
 HIDE/SHOW WHEN SINGLE OR MULTI-MAPS SELECTED
 **********************************************************/
 .multi-maps-selected .hide-for-multi-maps-selected {

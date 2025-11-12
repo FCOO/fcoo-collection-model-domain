@@ -37,7 +37,9 @@
 //HER           window.fcoo.LOCAL_DATA = true;
 
 
-    //window.fcoo.FCMD_FORCE_OCEAN = true;
+    //window.fcoo.FCMD_FORCE_LAND = true;
+
+    window.fcoo.FCMD_FORCE_LAND  = window.fcoo.FCMD_FORCE_LAND  || (window.location.search =='?land');
     window.fcoo.FCMD_FORCE_OCEAN = window.fcoo.FCMD_FORCE_OCEAN || (window.location.search =='?ocean');
 
     //TEMP: No access to data-files on AWS. Read from old location instead
@@ -74,7 +76,7 @@
         let  bounds = L.latLngBounds([[61.52269494598361, 14.833984375000001], [53.08082737207479, -1.667480468750002]]);
 
         let asModalOptions = {
-                backgroundId: 'retro', //'strandard', 'charts', 'gray', 'retro'
+                backgroundId: 'charts', //'strandard', 'charts', 'gray', 'retro'
                 bounds   :  bounds,
                 timeRange: [-2*24, 5*24],
                 timeColor: {

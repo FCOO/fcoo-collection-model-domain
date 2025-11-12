@@ -72,8 +72,17 @@ Create collections and datasets
     };
 
 
+    //Status when collection and dataset info are shown in modal. ds = displayStatus for the current map-center (latlng) and time in time-slider
+    const dsOk          = nsCollection.dsOk        = 1, //Ok
+          dsTimeRange   = nsCollection.dsTimeRange = 2, //Outside the time-range
+          dsOverOcean   = nsCollection.dsOverOcean = 3, //LatLng is over water/ocean when only forecast for land
+          dsOverLand    = nsCollection.dsOverLand  = 4, //LatLng is over land when only forecast for water/ocean
+          dsOutside     = nsCollection.dsOutside   = 5; //LatLng is outside the dataset domain
+
+
     //colorNameList = []COLORNAME = different colors for domains
-    const colorNameList   = ["blue", "green", "cyan", "purple", "grey", "pink"],
+    //const colorNameList   = ["blue", "green", "cyan", "purple", "grey", "pink"];
+    const colorNameList   = ['chocolate', 'springgreen', 'olive', 'darkviolet', 'cyan', 'purple', 'grey', 'pink'],
           globalColorName = "brown";
 
 
@@ -82,6 +91,8 @@ Create collections and datasets
     nsCollection.globalMax       = null;
     nsCollection.globalMinMoment = null;
     nsCollection.globalMaxMoment = null;
+
+
 
 
     /****************************************************************************
@@ -405,8 +416,7 @@ Create collections and datasets
                     map.fitBounds(options.bounds);
             }
 
-            this.updateTimeRangeInfo();
-
+            this.updateDisplayStatus();
         },
 
 
@@ -482,12 +492,12 @@ Create collections and datasets
         _timeSlider_onBuild: function( result ){
             let $grid = result.slider.cache.$grid;
             this.list.forEach( dataset => dataset._createGridSpan($grid) );
-            this._updateTimeRangeInfo();
+            this._updateDisplayStatus();
         },
 
         /*********************************************
         _timeSlider_onChange
-        Hide/showw the time-info for the different datasets
+        Hide/show the time-info for the different datasets
         *********************************************/
         _timeSlider_onChange: function( timeSlider ){
             if (!timeSlider) return;
@@ -495,30 +505,53 @@ Create collections and datasets
             this.currentTimeValue = timeSlider.value;
 
             let currentDatasetFound = false;
+
+            this.displayStatus = 99;
             this.list.forEach( dataset => {
                 if (currentDatasetFound)
                     dataset._toggleTimeInfo(false);
-                else
-                    currentDatasetFound = dataset._updateTimeInfo();
+                else {
+                    dataset._updateTimeInfo();
+                    currentDatasetFound = dataset.displayStatus == dsOk;
+                }
+                this.displayStatus = Math.min(this.displayStatus, dataset.displayStatus);
             });
+
+            /*
+            switch (this.displayStatus){
+                case dsOk          : console.log('Ok');                     break;
+                case dsTimeRange   : console.log('Outside the time-range'); break;
+                case dsOverOcean   : console.log('Over water');             break;
+                case dsOverLand    : console.log('Over land');              break;
+                case dsOutside     : console.log('Outside');                break;
+            }
+            //*/
+
+            //Show/hide display-status for no-forecast
+            $.each(this.displayStatusElement, (dsId, $elem) => {
+                $elem.toggleClass('d-none', dsId != this.displayStatus);
+            }, this);
+
         },
 
 
 
         /*********************************************
-        updateTimeRangeInfo
+        updateDisplayStatus
         *********************************************/
-        updateTimeRangeInfo: function(){
+        updateDisplayStatus: function(){
             if (this.timeoutId)
                 window.clearTimeout(this.timeoutId);
 
-            this.timeoutId = window.setTimeout(this._updateTimeRangeInfo.bind(this), 20);
+            this.timeoutId = window.setTimeout(this._updateDisplayStatus.bind(this), 20);
         },
 
         /*********************************************
-        updateTimeRangeInfo
+        updateDisplayStatus
+        Update the info above the time-slider with info
+        on current dataset or "No forecast"-text
         *********************************************/
-        _updateTimeRangeInfo: function(){
+        _updateDisplayStatus: function(){
             this.timeoutId = null;
 
             if (!this.timeSlider) return;
@@ -528,7 +561,12 @@ Create collections and datasets
                 isOverLand = map ? map.isOverLand(latLng) : null;
 
             if (map){
-                this.list.forEach( dataset => dataset._updateGridSpan(latLng, isOverLand) );
+                this.list.forEach( dataset => {
+                    dataset._setDisplayStatus(latLng, isOverLand);
+                    dataset._updateGridSpan(latLng, isOverLand);
+                }, this);
+
+                //Use _timeSlider_onChange to update displayStatus
                 this._timeSlider_onChange(this.timeSlider.result);
             }
         },
@@ -537,7 +575,6 @@ Create collections and datasets
         _modalContent
         *********************************************/
         _modalContent: function(options = {}){
-
             if (this.timeSlider){
                 this.timeSlider.remove();
                 this.timeSlider = null;
@@ -579,10 +616,11 @@ Create collections and datasets
                 nsMap.standard.wms({});
 
             //Create background-layer and use the color-event to update time-range info
-            e.map.setBackground(options.backgroundId || 'standard');
+            let backgroundId = options.backgroundId || 'standard';
+            e.map.setBackground(backgroundId);
 
             if (options.timeRange)
-                e.map.backgroundLandLayer.on('color', this.updateTimeRangeInfo.bind(this) );
+                e.map.backgroundLandLayer.on('color', this.updateDisplayStatus.bind(this) );
 
             //Create layerGroup to hole all polygons
             e.layerGroup = L.layerGroup().addTo(e.map);
@@ -692,6 +730,31 @@ Create collections and datasets
                     }
                 });
 
+                //Create position and time info for the different no-forecast situations
+                this.displayStatusElement = {};
+
+                let noForecast = {icon: 'far fa-ban', text: {da:'Ingen prognoser', en: 'No forecasts'}},
+                    overLand   = {icon: [['fas fa-square-full fa-map-'+backgroundId+'-land', 'far fa-square-full']], text: {da:'Over land', en: 'Over land'}},
+                    overOcean  = {icon: [['fas fa-square-full fa-map-'+backgroundId+'-water', 'far fa-square-full']], text: {da:'Over hav', en: 'Over sea'}};
+                //There is no dataset covering the position
+                this.displayStatusElement[dsOutside] = noForecast;
+
+                //The map center is over land for a ocean parameter
+                this.displayStatusElement[dsOverLand] = this.isGlobal ? overLand : [noForecast, '/', overLand];
+
+                //The map center is over the ocean for a land parameter
+                this.displayStatusElement[dsOverOcean] = this.isGlobal ? overOcean : [noForecast, '/', overOcean];
+
+                //The time-range do not include the current time
+                this.displayStatusElement[dsTimeRange] = {icon: 'far fa-clock', text: {da:'Ingen prognoser for valgte tidspunkt', en: 'No forecasts for selected time'}};
+
+                $.each(this.displayStatusElement, (id, opt) => {
+                    this.displayStatusElement[id] = $('<div></div>')
+                                                .addClass('d-inline-block')
+                                                ._bsAddHtml(opt)
+                                                .appendTo($timeInfoContainer);
+                });
+
 
                 if (options.timeColor){
                     //Add past, now and future colors
@@ -746,7 +809,7 @@ Create collections and datasets
                         children : accordionChildren
                     },
 
-remove: true,
+                    remove    : true,
                     helpId    : this.options.helpId,
                     helpButton: true
                 };

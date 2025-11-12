@@ -5,56 +5,141 @@
 	https://github.com/FCOO/fcoo-collection-model-domain
 	https://github.com/FCOO
 ************************************************/
-.text-pink {
-  color: pink !important;
+/***********************************************
+    _leaflet-polyline-mixin.scss
+
+	(c) 2018, FCOO
+
+	https://github.com/FCOO/leaflet-polyline
+	https://github.com/FCOO
+
+************************************************/
+/*
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    white,
+    grey,
+    black,
+    darkblue
+*/
+.text-chocolate {
+  color: chocolate !important;
 }
 
-.text-purple {
-  color: purple !important;
+.lpl-base.lpl-chocolate {
+  fill: chocolate;
 }
 
-.text-red {
-  color: red !important;
+.lpl-base.lpl-border-chocolate,
+.lpl-shadow.lpl-border-chocolate {
+  stroke: chocolate;
 }
 
-.text-orange {
-  color: orange !important;
+.text-springgreen {
+  color: springgreen !important;
 }
 
-.text-yellow {
-  color: yellow !important;
+.lpl-base.lpl-springgreen {
+  fill: springgreen;
 }
 
-.text-green {
-  color: green !important;
+.lpl-base.lpl-border-springgreen,
+.lpl-shadow.lpl-border-springgreen {
+  stroke: springgreen;
+}
+
+.text-olive {
+  color: olive !important;
+}
+
+.lpl-base.lpl-olive {
+  fill: olive;
+}
+
+.lpl-base.lpl-border-olive,
+.lpl-shadow.lpl-border-olive {
+  stroke: olive;
+}
+
+.text-darkviolet {
+  color: darkviolet !important;
+}
+
+.lpl-base.lpl-darkviolet {
+  fill: darkviolet;
+}
+
+.lpl-base.lpl-border-darkviolet,
+.lpl-shadow.lpl-border-darkviolet {
+  stroke: darkviolet;
 }
 
 .text-cyan {
   color: cyan !important;
 }
 
-.text-blue {
-  color: blue !important;
+.lpl-base.lpl-cyan {
+  fill: cyan;
 }
 
-.text-brown {
-  color: brown !important;
+.lpl-base.lpl-border-cyan,
+.lpl-shadow.lpl-border-cyan {
+  stroke: cyan;
 }
 
-.text-white {
-  color: white !important;
+.text-purple {
+  color: purple !important;
+}
+
+.lpl-base.lpl-purple {
+  fill: purple;
+}
+
+.lpl-base.lpl-border-purple,
+.lpl-shadow.lpl-border-purple {
+  stroke: purple;
 }
 
 .text-grey {
   color: grey !important;
 }
 
-.text-black {
-  color: black !important;
+.lpl-base.lpl-grey {
+  fill: grey;
 }
 
-.text-darkblue {
-  color: darkblue !important;
+.lpl-base.lpl-border-grey,
+.lpl-shadow.lpl-border-grey {
+  stroke: grey;
+}
+
+.text-pink {
+  color: pink !important;
+}
+
+.lpl-base.lpl-pink {
+  fill: pink;
+}
+
+.lpl-base.lpl-border-pink,
+.lpl-shadow.lpl-border-pink {
+  stroke: pink;
+}
+
+.text-brown {
+  color: brown !important;
+}
+
+.lpl-base.lpl-brown {
+  fill: brown;
+}
+
+.lpl-base.lpl-border-brown,
+.lpl-shadow.lpl-border-brown {
+  stroke: brown;
 }
 
 :root {

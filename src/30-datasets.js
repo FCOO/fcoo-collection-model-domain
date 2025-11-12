@@ -18,6 +18,14 @@ Create Datasets
           stateAlert = nsCollection.stateAlert,
           stateFail  = nsCollection.stateFail;
 
+    //Status when collection and dataset info are shown in modal. ds = displayStatus for the current map-center (latlng) and time in time-slider
+    const dsOk          = nsCollection.dsOk,
+          dsTimeRange   = nsCollection.dsTimeRange,
+          dsOverOcean   = nsCollection.dsOverOcean,
+          dsOverLand    = nsCollection.dsOverLand,
+          dsOutside     = nsCollection.dsOutside;
+
+
 
     function createDummyDomain(){
         //Create "dummy" modal and domain for fallback
@@ -53,8 +61,14 @@ Create Datasets
         this.domain = domain || createDummyDomain();
 
         this.isGlobal = this.domain.isGlobal;
+
+        if (this.isGlobal)
+            this.collection.isGlobal = true;
+
         this.isPrimary = this.isGlobal || !!options.primary;
         this.isOcean = ns.FCMD_FORCE_OCEAN ? true : (this.domain.options.type == 'ocean');
+        this.isLand  = ns.FCMD_FORCE_LAND  ? true : (this.domain.options.type == 'land' );
+        this.isAll   = !this.isOcean && !this.isLand;
 
         this.update( options );
     };
@@ -314,13 +328,16 @@ Create Datasets
             this.polygon
                 .on('click', this._polygon_onClick.bind(this) )
                 .bindTooltip(this.domain.fullNameSimple(), {sticky: true});
+
+            this.polygonBounds = this.polygon.getBounds();
+
         },
 
         rejectPolygon: function(){
             this.errorLoadingMask = true;
 
-            //Reload the modal
-            this.collection.update();
+            //Reload the modal. Bug fix: Wait 300ms to allow time-slider resize to get called
+            setTimeout(this.collection.update.bind(this.collection), 300);
         },
 
 
@@ -353,7 +370,7 @@ Create Datasets
                         this.polygon.setStyle({
                             transparent    : true, //!selected || !this.isOcean,
                             weight         : selected && !this.isOcean ? 3 : 1,
-                        borderColorName: (selected && !this.isOcean) || disabled ? 'black' : this.colorName,
+                            borderColorName: (selected && !this.isOcean) || disabled ? 'black' : this.colorName,
                         });
                         if (selected)
                             map.fitBounds(this.polygon.getBounds(), {_maxZoom: map.getZoom()});
@@ -372,8 +389,6 @@ Create Datasets
         *********************************************/
         _createGridSpan: function($grid){
             let cTimeRange = this.collection.timeRange;
-
-            this.showColorSpan = null;
 
             if (this.include){
                 let $colorSpan = $grid.find('.grid-color.data-set-grid-color-'+this.options.sequence_id);
@@ -403,7 +418,7 @@ Create Datasets
                         'left'   : 100*(start - cTimeRange[0])/range +'%',
                         'width'  : 100*(end - start)/range + '%',
                         'z-index': 1000 - this.options.sequence_id,
-'top': '-' + this.$colorSpan.height() + 'px'
+                        'top'    : '-' + this.$colorSpan.height() + 'px'
                     });
                 }
                 else {
@@ -413,24 +428,43 @@ Create Datasets
             }
         },
 
+
+        /*********************************************
+        _setDisplayStatus(latLng, isOverLand)
+        Get displayStatus (see const prefixed "ds" in 20-collections.js)
+          dsOk          = nsCollection.dsOk        = 1, //Ok
+          dsTimeRange   = nsCollection.dsTimeRange = 2, //Outside the time-range
+          dsOverOcean   = nsCollection.dsOverOcean = 3, //LatLng is over water/ocean when only forecast for land
+          dsOverLand    = nsCollection.dsOverLand  = 4, //LatLng is over land when only forecast for water/ocean
+          dsOutside     = nsCollection.dsOutside   = 5; //LatLng is outside the dataset domain
+
+        *********************************************/
+        _checkLandOcean: function( isOverLand, defaultStatus ){
+            if (this.isLand && !isOverLand)
+                return dsOverOcean;
+            else
+                if (this.isOcean && isOverLand)
+                    return dsOverLand;
+                else
+                    return defaultStatus;
+        },
+
+        _setDisplayStatus: function(latLng, isOverLand){
+            if (this.isGlobal || (this.polygon && this.polygon.contains(latLng)) )
+                this.displayStatus = this._checkLandOcean( isOverLand, dsOk );
+            else
+                if (this.polygonBounds && this.polygonBounds.contains(latLng))
+                    this.displayStatus = this._checkLandOcean( isOverLand, dsOutside );
+                else
+                    this.displayStatus = dsOutside;
+        },
+
         /*********************************************
         _updateGridSpan
         Update the color-bar in the time-slider
         *********************************************/
-        _updateGridSpan: function(latLng, isOverLand){
-            let show = this.isGlobal && (!isOverLand || !this.isOcean);
-
-            if (!show){
-                if (this.isOcean && isOverLand)
-                    show = false;
-                else
-                    show = this.polygon && this.polygon.contains(latLng);
-            }
-
-            if (this.showColorSpan !== show){
-                this.showColorSpan = show;
-                this.$colorSpan ? this.$colorSpan.toggle(show) : null;
-            }
+        _updateGridSpan: function(){
+            this.$colorSpan ? this.$colorSpan.toggle(this.displayStatus == dsOk) : null;
         },
 
 
@@ -464,14 +498,19 @@ Create Datasets
         Show/hide the <div> Update the color-bar in the time-slider
         *********************************************/
         _updateTimeInfo: function(){
-            let time   = this.collection.currentTimeValue,
-                tRange = this.status.timeRange,
-                start  = tRange ? tRange[0] : null,
-                end    = tRange ? tRange[1] : null,
-                show   = this.showColorSpan && tRange && (start <= time) && (end >= time);
+            let time         = this.collection.currentTimeValue,
+                tRange       = this.status.timeRange,
+                start        = tRange ? tRange[0] : null,
+                end          = tRange ? tRange[1] : null,
+                insideTRange = tRange && (start <= time) && (end >= time);
 
-            this._toggleTimeInfo( show );
-            return show;
+            if ((this.displayStatus == dsOk) && !insideTRange)
+                this.displayStatus = dsTimeRange;
+            else
+                if ((this.displayStatus == dsTimeRange) && insideTRange)
+                    this.displayStatus = dsOk;
+
+            this._toggleTimeInfo( this.displayStatus == dsOk );
         },
 
 
