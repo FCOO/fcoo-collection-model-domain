@@ -431,6 +431,7 @@ Create collections and datasets
             if (map){
                 this.mapCenter = map.getCenter();
                 this.mapZoom   = map.getZoom();
+                map.remove();
             }
 
             this.accordionStatus = this.$accordion.bsAccordionStatus();
@@ -617,7 +618,9 @@ Create collections and datasets
 
             //Create background-layer and use the color-event to update time-range info
             let backgroundId = options.backgroundId || 'standard';
+
             e.map.setBackground(backgroundId);
+
             e.map.isVisibleInMultiMaps = true; //Needed to fire 'color' event....
             if (options.timeRange)
                 e.map.backgroundLandLayer.on('color', this.updateDisplayStatus.bind(this) );
