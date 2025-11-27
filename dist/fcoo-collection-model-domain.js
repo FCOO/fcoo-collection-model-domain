@@ -140,6 +140,7 @@ Objects and methods to create and manages list of models
             process             : 3,
         }, nsModel.options.domain, model.options.domain, options);
 
+
         this.options.abbr = this.options.abbr || this.options.id;
         this.options.name = this.options.name || this.options.abbr;
         this.options.link = this.options.link || this.model.options.link;
@@ -207,6 +208,7 @@ Objects and methods to create and manages list of models
         }
         *********************************************/
         createDetailContent: function( $container, status, STATUSTEXT ){
+
             //*****************************************************
             function replaceSpace( text ){
                 return text.replace(/ /g, '&nbsp;');
@@ -554,12 +556,12 @@ Create collections and datasets
     };
 
 
-    //Status when collection and dataset info are shown in modal. ds = displayStatus for the current map-center (latlng) and time in time-slider
-    const dsOk          = nsCollection.dsOk        = 1, //Ok
-          dsTimeRange   = nsCollection.dsTimeRange = 2, //Outside the time-range
-          dsOverOcean   = nsCollection.dsOverOcean = 3, //LatLng is over water/ocean when only forecast for land
-          dsOverLand    = nsCollection.dsOverLand  = 4, //LatLng is over land when only forecast for water/ocean
-          dsOutside     = nsCollection.dsOutside   = 5; //LatLng is outside the dataset domain
+    //Status when collection and dataset info are shown in modal. mds = modal-display-status for the current map-center (latlng) and time in time-slider
+    const mdsOk          = nsCollection.mdsOk        = 1, //Ok
+          mdsTimeRange   = nsCollection.mdsTimeRange = 2, //Outside the time-range
+          mdsOverOcean   = nsCollection.mdsOverOcean = 3, //LatLng is over water/ocean when only forecast for land
+          mdsOverLand    = nsCollection.mdsOverLand  = 4, //LatLng is over land when only forecast for water/ocean
+          mdsOutside     = nsCollection.mdsOutside   = 5; //LatLng is outside the dataset domain
 
 
     //colorNameList = []COLORNAME = different colors for domains
@@ -898,7 +900,7 @@ Create collections and datasets
                     map.fitBounds(options.bounds);
             }
 
-            this.updateDisplayStatus();
+            this.updateModalDisplayStatus();
         },
 
 
@@ -975,7 +977,7 @@ Create collections and datasets
         _timeSlider_onBuild: function( result ){
             let $grid = result.slider.cache.$grid;
             this.list.forEach( dataset => dataset._createGridSpan($grid) );
-            this._updateDisplayStatus();
+            this._updateModalDisplayStatus();
         },
 
         /*********************************************
@@ -989,30 +991,31 @@ Create collections and datasets
 
             let currentDatasetFound = false;
 
-            this.displayStatus = 99;
+            this.modalDisplayStatus = 99;
             this.list.forEach( dataset => {
                 if (currentDatasetFound)
                     dataset._toggleTimeInfo(false);
                 else {
                     dataset._updateTimeInfo();
-                    currentDatasetFound = dataset.displayStatus == dsOk;
+                    currentDatasetFound = dataset.modalDisplayStatus == mdsOk;
                 }
-                this.displayStatus = Math.min(this.displayStatus, dataset.displayStatus);
+                this.modalDisplayStatus = Math.min(this.modalDisplayStatus, dataset.modalDisplayStatus);
             });
 
             /*
             switch (this.displayStatus){
-                case dsOk          : console.log('Ok');                     break;
-                case dsTimeRange   : console.log('Outside the time-range'); break;
-                case dsOverOcean   : console.log('Over water');             break;
-                case dsOverLand    : console.log('Over land');              break;
-                case dsOutside     : console.log('Outside');                break;
+                case mdsOk          : console.log('Ok');                     break;
+                case mdsTimeRange   : console.log('Outside the time-range'); break;
+                case mdsOverOcean   : console.log('Over water');             break;
+                case mdsOverLand    : console.log('Over land');              break;
+                case mdsOutside     : console.log('Outside');                break;
             }
             //*/
 
             //Show/hide display-status for no-forecast
-            $.each(this.displayStatusElement, (dsId, $elem) => {
-                $elem.toggleClass('d-none', dsId != this.displayStatus);
+
+            $.each(this.modalDisplayStatusElement, (mdsId, $elem) => {
+                $elem.toggleClass('d-none', mdsId != this.modalDisplayStatus);
             }, this);
 
         },
@@ -1020,21 +1023,21 @@ Create collections and datasets
 
 
         /*********************************************
-        updateDisplayStatus
+        updateModalDisplayStatus
         *********************************************/
-        updateDisplayStatus: function(){
+        updateModalDisplayStatus: function(){
             if (this.timeoutId)
                 window.clearTimeout(this.timeoutId);
 
-            this.timeoutId = window.setTimeout(this._updateDisplayStatus.bind(this), 20);
+            this.timeoutId = window.setTimeout(this._updateModalDisplayStatus.bind(this), 20);
         },
 
         /*********************************************
-        updateDisplayStatus
+        _updateModalDisplayStatus
         Update the info above the time-slider with info
         on current dataset or "No forecast"-text
         *********************************************/
-        _updateDisplayStatus: function(){
+        _updateModalDisplayStatus: function(){
             this.timeoutId = null;
 
             if (!this.timeSlider) return;
@@ -1045,7 +1048,7 @@ Create collections and datasets
 
             if (map){
                 this.list.forEach( dataset => {
-                    dataset._setDisplayStatus(latLng, isOverLand);
+                    dataset._setModalDisplayStatus(latLng, isOverLand);
                     dataset._updateGridSpan(latLng, isOverLand);
                 }, this);
 
@@ -1105,7 +1108,7 @@ Create collections and datasets
 
             e.map.isVisibleInMultiMaps = true; //Needed to fire 'color' event....
             if (options.timeRange)
-                e.map.backgroundLandLayer.on('color', this.updateDisplayStatus.bind(this) );
+                e.map.backgroundLandLayer.on('color', this.updateModalDisplayStatus.bind(this) );
 
             //Create layerGroup to hole all polygons
             e.layerGroup = L.layerGroup().addTo(e.map);
@@ -1216,29 +1219,29 @@ Create collections and datasets
                 });
 
                 //Create position and time info for the different no-forecast situations
-                this.displayStatusElement = {};
+                this.modalDisplayStatusElement = {};
 
                 let noForecast = {icon: 'far fa-ban', text: {da:'Ingen prognoser', en: 'No forecasts'}},
                     overLand   = {icon: [['fas fa-square-full fa-map-'+backgroundId+'-land', 'far fa-square-full']], text: {da:'Over land', en: 'Over land'}},
                     overOcean  = {icon: [['fas fa-square-full fa-map-'+backgroundId+'-water', 'far fa-square-full']], text: {da:'Over hav', en: 'Over sea'}};
                 //There is no dataset covering the position
-                this.displayStatusElement[dsOutside] = noForecast;
+                this.modalDisplayStatusElement[mdsOutside] = noForecast;
 
                 //The map center is over land for a ocean parameter
-                this.displayStatusElement[dsOverLand] = this.isGlobal ? overLand : [noForecast, '/', overLand];
+                this.modalDisplayStatusElement[mdsOverLand] = this.isGlobal ? overLand : [noForecast, '/', overLand];
 
                 //The map center is over the ocean for a land parameter
-                this.displayStatusElement[dsOverOcean] = this.isGlobal ? overOcean : [noForecast, '/', overOcean];
+                this.modalDisplayStatusElement[mdsOverOcean] = this.isGlobal ? overOcean : [noForecast, '/', overOcean];
 
                 //The time-range do not include the current time
-                this.displayStatusElement[dsTimeRange] = {icon: 'far fa-clock', text: {da:'Ingen prognoser for valgte tidspunkt', en: 'No forecasts for selected time'}};
+                this.modalDisplayStatusElement[mdsTimeRange] = {icon: 'far fa-clock', text: {da:'Ingen prognoser for valgte tidspunkt', en: 'No forecasts for selected time'}};
 
-                $.each(this.displayStatusElement, (id, opt) => {
-                    this.displayStatusElement[id] = $('<div></div>')
+                $.each(this.modalDisplayStatusElement, (mdsId, opt) => {
+                    this.modalDisplayStatusElement[mdsId] = $('<div></div>')
                                                 .addClass('d-inline-block')
                                                 ._bsAddHtml(opt)
                                                 .appendTo($timeInfoContainer);
-                });
+                }, this);
 
 
                 if (options.timeColor){
@@ -1326,12 +1329,12 @@ Create Datasets
           stateAlert = nsCollection.stateAlert,
           stateFail  = nsCollection.stateFail;
 
-    //Status when collection and dataset info are shown in modal. ds = displayStatus for the current map-center (latlng) and time in time-slider
-    const dsOk          = nsCollection.dsOk,
-          dsTimeRange   = nsCollection.dsTimeRange,
-          dsOverOcean   = nsCollection.dsOverOcean,
-          dsOverLand    = nsCollection.dsOverLand,
-          dsOutside     = nsCollection.dsOutside;
+    //Status when collection and dataset info are shown in modal. mds = modal-display-status for the current map-center (latlng) and time in time-slider
+    const mdsOk          = nsCollection.mdsOk,
+          mdsTimeRange   = nsCollection.mdsTimeRange,
+          mdsOverOcean   = nsCollection.mdsOverOcean,
+          mdsOverLand    = nsCollection.mdsOverLand,
+          mdsOutside     = nsCollection.mdsOutside;
 
 
 
@@ -1738,33 +1741,33 @@ Create Datasets
 
 
         /*********************************************
-        _setDisplayStatus(latLng, isOverLand)
+        _setModalDisplayStatus(latLng, isOverLand)
         Get displayStatus (see const prefixed "ds" in 20-collections.js)
-          dsOk          = nsCollection.dsOk        = 1, //Ok
-          dsTimeRange   = nsCollection.dsTimeRange = 2, //Outside the time-range
-          dsOverOcean   = nsCollection.dsOverOcean = 3, //LatLng is over water/ocean when only forecast for land
-          dsOverLand    = nsCollection.dsOverLand  = 4, //LatLng is over land when only forecast for water/ocean
-          dsOutside     = nsCollection.dsOutside   = 5; //LatLng is outside the dataset domain
+          mdsOk          = nsCollection.mdsOk        = 1, //Ok
+          mdsTimeRange   = nsCollection.mdsTimeRange = 2, //Outside the time-range
+          mdsOverOcean   = nsCollection.mdsOverOcean = 3, //LatLng is over water/ocean when only forecast for land
+          mdsOverLand    = nsCollection.mdsOverLand  = 4, //LatLng is over land when only forecast for water/ocean
+          mdsOutside     = nsCollection.mdsOutside   = 5; //LatLng is outside the dataset domain
 
         *********************************************/
         _checkLandOcean: function( isOverLand, defaultStatus ){
             if (this.isLand && !isOverLand)
-                return dsOverOcean;
+                return mdsOverOcean;
             else
                 if (this.isOcean && isOverLand)
-                    return dsOverLand;
+                    return mdsOverLand;
                 else
                     return defaultStatus;
         },
 
-        _setDisplayStatus: function(latLng, isOverLand){
+        _setModalDisplayStatus: function(latLng, isOverLand){
             if (this.isGlobal || (this.polygon && this.polygon.contains(latLng)) )
-                this.displayStatus = this._checkLandOcean( isOverLand, dsOk );
+                this.modalDisplayStatus = this._checkLandOcean( isOverLand, mdsOk );
             else
                 if (this.polygonBounds && this.polygonBounds.contains(latLng))
-                    this.displayStatus = this._checkLandOcean( isOverLand, dsOutside );
+                    this.modalDisplayStatus = this._checkLandOcean( isOverLand, mdsOutside );
                 else
-                    this.displayStatus = dsOutside;
+                    this.modalDisplayStatus = mdsOutside;
         },
 
         /*********************************************
@@ -1772,7 +1775,7 @@ Create Datasets
         Update the color-bar in the time-slider
         *********************************************/
         _updateGridSpan: function(){
-            this.$colorSpan ? this.$colorSpan.toggle(this.displayStatus == dsOk) : null;
+            this.$colorSpan ? this.$colorSpan.toggle(this.modalDisplayStatus == mdsOk) : null;
         },
 
 
@@ -1812,13 +1815,13 @@ Create Datasets
                 end          = tRange ? tRange[1] : null,
                 insideTRange = tRange && (start <= time) && (end >= time);
 
-            if ((this.displayStatus == dsOk) && !insideTRange)
-                this.displayStatus = dsTimeRange;
+            if ((this.modalDisplayStatus == mdsOk) && !insideTRange)
+                this.modalDisplayStatus = mdsTimeRange;
             else
-                if ((this.displayStatus == dsTimeRange) && insideTRange)
-                    this.displayStatus = dsOk;
+                if ((this.modalDisplayStatus == mdsTimeRange) && insideTRange)
+                    this.modalDisplayStatus = mdsOk;
 
-            this._toggleTimeInfo( this.displayStatus == dsOk );
+            this._toggleTimeInfo( this.modalDisplayStatus == mdsOk );
         },
 
 

@@ -140,6 +140,7 @@ Objects and methods to create and manages list of models
             process             : 3,
         }, nsModel.options.domain, model.options.domain, options);
 
+
         this.options.abbr = this.options.abbr || this.options.id;
         this.options.name = this.options.name || this.options.abbr;
         this.options.link = this.options.link || this.model.options.link;
@@ -207,6 +208,7 @@ Objects and methods to create and manages list of models
         }
         *********************************************/
         createDetailContent: function( $container, status, STATUSTEXT ){
+
             //*****************************************************
             function replaceSpace( text ){
                 return text.replace(/ /g, '&nbsp;');

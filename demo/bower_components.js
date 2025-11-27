@@ -115382,6 +115382,7 @@ if (ns.DEV_VERSION)
 
             //Add all data.owner to i18next
             i18next.addBundleKeyPhrases(data);
+
         },
 
         promiseOptions  : {

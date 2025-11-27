@@ -18,12 +18,12 @@ Create Datasets
           stateAlert = nsCollection.stateAlert,
           stateFail  = nsCollection.stateFail;
 
-    //Status when collection and dataset info are shown in modal. ds = displayStatus for the current map-center (latlng) and time in time-slider
-    const dsOk          = nsCollection.dsOk,
-          dsTimeRange   = nsCollection.dsTimeRange,
-          dsOverOcean   = nsCollection.dsOverOcean,
-          dsOverLand    = nsCollection.dsOverLand,
-          dsOutside     = nsCollection.dsOutside;
+    //Status when collection and dataset info are shown in modal. mds = modal-display-status for the current map-center (latlng) and time in time-slider
+    const mdsOk          = nsCollection.mdsOk,
+          mdsTimeRange   = nsCollection.mdsTimeRange,
+          mdsOverOcean   = nsCollection.mdsOverOcean,
+          mdsOverLand    = nsCollection.mdsOverLand,
+          mdsOutside     = nsCollection.mdsOutside;
 
 
 
@@ -430,33 +430,33 @@ Create Datasets
 
 
         /*********************************************
-        _setDisplayStatus(latLng, isOverLand)
+        _setModalDisplayStatus(latLng, isOverLand)
         Get displayStatus (see const prefixed "ds" in 20-collections.js)
-          dsOk          = nsCollection.dsOk        = 1, //Ok
-          dsTimeRange   = nsCollection.dsTimeRange = 2, //Outside the time-range
-          dsOverOcean   = nsCollection.dsOverOcean = 3, //LatLng is over water/ocean when only forecast for land
-          dsOverLand    = nsCollection.dsOverLand  = 4, //LatLng is over land when only forecast for water/ocean
-          dsOutside     = nsCollection.dsOutside   = 5; //LatLng is outside the dataset domain
+          mdsOk          = nsCollection.mdsOk        = 1, //Ok
+          mdsTimeRange   = nsCollection.mdsTimeRange = 2, //Outside the time-range
+          mdsOverOcean   = nsCollection.mdsOverOcean = 3, //LatLng is over water/ocean when only forecast for land
+          mdsOverLand    = nsCollection.mdsOverLand  = 4, //LatLng is over land when only forecast for water/ocean
+          mdsOutside     = nsCollection.mdsOutside   = 5; //LatLng is outside the dataset domain
 
         *********************************************/
         _checkLandOcean: function( isOverLand, defaultStatus ){
             if (this.isLand && !isOverLand)
-                return dsOverOcean;
+                return mdsOverOcean;
             else
                 if (this.isOcean && isOverLand)
-                    return dsOverLand;
+                    return mdsOverLand;
                 else
                     return defaultStatus;
         },
 
-        _setDisplayStatus: function(latLng, isOverLand){
+        _setModalDisplayStatus: function(latLng, isOverLand){
             if (this.isGlobal || (this.polygon && this.polygon.contains(latLng)) )
-                this.displayStatus = this._checkLandOcean( isOverLand, dsOk );
+                this.modalDisplayStatus = this._checkLandOcean( isOverLand, mdsOk );
             else
                 if (this.polygonBounds && this.polygonBounds.contains(latLng))
-                    this.displayStatus = this._checkLandOcean( isOverLand, dsOutside );
+                    this.modalDisplayStatus = this._checkLandOcean( isOverLand, mdsOutside );
                 else
-                    this.displayStatus = dsOutside;
+                    this.modalDisplayStatus = mdsOutside;
         },
 
         /*********************************************
@@ -464,7 +464,7 @@ Create Datasets
         Update the color-bar in the time-slider
         *********************************************/
         _updateGridSpan: function(){
-            this.$colorSpan ? this.$colorSpan.toggle(this.displayStatus == dsOk) : null;
+            this.$colorSpan ? this.$colorSpan.toggle(this.modalDisplayStatus == mdsOk) : null;
         },
 
 
@@ -504,13 +504,13 @@ Create Datasets
                 end          = tRange ? tRange[1] : null,
                 insideTRange = tRange && (start <= time) && (end >= time);
 
-            if ((this.displayStatus == dsOk) && !insideTRange)
-                this.displayStatus = dsTimeRange;
+            if ((this.modalDisplayStatus == mdsOk) && !insideTRange)
+                this.modalDisplayStatus = mdsTimeRange;
             else
-                if ((this.displayStatus == dsTimeRange) && insideTRange)
-                    this.displayStatus = dsOk;
+                if ((this.modalDisplayStatus == mdsTimeRange) && insideTRange)
+                    this.modalDisplayStatus = mdsOk;
 
-            this._toggleTimeInfo( this.displayStatus == dsOk );
+            this._toggleTimeInfo( this.modalDisplayStatus == mdsOk );
         },
 
 
