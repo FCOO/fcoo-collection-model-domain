@@ -215,20 +215,20 @@ Create Datasets
             if (!options.asStatic)
                 icons.push( nsCollection.getStateIcon(this.displayStatus.state) );
 
-            //Colored square icon (visible) or eye-slash-icon
+            //Colored square icon (visible) or eye-slash-icon (not global datasets)
             if (options.asStatic || !this.displayStatus.disabled){
-                if (this.errorLoadingMask)
+                if (!this.isGlobal)
                     icons.push(['far fa-square fa-sm', 'far fa-slash']);
-                else
-                    icons.push( this.getIcon() );
+                icons.push( this.getIcon() );
             }
             else
                 icons.push('far fa-eye-slash');
 
             return {
                 header: {
-                    icon: icons,
-                    text: this.domain.fullNameSimple()
+                    icon     : icons,
+                    iconClass: this.isGlobal ? null : ['', 'hide-for-dataset-with-polygon-'+this.index, 'show-for-dataset-with-polygon-'+this.index],
+                    text     : this.domain.fullNameSimple()
                 },
                 content: function( $container) {
                     this.domain.createDetailContent( $container, this.displayStatus, this.STATUSTEXT );
@@ -236,6 +236,10 @@ Create Datasets
             };
         },
 
+        updatePolyginIcons: function( hasPolygon ){
+            this.hasPolygon = hasPolygon;
+            this.collection.updatePolygonIcons();
+        },
 
         /*********************************************
         **********************************************
@@ -281,7 +285,10 @@ Create Datasets
             else {
                 if (!this.domain.options.mask)
                     this.errorLoadingMask = true;
-                if (!this.errorLoadingMask)
+
+                if (this.errorLoadingMask)
+                    this.updatePolyginIcons( false );
+                else
                     //Load polygons from json-file
                     Promise.getJSON(
                         ns.dataFilePath({subDir: 'model-domain', fileName: this.domain.options.mask}), {
@@ -331,13 +338,13 @@ Create Datasets
 
             this.polygonBounds = this.polygon.getBounds();
 
+            this.updatePolyginIcons( true );
+
         },
 
         rejectPolygon: function(){
             this.errorLoadingMask = true;
-
-            //Reload the modal. Bug fix: Wait 300ms to allow time-slider resize to get called
-            setTimeout(this.collection.update.bind(this.collection), 300);
+            this.updatePolyginIcons( false );
         },
 
 

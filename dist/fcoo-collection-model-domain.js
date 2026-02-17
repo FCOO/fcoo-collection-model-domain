@@ -755,6 +755,7 @@ Create collections and datasets
 
                 //Get list of datasets / domains
                 this.hasDatasets = false;
+                this.numOfDatasets = 0;
                 this.datasets = {};
 
             }
@@ -768,8 +769,11 @@ Create collections and datasets
                 if (dataset)
                     dataset.update(options);
                 else
-                    if (datasetId)
+                    if (datasetId){
                         this.datasets[datasetId] = new nsCollection.Dataset( options, this );
+                        this.datasets[datasetId].index = this.numOfDatasets;
+                        this.numOfDatasets++;
+                    }
             }, this);
 
 
@@ -854,7 +858,7 @@ Create collections and datasets
 
 
         /*********************************************
-        asModal - Show info and status for the datasetss in the Collection
+        asModal - Show info and status for the datasets in the Collection
         options = {
             header      : {icon, text}
             asStatic    : BOOLEAN   - if true only static model/domain info are shown
@@ -878,7 +882,6 @@ Create collections and datasets
             else
                 this.modalHeaderText = options.header ? options.header.text : this.options.title || '';
 
-
             if (this.bsModal)
                 this.bsModal.update( this._modalContent(options) );
             else
@@ -901,6 +904,9 @@ Create collections and datasets
             }
 
             this.updateModalDisplayStatus();
+
+
+            this.updatePolygonIcons();
         },
 
 
@@ -1057,6 +1063,20 @@ Create collections and datasets
             }
         },
 
+
+        /*********************************************
+        updatePolygonIcons
+        *********************************************/
+        updatePolygonIcons: function(){
+            if (this.bsModal)
+                $.each( this.datasets, function(id, dataset){
+                    //Find the accordion header of the dataset and toggle modernizr dataset-with-polygon-X
+                    const $accordionHeader = this.bsModal.bsModal && !dataset.isGlobal ? this.bsModal.bsModal.$body.find('.show-for-dataset-with-polygon-'+dataset.index).parent() : null;
+                    if ($accordionHeader)
+                        $accordionHeader.modernizrToggle('dataset-with-polygon-'+dataset.index, dataset.hasPolygon);
+                }.bind(this) );
+        },
+
         /*********************************************
         _modalContent
         *********************************************/
@@ -1065,7 +1085,6 @@ Create collections and datasets
                 this.timeSlider.remove();
                 this.timeSlider = null;
             }
-
 
             this.accordionStatus = this.accordionStatus || [true, true];
 
@@ -1078,6 +1097,8 @@ Create collections and datasets
 
             //Create map-container and map-element and the info-map
             e.$mapContainer = $('<div/>').css(nsCollection.options.mapContainerCss).height(mapHeight);
+
+
 
             e.map = L.map(e.$mapContainer.get(0), $.extend(true, {},
                         nsCollection.options.modalMapOptions, {
@@ -1526,20 +1547,20 @@ Create Datasets
             if (!options.asStatic)
                 icons.push( nsCollection.getStateIcon(this.displayStatus.state) );
 
-            //Colored square icon (visible) or eye-slash-icon
+            //Colored square icon (visible) or eye-slash-icon (not global datasets)
             if (options.asStatic || !this.displayStatus.disabled){
-                if (this.errorLoadingMask)
+                if (!this.isGlobal)
                     icons.push(['far fa-square fa-sm', 'far fa-slash']);
-                else
-                    icons.push( this.getIcon() );
+                icons.push( this.getIcon() );
             }
             else
                 icons.push('far fa-eye-slash');
 
             return {
                 header: {
-                    icon: icons,
-                    text: this.domain.fullNameSimple()
+                    icon     : icons,
+                    iconClass: this.isGlobal ? null : ['', 'hide-for-dataset-with-polygon-'+this.index, 'show-for-dataset-with-polygon-'+this.index],
+                    text     : this.domain.fullNameSimple()
                 },
                 content: function( $container) {
                     this.domain.createDetailContent( $container, this.displayStatus, this.STATUSTEXT );
@@ -1547,6 +1568,10 @@ Create Datasets
             };
         },
 
+        updatePolyginIcons: function( hasPolygon ){
+            this.hasPolygon = hasPolygon;
+            this.collection.updatePolygonIcons();
+        },
 
         /*********************************************
         **********************************************
@@ -1592,7 +1617,10 @@ Create Datasets
             else {
                 if (!this.domain.options.mask)
                     this.errorLoadingMask = true;
-                if (!this.errorLoadingMask)
+
+                if (this.errorLoadingMask)
+                    this.updatePolyginIcons( false );
+                else
                     //Load polygons from json-file
                     Promise.getJSON(
                         ns.dataFilePath({subDir: 'model-domain', fileName: this.domain.options.mask}), {
@@ -1642,13 +1670,13 @@ Create Datasets
 
             this.polygonBounds = this.polygon.getBounds();
 
+            this.updatePolyginIcons( true );
+
         },
 
         rejectPolygon: function(){
             this.errorLoadingMask = true;
-
-            //Reload the modal. Bug fix: Wait 300ms to allow time-slider resize to get called
-            setTimeout(this.collection.update.bind(this.collection), 300);
+            this.updatePolyginIcons( false );
         },
 
 

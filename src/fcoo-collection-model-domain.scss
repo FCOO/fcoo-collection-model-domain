@@ -7,6 +7,7 @@
 ************************************************/
 
 @import "../bower_components/leaflet-polyline-mixin/dist/leaflet-polyline-mixin";
+@import "../bower_components/modernizr-scss/dist/modernizr-scss";
 
 
 //Create class for color of different domains
@@ -59,3 +60,12 @@ $color-name: ''+$color;
 }
 
 
+
+//Hide/show icons if dataset has polygon. Up to 16 dataset pro collection
+@for $i from 0 through 15 {
+	@include show-and-hide-for-modernizr-test(
+		$modernizr-test    : 'dataset-with-polygon-'+#{$i},
+		$incl-no-selector  : false,
+		$incl-table-display: false
+	)
+}

@@ -271,6 +271,7 @@ Create collections and datasets
 
                 //Get list of datasets / domains
                 this.hasDatasets = false;
+                this.numOfDatasets = 0;
                 this.datasets = {};
 
             }
@@ -284,8 +285,11 @@ Create collections and datasets
                 if (dataset)
                     dataset.update(options);
                 else
-                    if (datasetId)
+                    if (datasetId){
                         this.datasets[datasetId] = new nsCollection.Dataset( options, this );
+                        this.datasets[datasetId].index = this.numOfDatasets;
+                        this.numOfDatasets++;
+                    }
             }, this);
 
 
@@ -370,7 +374,7 @@ Create collections and datasets
 
 
         /*********************************************
-        asModal - Show info and status for the datasetss in the Collection
+        asModal - Show info and status for the datasets in the Collection
         options = {
             header      : {icon, text}
             asStatic    : BOOLEAN   - if true only static model/domain info are shown
@@ -394,7 +398,6 @@ Create collections and datasets
             else
                 this.modalHeaderText = options.header ? options.header.text : this.options.title || '';
 
-
             if (this.bsModal)
                 this.bsModal.update( this._modalContent(options) );
             else
@@ -417,6 +420,9 @@ Create collections and datasets
             }
 
             this.updateModalDisplayStatus();
+
+
+            this.updatePolygonIcons();
         },
 
 
@@ -573,6 +579,20 @@ Create collections and datasets
             }
         },
 
+
+        /*********************************************
+        updatePolygonIcons
+        *********************************************/
+        updatePolygonIcons: function(){
+            if (this.bsModal)
+                $.each( this.datasets, function(id, dataset){
+                    //Find the accordion header of the dataset and toggle modernizr dataset-with-polygon-X
+                    const $accordionHeader = this.bsModal.bsModal && !dataset.isGlobal ? this.bsModal.bsModal.$body.find('.show-for-dataset-with-polygon-'+dataset.index).parent() : null;
+                    if ($accordionHeader)
+                        $accordionHeader.modernizrToggle('dataset-with-polygon-'+dataset.index, dataset.hasPolygon);
+                }.bind(this) );
+        },
+
         /*********************************************
         _modalContent
         *********************************************/
@@ -581,7 +601,6 @@ Create collections and datasets
                 this.timeSlider.remove();
                 this.timeSlider = null;
             }
-
 
             this.accordionStatus = this.accordionStatus || [true, true];
 
@@ -594,6 +613,8 @@ Create collections and datasets
 
             //Create map-container and map-element and the info-map
             e.$mapContainer = $('<div/>').css(nsCollection.options.mapContainerCss).height(mapHeight);
+
+
 
             e.map = L.map(e.$mapContainer.get(0), $.extend(true, {},
                         nsCollection.options.modalMapOptions, {

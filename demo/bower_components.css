@@ -1164,6 +1164,18 @@ Color for time = tree colors for the past, now, and the future
   background-color: var(--fc-time-future-color);
 }
 
+.time-past-color-as-text-color {
+  color: var(--fc-time-past-color);
+}
+
+.time-now-color-as-text-color {
+  color: var(--fc-time-now-color);
+}
+
+.time-future-color-as-text-color {
+  color: var(--fc-time-future-color);
+}
+
 /**********************************************************
 Application color
 Defaults is = DALO color in "Forsvarsministeriets koncernfælles Designmanual 2018"
