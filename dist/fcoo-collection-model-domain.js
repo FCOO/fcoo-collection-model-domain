@@ -843,12 +843,15 @@ Create collections and datasets
             //If the modal with status is open => update it
             if (this.bsModal){
                 this.modalOptions = this.modalOptions || {};
-                let map = this.elements ? this.elements.map : null;
-                if (map){
-                    this.modalOptions.mapCenter = map.getCenter();
-                    this.modalOptions.mapZoom   = map.getZoom();
-                }
+                this.bsModal.close();
+                this.modalOptions.mapCenter = this.mapCenter;
+                this.modalOptions.mapZoom   = this.mapZoom;
+                const dontFitBounds = this.modalOptions.dontFitBounds;
+                this.modalOptions.dontFitBounds = true;
+
                 this.asModal(this.modalOptions);
+
+                this.modalOptions.dontFitBounds = dontFitBounds;
             }
 
             //Call on-update-func (if any)
@@ -897,7 +900,7 @@ Create collections and datasets
                     map.setView(options.mapCenter);
                 if (options.mapZoom)
                     map.setZoom(options.mapZoom);
-                if (options.bounds)
+                if (options.bounds && !options.dontFitBounds)
                     map.fitBounds(options.bounds);
             }
 
