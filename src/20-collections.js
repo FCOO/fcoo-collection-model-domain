@@ -83,7 +83,8 @@ Create collections and datasets
     //colorNameList = []COLORNAME = different colors for domains
     //const colorNameList   = ["blue", "green", "cyan", "purple", "grey", "pink"];
     const colorNameList   = ['chocolate', 'springgreen', 'olive', 'darkviolet', 'cyan', 'purple', 'grey', 'pink'],
-          globalColorName = "brown";
+          //globalColorName = "brown";
+          globalColorName = "darkblue";
 
 
     const timeUnit = window.FCOOMAPSTIME_TEST_NOW ? 'seconds' : 'hour';
@@ -398,10 +399,7 @@ Create collections and datasets
             else
                 this.modalHeaderText = options.header ? options.header.text : this.options.title || '';
 
-            if (this.bsModal)
-                this.bsModal.update( this._modalContent(options) );
-            else
-                this.bsModal = $.bsModal( this._modalContent(options) );
+            this.bsModal = $.bsModal( this._modalContent(options) );
 
             this.$accordion = this.bsModal.bsModal.$body.find('.BSACCORDION');
 
@@ -420,8 +418,6 @@ Create collections and datasets
             }
 
             this.updateModalDisplayStatus();
-
-
             this.updatePolygonIcons();
         },
 

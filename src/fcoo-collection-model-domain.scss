@@ -20,7 +20,9 @@ $color-list:
     purple,
     grey,
     pink,
-    brown;
+    brown,
+    red,
+    darkblue;
 
 /*
     red,
@@ -35,7 +37,7 @@ $color-list:
 */
 
 @each $color in $color-list {
-$color-name: ''+$color;
+    $color-name: ''+$color;
     .text-#{$color-name}{
         color : #{$color-name} !important;
     }
