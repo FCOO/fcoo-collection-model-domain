@@ -485,6 +485,9 @@ Create collections and datasets
                 dataset._updateModalMap( selected );
 
             }, this);
+
+
+            this.updateModalDisplayStatus();
         },
 
         /*********************************************

@@ -969,6 +969,9 @@ Create collections and datasets
                 dataset._updateModalMap( selected );
 
             }, this);
+
+
+            this.updateModalDisplayStatus();
         },
 
         /*********************************************
@@ -1689,27 +1692,28 @@ Create Datasets
         _updateModalMap
         *********************************************/
         _updateModalMap: function( selected ){
-                let e        = this.collection.elements,
-                    map      = e.map,
-                    disabled = this.displayStatus.disabled;
-                if (this.isGlobal && disabled) return;
+            let e        = this.collection.elements,
+                map      = e.map,
+                disabled = this.displayStatus.disabled;
 
-                if (this.isGlobal){
-                    e.$mapContainer.css('box-shadow', selected ? '0 0 6px 1px ' + this.colorName : 'none');
+            if (this.isGlobal && disabled) return;
+
+            if (this.isGlobal){
+                e.$mapContainer.css('box-shadow', selected ? '0 0 6px 1px ' + this.colorName : 'none');
+                if (selected)
+                    map.setZoom( map.getMinZoom(), {animate: false} );
+            }
+            else
+                if (this.polygon){
+                    //Set style of selected/not-selected polygon
+                    this.polygon.setStyle({
+                        transparent    : true, //!selected || !this.isOcean,
+                        weight         : selected && !this.isOcean ? 3 : 1,
+                        borderColorName: (selected && !this.isOcean) || disabled ? 'black' : this.colorName,
+                    });
                     if (selected)
-                        map.setZoom( map.getMinZoom(), {animate: false} );
+                         map.fitBounds(this.polygon.getBounds(), {_maxZoom: map.getZoom()});
                 }
-                else
-                    if (this.polygon){
-                        //Set style of selected/not-selected polygon
-                        this.polygon.setStyle({
-                            transparent    : true, //!selected || !this.isOcean,
-                            weight         : selected && !this.isOcean ? 3 : 1,
-                            borderColorName: (selected && !this.isOcean) || disabled ? 'black' : this.colorName,
-                        });
-                        if (selected)
-                            map.fitBounds(this.polygon.getBounds(), {_maxZoom: map.getZoom()});
-                    }
         },
 
         /*********************************************
