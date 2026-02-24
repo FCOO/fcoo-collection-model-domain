@@ -50,7 +50,7 @@
     i18next.changeLanguage('en');
     i18next.options.fallbackLng = i18next.language == 'da' ? 'en' : 'da';
 
-    moment.sfSetFormat({ time: 24, timezone:'local' } );
+    moment.sfSetFormat({ time: 24, timezone:'UTC' } );
 
     Promise.defaultErrorHandler = function(error){ console.log(error)};
 

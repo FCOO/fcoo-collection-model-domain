@@ -59885,6 +59885,7 @@ window.xmlToJSON = function(xml) {
                     options.format = options.format ? options.format.toUpperCase() : 'JSON';
                     switch (options.format){
                         case 'JSON' : get = window.Promise.getJSON; break;
+                        case 'YAML' : get = window.Promise.getYAML; break;
                         case 'XML'  : get = window.Promise.getXML; break;
                         default     : get = window.Promise.getText; break;
                     }
@@ -151153,16 +151154,18 @@ L.Map._getPaneDeltaZIndex(paneId, postfix, deltaZIndex) Create and return a pane
     nsMap.zIndexList = [];
 
     ns.promiseList.append({
-        fileName: {subDir: "layers", fileName: "layer-z-index.json"},
+        fileName: {subDir: "layers", fileName: "layer-z-index.yaml"},
+        format  : 'YAML',
         resolve : function( list ){
+
             //DEMO/TEST in LAYERZINDEX
             list = window.LAYERZINDEX || list;
 
             let zIndex = 2000 + list.length * 1000;
             list.forEach( rec => {
-                let id = rec.id.toUpperCase();
+                let id = rec.toUpperCase();
                 nsMap.zIndex[id] = zIndex;
-                nsMap.zIndexList.push({id: id, zIndex: zIndex, desc: rec.desc});
+                nsMap.zIndexList.push({id: id, zIndex: zIndex});
                 zIndex = zIndex - 1000;
             });
             nsMap.zIndexList.sort( (rec1, rec2) => {return rec2.zIndex - rec1.zIndex; });
