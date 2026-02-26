@@ -78305,7 +78305,7 @@ jquery-base-slider-public.js
     Loading (key-)phrases from json-file(s) using fcoo/promise-get
     ***********************************************************************/
     i18next._loadJSON = function( jsonFileName, options, resolve ){
-        jsonFileName = $.isArray(jsonFileName) ? jsonFileName : [jsonFileName];
+        jsonFileName =  Array.isArray(jsonFileName) ? jsonFileName : [jsonFileName];
 
         $.each( jsonFileName, function( index, url ){
             Promise.getJSON( url, options, resolve );
@@ -78444,10 +78444,11 @@ jquery-base-slider-public.js
 
     /***********************************************************************
     sentence ( langValues, options )
+    s ( langValues, options )
     - langValues = { [lang: value]xN }
     A single translation of a sentence. No key used or added
     ***********************************************************************/
-    i18next.sentence = function( langValues, options ){
+    i18next.sentence = i18next.s = function( langValues, options ){
         var nsTemp = '__SENTENCE_TEMP__',
             keyTemp = '__SENTENCE_KEY__',
             _this = this,
@@ -78465,11 +78466,13 @@ jquery-base-slider-public.js
     };
 
     /***********************************************************************
-    s ( langValues, options )
-    - langValues = { [lang: value]xN }
+    sentenceArray = function( textArray, separator, options)
     ***********************************************************************/
-    i18next.s = function( langValues, options ){
-        return this.sentence( langValues, options );
+    i18next.sentenceArray = function( textArray = [], separator = '', options){
+        textArray = Array.isArray(textArray) ? textArray : [textArray];
+        let resultArray = [];
+        textArray.forEach( txt => resultArray.push( typeof txt == 'object' ? i18next.sentence(txt, options) : txt) );
+        return resultArray.join( typeof separator == 'object' ? i18next.sentence(separator) : separator );
     };
 
 

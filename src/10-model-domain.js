@@ -185,13 +185,9 @@ Objects and methods to create and manages list of models
         },
 
         fullNameSimple: function(){
-            var result = '';
-            $.each([this.options.owner, this.model.options.name, this.options.abbr], function(index, text){
-                if (text)
-                    result = result + (result ? '&nbsp;/&nbsp;' : '') + text.toUpperCase();
-            });
-            result = result + '&nbsp;(' + i18next.s(this.options.areaName) + ')';
-            return result;
+            let textArray = [];
+            [this.options.owner, this.model.options.name, this.options.abbr].forEach( text => { if (text) textArray.push(text); });
+            return i18next.sentenceArray( textArray, '&nbsp;/&nbsp;' ) + '&nbsp;(' + i18next.s(this.options.areaName) + ')';
         },
 
 
@@ -216,8 +212,8 @@ Objects and methods to create and manages list of models
             //*****************************************************
             function abbrAndName( options  ){
                 let o       = options,
-                    idLower = o.id ? o.id.toLowerCase() : 'UNKNOWN',
-                    abbr    = i18next.exists('abbr:'+idLower) ? i18next.t('abbr:'+idLower) : o.id.toUpperCase();
+                    idLower = o.id ? i18next.t(o.id).toLowerCase() : 'UNKNOWN',
+                    abbr    = i18next.exists('abbr:'+idLower) ? i18next.t('abbr:'+idLower) : i18next.t(o.id).toUpperCase();
 
                 let name =  i18next.exists('name:'+idLower) ?
                             i18next.t('name:'+idLower) :
