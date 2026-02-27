@@ -29,7 +29,7 @@ Objects and methods to create and manages list of models
         modelList: {
             //data located in file under sub-dir 'static' contains all the groups
             dataSubDir  : 'model-domain',
-            dataFileName: 'model-domain.json',
+            dataFileName: 'model-domain.yaml',
             model       : {},   //Options for Model in current instans of ModelList
             domain      : {},   //Options for Domain in current instans of ModelList
         },
@@ -49,6 +49,7 @@ Objects and methods to create and manages list of models
 
         ns.promiseList.append({
             fileName: {subDir: modelList.options.dataSubDir, fileName: modelList.options.dataFileName},
+            format  :'YAML',
             resolve : modelList.resolve.bind(modelList)
         });
     };
@@ -185,13 +186,13 @@ Objects and methods to create and manages list of models
         },
 
         fullNameSimple: function(){
-            var result = '';
-            $.each([this.options.owner, this.model.options.name, this.options.abbr], function(index, text){
+            let textArray = [];
+            [this.options.owner.toUpperCase(), this.model.options.name, this.options.abbr].forEach( text => {
                 if (text)
-                    result = result + (result ? '&nbsp;/&nbsp;' : '') + text.toUpperCase();
+                    textArray.push(text);
             });
-            result = result + '&nbsp;(' + i18next.s(this.options.areaName) + ')';
-            return result;
+            return i18next.sentenceArray( textArray, '&nbsp;/&nbsp;' ) + '&nbsp;(' + i18next.s(this.options.areaName) + ')';
+
         },
 
 
@@ -214,45 +215,68 @@ Objects and methods to create and manages list of models
                 return text.replace(/ /g, '&nbsp;');
             }
             //*****************************************************
-            function abbrAndName( options  ){
-                let o       = options,
-                    idLower = o.id ? o.id.toLowerCase() : 'UNKNOWN',
-                    abbr    = i18next.exists('abbr:'+idLower) ? i18next.t('abbr:'+idLower) : o.id.toUpperCase();
+            function abbrAndName( o /*options*/ ){
+                let idList = o.id ? (Array.isArray(o.id) ? o.id : [o.id]) : [''],
+                    textList  = [],
+                    linkList  = [],
+                    titleList = [],
+                    finish    = false;
 
-                let name =  i18next.exists('name:'+idLower) ?
-                            i18next.t('name:'+idLower) :
-                            ($.isPlainObject(o.name) ? i18next.s(o.name) : o.name) || o.abbr;
+                idList.forEach( (id, index) => {
+                    if (finish) return;
 
-                let textList, linkList;
+                    let idLower = id ? i18next.t(id).toLowerCase() : 'UNKNOWN',
+                        abbr    = i18next.exists('abbr:'+idLower) ? i18next.t('abbr:'+idLower) : i18next.t(id).toUpperCase(),
+                        name    = i18next.exists('name:'+idLower) ?
+                                    i18next.t('name:'+idLower) :
+                                    ($.isPlainObject(o.name) ? i18next.s(o.name) : o.name) || o.abbr || id.toUpperCase(),
+                        link    = (o.link || i18next.exists('link:'+idLower)) ? o.link || 'link:'+idLower : '';
 
-                if (name){
-                    textList = o.prefix ? [o.prefix] : [],
-                    linkList = o.prefix ? [''] : [];
 
-                    if (o.link || i18next.exists('link:'+idLower))
-                        linkList.push(o.link || 'link:'+idLower);
+                    if (index == 0){
+                        //First id
+                        if (name){
+                            textList = o.prefix ? [o.prefix] : [],
+                            linkList = o.prefix ? ['']       : [];
 
-                    textList.push(name);
-                    if (name && (name.toUpperCase() !== abbr.toUpperCase()))
-                        textList.push('(' + abbr + ')');
+                            if (name && (name.toUpperCase() !== abbr.toUpperCase()))
+                                name = name + ' (' + abbr + ')';
 
-                    if (o.postfix)
-                        textList.push(o.postfix);
-                }
-                else
-                    textList = {da:'Ukendt', en:'Unknown'};
+                            textList.push(name);
+                            linkList.push(link);
+
+
+                            if (o.postfix){
+                                textList.push(o.postfix);
+                                linkList.push('');
+                            }
+                        }
+                        else {
+                            textList = {da:'Ukendt', en:'Unknown'};
+                            finish = true;
+                        }
+                    }
+                    else
+                        if (abbr){
+                            textList.push('/', abbr);
+                            linkList.push('', link);
+                        }
+                });
 
                 return {
                     type     : 'textarea',
                     class    : 'info-box',
                     label    : o.label,
                     text     : textList,
+                    title    : titleList,
                     textClass:'text-center',
                     link     : linkList,
                     center   : true,
                     middle   : true
                 };
             }
+
+
             /*****************************************************
             momentAsText(options)
             options = {
@@ -263,7 +287,6 @@ Objects and methods to create and manages list of models
                 pastRelative
                 furtureRelative
             }
-
             *****************************************************/
             function momentAsText( options ){
                 let o = options,
@@ -437,11 +460,20 @@ Objects and methods to create and manages list of models
                 }
             }
 
-            //Two columns with Owner and Model
+            //Two columns with Owner and Model or System and list of models
+            let label = {da:'Model', en: 'Model'};
+            if (this.model.options.isSystem)
+                label = this.options.modelId ? {da:'System/Model', en: 'System/Model'} : {da:'System', en: 'System'};
             content.push(
                 createSubContainer([
-                    abbrAndName({id: this.options.owner,      label: {da:'Ejer/Distributør', en: 'Owner/Distributor'} }),
-                    abbrAndName({id: this.model.options.name, label: {da:'Model',            en: 'Model'            } })
+                    abbrAndName({
+                        id   : this.options.owner,
+                        label: {da:'Ejer/Distributør',    en: 'Owner/Distributor'}
+                    }),
+                    abbrAndName({
+                        id   : this.options.modelId ? [this.model.options.id, this.options.modelId] : [this.model.options.id],
+                        label: label
+                    })
                 ])
             );
 
