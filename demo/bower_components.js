@@ -60170,10 +60170,10 @@ window.xmlToJSON = function(xml) {
   }
 
   /*!
-   * GSAP 3.14.2
+   * GSAP 3.15.0
    * https://gsap.com
    *
-   * @license Copyright 2008-2025, GreenSock. All rights reserved.
+   * @license Copyright 2008-2026, GreenSock. All rights reserved.
    * Subject to the terms at https://gsap.com/standard-license
    * @author: Jack Doyle, jack@greensock.com
   */
@@ -61508,27 +61508,6 @@ window.xmlToJSON = function(xml) {
       return 1 - ease(1 - p);
     };
   },
-      _propagateYoyoEase = function _propagateYoyoEase(timeline, isYoyo) {
-    var child = timeline._first,
-        ease;
-
-    while (child) {
-      if (child instanceof Timeline) {
-        _propagateYoyoEase(child, isYoyo);
-      } else if (child.vars.yoyoEase && (!child._yoyo || !child._repeat) && child._yoyo !== isYoyo) {
-        if (child.timeline) {
-          _propagateYoyoEase(child.timeline, isYoyo);
-        } else {
-          ease = child._ease;
-          child._ease = child._yEase;
-          child._yEase = ease;
-          child._yoyo = isYoyo;
-        }
-      }
-
-      child = child._next;
-    }
-  },
       _parseEase = function _parseEase(ease, defaultEase) {
     return !ease ? defaultEase : (_isFunction(ease) ? ease : _easeMap[ease] || _configEaseFromString(ease)) || defaultEase;
   },
@@ -62205,8 +62184,6 @@ window.xmlToJSON = function(xml) {
             if (!this._ts && !prevPaused) {
               return this;
             }
-
-            _propagateYoyoEase(this, isYoyo);
           }
         }
 
@@ -62220,7 +62197,7 @@ window.xmlToJSON = function(xml) {
 
         this._tTime = tTime;
         this._time = time;
-        this._act = !timeScale;
+        this._act = !!timeScale;
 
         if (!this._initted) {
           this._onUpdate = this.vars.onUpdate;
@@ -62843,6 +62820,7 @@ window.xmlToJSON = function(xml) {
         fullTargets = parent && parent.data === "nested" ? parent.vars.targets : targets,
         autoOverwrite = tween._overwrite === "auto" && !_suppressOverwrites,
         tl = tween.timeline,
+        reverseEase = vars.easeReverse || yoyoEase,
         cleanVars,
         i,
         p,
@@ -62858,15 +62836,9 @@ window.xmlToJSON = function(xml) {
         overwritten;
     tl && (!keyframes || !ease) && (ease = "none");
     tween._ease = _parseEase(ease, _defaults.ease);
-    tween._yEase = yoyoEase ? _invertEase(_parseEase(yoyoEase === true ? ease : yoyoEase, _defaults.ease)) : 0;
-
-    if (yoyoEase && tween._yoyo && !tween._repeat) {
-      yoyoEase = tween._yEase;
-      tween._yEase = tween._ease;
-      tween._ease = yoyoEase;
-    }
-
+    tween._rEase = reverseEase && (_parseEase(reverseEase) || tween._ease);
     tween._from = !tl && !!vars.runBackwards;
+    if (tween._from) tween.ratio = 1;
 
     if (!tl || keyframes && !vars.stagger) {
       harness = targets[0] ? _getCache(targets[0]).harness : 0;
@@ -63014,7 +62986,7 @@ window.xmlToJSON = function(xml) {
           _initTween(tween, time);
 
           _forceAllPropTweens = 0;
-          return skipRecursion ? _warn(property + " not eligible for reset") : 1;
+          return skipRecursion ? _warn(property + " not eligible for reset. Try splitting into individual properties") : 1;
         }
 
         ptCache.push(pt);
@@ -63087,7 +63059,7 @@ window.xmlToJSON = function(xml) {
       _parseFuncOrString = function _parseFuncOrString(value, tween, i, target, targets) {
     return _isFunction(value) ? value.call(tween, i, target, targets) : _isString(value) && ~value.indexOf("random(") ? _replaceRandom(value) : value;
   },
-      _staggerTweenProps = _callbackNames + "repeat,repeatDelay,yoyo,repeatRefresh,yoyoEase,autoRevert",
+      _staggerTweenProps = _callbackNames + "repeat,repeatDelay,yoyo,repeatRefresh,yoyoEase,easeReverse,autoRevert",
       _staggerPropsToSkip = {};
 
   _forEachName(_staggerTweenProps + ",id,stagger,delay,duration,paused,scrollTrigger", function (name) {
@@ -63116,7 +63088,6 @@ window.xmlToJSON = function(xml) {
           keyframes = _this3$vars.keyframes,
           defaults = _this3$vars.defaults,
           scrollTrigger = _this3$vars.scrollTrigger,
-          yoyoEase = _this3$vars.yoyoEase,
           parent = vars.parent || _globalTimeline,
           parsedTargets = (_isArray(targets) || _isTypedArray(targets) ? _isNumber(targets[0]) : "length" in vars) ? [targets] : toArray(targets),
           tl,
@@ -63133,6 +63104,7 @@ window.xmlToJSON = function(xml) {
 
       if (keyframes || stagger || _isFuncOrString(duration) || _isFuncOrString(delay)) {
         vars = _this3.vars;
+        var easeReverse = vars.easeReverse || vars.yoyoEase;
         tl = _this3.timeline = new Timeline({
           data: "nested",
           defaults: defaults || {},
@@ -63158,7 +63130,7 @@ window.xmlToJSON = function(xml) {
           for (i = 0; i < l; i++) {
             copy = _copyExcluding(vars, _staggerPropsToSkip);
             copy.stagger = 0;
-            yoyoEase && (copy.yoyoEase = yoyoEase);
+            easeReverse && (copy.easeReverse = easeReverse);
             staggerVarsToMerge && _merge(copy, staggerVarsToMerge);
             curTarget = parsedTargets[i];
             copy.duration = +_parseFuncOrString(duration, _assertThisInitialized(_this3), i, curTarget, parsedTargets);
@@ -63265,8 +63237,7 @@ window.xmlToJSON = function(xml) {
           prevIteration,
           isYoyo,
           ratio,
-          timeline,
-          yoyoEase;
+          timeline;
 
       if (!dur) {
         _renderZeroDurationTween(this, totalTime, suppressEvents, force);
@@ -63299,12 +63270,7 @@ window.xmlToJSON = function(xml) {
           }
 
           isYoyo = this._yoyo && iteration & 1;
-
-          if (isYoyo) {
-            yoyoEase = this._yEase;
-            time = dur - time;
-          }
-
+          if (isYoyo) time = dur - time;
           prevIteration = _animationCycle(this._tTime, cycleDuration);
 
           if (time === prevTime && !force && this._initted && iteration === prevIteration) {
@@ -63313,8 +63279,6 @@ window.xmlToJSON = function(xml) {
           }
 
           if (iteration !== prevIteration) {
-            timeline && this._yEase && _propagateYoyoEase(timeline, isYoyo);
-
             if (this.vars.repeatRefresh && !isYoyo && !this._lock && time !== cycleDuration && this._initted) {
               this._lock = force = 1;
               this.render(_roundPrecise(cycleDuration * iteration), true).invalidate()._lock = 0;
@@ -63337,18 +63301,32 @@ window.xmlToJSON = function(xml) {
           }
         }
 
+        if (this._rEase) {
+          var inv = time < prevTime;
+
+          if (inv !== this._inv) {
+            var segDur = inv ? prevTime : dur - prevTime;
+            this._inv = inv;
+            if (this._from) this.ratio = 1 - this.ratio;
+            this._invRatio = this.ratio;
+            this._invTime = prevTime;
+            this._invRecip = segDur ? (inv ? -1 : 1) / segDur : 0;
+            this._invScale = inv ? -this.ratio : 1 - this.ratio;
+            this._invEase = inv ? this._rEase : this._ease;
+          }
+
+          this.ratio = ratio = this._invRatio + this._invScale * this._invEase((time - this._invTime) * this._invRecip);
+        } else {
+          this.ratio = ratio = this._ease(time / dur);
+        }
+
+        if (this._from) this.ratio = ratio = 1 - ratio;
         this._tTime = tTime;
         this._time = time;
 
         if (!this._act && this._ts) {
           this._act = 1;
           this._lazy = 0;
-        }
-
-        this.ratio = ratio = (yoyoEase || this._ease)(time / dur);
-
-        if (this._from) {
-          this.ratio = ratio = 1 - ratio;
         }
 
         if (!prevTime && tTime && !suppressEvents && !prevIteration) {
@@ -63709,7 +63687,7 @@ window.xmlToJSON = function(xml) {
     return PropTween;
   }();
 
-  _forEachName(_callbackNames + "parent,duration,ease,delay,overwrite,runBackwards,startAt,yoyo,immediateRender,repeat,repeatDelay,data,paused,reversed,lazy,callbackScope,stringFilter,id,yoyoEase,stagger,inherit,repeatRefresh,keyframes,autoRevert,scrollTrigger", function (name) {
+  _forEachName(_callbackNames + "parent,duration,ease,delay,overwrite,runBackwards,startAt,yoyo,immediateRender,repeat,repeatDelay,data,paused,reversed,lazy,callbackScope,stringFilter,id,yoyoEase,stagger,inherit,repeatRefresh,keyframes,autoRevert,scrollTrigger,easeReverse", function (name) {
     return _reservedProps[name] = 1;
   });
 
@@ -64301,7 +64279,7 @@ window.xmlToJSON = function(xml) {
       }
     }
   }, _buildModifierPlugin("roundProps", _roundModifier), _buildModifierPlugin("modifiers"), _buildModifierPlugin("snap", snap)) || _gsap;
-  Tween.version = Timeline.version = gsap.version = "3.14.2";
+  Tween.version = Timeline.version = gsap.version = "3.15.0";
   _coreReady = 1;
   _windowExists() && _wake();
   var Power0 = _easeMap.Power0,
@@ -87918,18 +87896,23 @@ module.exports = g;
                     $icon.addClass(className);
             });
         }
-        else {
-            var allClassNames = options.icon || options.class || '';
+        else
+            if (options instanceof $){
+                $icon = options.clone();
+                $icon.addClass(className);
+            }
+                else {
+                var allClassNames = options.icon || options.class || '';
 
-            //Append $.FONTAWESOME_PREFIX if icon don't contain fontawesome prefix ("fa?")
-            if (allClassNames.search(iconfontPrefixRegExp) == -1)
-                allClassNames = $.FONTAWESOME_PREFIX + ' ' + allClassNames;
+                //Append $.FONTAWESOME_PREFIX if icon don't contain fontawesome prefix ("fa?")
+                if (allClassNames.search(iconfontPrefixRegExp) == -1)
+                    allClassNames = $.FONTAWESOME_PREFIX + ' ' + allClassNames;
 
-            allClassNames = allClassNames + ' ' + (className || '');
+                allClassNames = allClassNames + ' ' + (className || '');
 
-            $icon = $._bsCreateElement( 'i', null, title, null, allClassNames );
+                $icon = $._bsCreateElement( 'i', null, title, null, allClassNames );
 
-        }
+            }
         $icon.appendTo( $appendTo );
         return $icon;
     };
@@ -90663,15 +90646,6 @@ uri         : {default: "Please enter a valid URI"}
                 class: square ? 'header-icon-selected' : null
             },
 
-            extend  : square ? 'fa-square-plus'  : 'fa-chevron-circle-up',
-            diminish: square ? 'fa-square-minus' : 'fa-chevron-circle-down',
-
-            fullScreenOn : square ? 'fa-expand'   : [ $.FONTAWESOME_PREFIX_STANDARD + ' fa-expand fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
-            fullScreenOff: square ? 'fa-compress' : [ $.FONTAWESOME_PREFIX_STANDARD + ' fa-compress fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
-
-
-            new     : square ? 'fa-window-maximize' : [ $.FONTAWESOME_PREFIX_STANDARD + ' fa-window-maximize fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
-
             error : {
                 icon : square ? 'fa-exclamation' : [ 'fas fa-circle back text-danger', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle', 'fas fa-exclamation fa-inside-circle-xmark'],
                 class: square ? 'header-icon-error' : null
@@ -90689,6 +90663,19 @@ uri         : {default: "Please enter a valid URI"}
 
             info    : square ? 'fa-info' : 'fa-circle-info',
             help    : square ? 'fa-question' : 'fa-circle-question',
+
+            down: square ? 'fa-square-arrow-down' : 'fa-circle-arrow-down',
+            up  : square ? 'fa-square-arrow-up'   : 'fa-circle-arrow-up',
+
+            extend   : square ? 'fa-square-plus'  : 'fa-chevron-circle-up',
+            diminish : square ? 'fa-square-minus' : 'fa-chevron-circle-down',
+
+            fullScreenOn : square ? 'fa-expand'   : [ $.FONTAWESOME_PREFIX_STANDARD + ' fa-expand fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
+            fullScreenOff: square ? 'fa-compress' : [ $.FONTAWESOME_PREFIX_STANDARD + ' fa-compress fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
+
+
+            new     : square ? 'fa-window-maximize' : [ $.FONTAWESOME_PREFIX_STANDARD + ' fa-window-maximize fa-inside-circle2', $.FONTAWESOME_PREFIX_STANDARD + ' fa-circle'],
+
 
             close   : {
                 icon : square ? 'fas fa-xmark' : ['fas fa-circle show-for-hover fa-hover-color-red', 'fa-xmark fa-inside-circle-xmark fa-hover-color-white', $.FONTAWESOME_PREFIX_STANDARD+' fa-circle'],
@@ -90751,7 +90738,7 @@ uri         : {default: "Please enter a valid URI"}
 
             //Add icons
             let headerIcons = useSquareIcons ? bsHeaderIconsSquare : bsHeaderIcons;
-            ['back', 'forward', 'pin', 'unpin', 'diminish', 'extend', 'fullScreenOn', 'fullScreenOff', 'new', 'error', 'alert', 'warning', 'info', 'help', 'close'].forEach( (id) => {
+            ['back', 'forward', 'pin', 'unpin', 'new', 'error', 'alert', 'warning', 'info', 'help', 'down', 'up', 'diminish', 'extend', 'fullScreenOn', 'fullScreenOff', 'close'].forEach( (id) => {
                 let iconOptions = options.icons[id];
                 if (iconOptions && (iconOptions.onClick || (typeof iconOptions == 'function'))){
                     if (typeof iconOptions == 'function')
@@ -92284,6 +92271,12 @@ jquery-bootstrap-modal-promise.js
             this.setHeaderIconEnabled(id, true);
         },
 
+        headerIconUpOn : function(){ return this.headerIconUpToggle(true); },
+        headerIconUpOff: function(){ return this.headerIconUpToggle(false); },
+        headerIconUpToggle: function(on){
+            this.bsModal.$header.modernizrToggle('modal-header-icon-up-on', !!on);
+        },
+
 
         /******************************************************
         update
@@ -92645,7 +92638,9 @@ jquery-bootstrap-modal-promise.js
 
                 extend          : { className: iconExtendClassName,     onClick: multiSize ? modalExtend   : null,                        altEvents:'swipeup'   },
                 diminish        : { className: iconDiminishClassName,   onClick: multiSize ? modalDiminish : null,                        altEvents:'swipedown' },
+
                 new             : {                                     onClick: options.onNew     ? options.onNew.bind(this)     : null                        },
+
                 info            : {                                     onClick: options.onInfo    ? options.onInfo.bind(this)    : null                        },
                 warning         : {                                     onClick: options.onWarning ? options.onWarning.bind(this) : null                        },
                 alert           : {                                     onClick: options.onAlert   ? options.onAlert.bind(this)   : null                        },
@@ -92668,6 +92663,23 @@ jquery-bootstrap-modal-promise.js
         //Hide the close icon on the header
         if (options.noCloseIconOnHeader && options.icons && options.icons.close)
             options.icons.close.hidden = true;
+
+        //If options.upDownIconAsRadio is set => adjust icons and show up- and down-icons in header as radio
+        if (options.upDownIconAsRadio && options.icons.down && options.icons.up){
+            $modalContent.addClass('modal-header-icon-up-and-down-as-radio');
+            ['up', 'down'].forEach( id => {
+                let iconOpt = options.icons[id];
+                if (typeof iconOpt == 'function')
+                    iconOpt = {onClick: iconOpt};
+
+                iconOpt.className = iconOpt.className || '';
+                iconOpt.className = iconOpt.className +  ' ' + (id == 'up' ? 'show-for-modal-header-icon-up-on' : 'hide-for-modal-header-icon-up-on');
+
+                options.icons[id] = iconOpt;
+            });
+        }
+
+
 
         //Add close-botton at beginning. Avoid by setting options.closeButton = false
         if (options.closeButton)
@@ -93254,6 +93266,12 @@ jquery-bootstrap-modal-promise.js
             if (options.show)
                 $result.show();
         }
+
+        if (options.upDownIconAsRadio){
+            $result.headerIconUpOff();
+        }
+
+
 
         //Save some options in bsModal
         ['noReopenFullScreen'].forEach( id => {
@@ -119083,11 +119101,6 @@ if (ns.DEV_VERSION)
         forward         : icon_fa_prefix + 'arrow-right',
         pin             : icon_fa_prefix + 'thumbtack fa-sm',
         unpin           : icon_fa_prefix + 'thumbtack fa-sm',
-        fullScreenOn    : icon_fa_prefix + 'expand',
-        fullScreenOff   : icon_fa_prefix + 'compress',
-        extend          : icon_fa_prefix + 'square-plus',
-        diminish        : icon_fa_prefix + 'square-minus',
-        new             : icon_fa_prefix + 'window-maximize',
 
         error           : icon_fa_prefix + 'triangle-exclamation',
         alert           : icon_fa_prefix + 'diamond-exclamation',
@@ -119095,6 +119108,18 @@ if (ns.DEV_VERSION)
 
         info            : icon_fa_prefix + 'info fa-sm',
         help            : icon_fa_prefix + 'question fa-sm',
+
+        down            : icon_fa_prefix + 'square-arrow-down',
+        up              : icon_fa_prefix + 'square-arrow-up',
+
+        extend          : icon_fa_prefix + 'square-plus',
+        diminish        : icon_fa_prefix + 'square-minus',
+
+        fullScreenOn    : icon_fa_prefix + 'expand',
+        fullScreenOff   : icon_fa_prefix + 'compress',
+
+        new             : icon_fa_prefix + 'window-maximize',
+
         close           : icon_fa_prefix + 'xmark'
     });
 
@@ -142083,6 +142108,10 @@ Can be used as leaflet standard zoom control with Bootstrap style
 /****************************************************************************
 leaflet-bootstrap-control-legend.js
 
+
+
+
+
 ****************************************************************************/
 (function ($, L, window, document, undefined) {
     "use strict";
@@ -142101,6 +142130,7 @@ leaflet-bootstrap-control-legend.js
                     icon: 'fas fa-list',
                     text: {da: 'Signaturforklaring', en:'Legend'}
                 },
+                //Using extend/diminish-icon to extend and diminish legends
                 icons: {
                     extend  : { onClick: function(){/*Empty*/} },
                     diminish: { onClick: function(){/*Empty*/} }
@@ -142119,6 +142149,14 @@ leaflet-bootstrap-control-legend.js
         initialize
         *******************************************/
         initialize: function(options) {
+            //Check and set options when innerWidth is set
+            if (options.innerWidth){
+                if (options.innerWidth === true)
+                    options.innerWidth = options.width;
+                options.fitWidth = true;
+                options.width = 'fit-content';
+            }
+
             this.options = $.extend(true, this.options, options);
             L.Control.BsButtonBox.prototype.initialize.call(this);
 
@@ -142141,8 +142179,15 @@ leaflet-bootstrap-control-legend.js
             this.bsModal = this.$contentContainer.bsModal;
             this.$modalContent = this.bsModal.$content;
 
-            //Manually implement extend and diminish functionality
+            //Set the inner-width
+            if (this.options.innerWidth)
+                this.$modalContent.css('--legend-inner-width', this.options.innerWidth+(typeof this.options.innerWidth == 'number' ? 'px' : ''));
+
+
+            //Manually implement extend and diminish functionality. Using fullScreenOn/Off-ixcons but keep extend/diminish-names for backward compability
             var $header = this.bsModal.$header;
+
+
             this.extendIcon = $header.find('[data-header-icon-id="extend"]');
             this.extendIcon.on('click', $.proxy(this.extendAll, this) );
 
@@ -142214,6 +142259,7 @@ leaflet-bootstrap-control-legend.js
             var legendId = legend instanceof L.BsLegend ? legend.id : legend;
             legend = this.legends[legendId];
             if (legend){
+                legend.hide();
                 legend.onRemove();
                 delete this.legends[legendId];
                 this.list.splice(legend.indexInList, 1);
@@ -142337,7 +142383,10 @@ leaflet-bootstrap-control-legend.js
             if ($.isArray(normalIcon))
                 normalIconIsStackedIcon = true;
             else
-                normalIcon = normalIcon + ' hide-for-bsl-working';
+                if (normalIcon instanceof $)
+                    normalIcon.addClass('hide-for-bsl-working');
+                else
+                    normalIcon = normalIcon + ' hide-for-bsl-working';
             /*
             Create 2+1 icons:
             The first for layer=visible contains of two icons: normal and working
@@ -142348,6 +142397,24 @@ leaflet-bootstrap-control-legend.js
                 'fa-fw fas fa-eye-slash ' + (this.options.hiddenIconClass || '')
             ];
 
+
+            //If innerWidth is given => calc innerWidthPx
+            if (parent.options.innerWidth && !parent.options.innerWidthPx){
+                let innerWidth = parent.options.innerWidth;
+                if (typeof innerWidth == 'number')
+                    parent.options.innerWidthPx = innerWidth;
+                else {
+                    innerWidth = innerWidth.toLowerCase();
+                    let factor = 1;
+                    let unit  = ['px', 'em', 'rem'].find( nextUnit => innerWidth.includes(nextUnit) );
+                    switch (unit){
+                        case 'px' :  factor = 1; break;
+                        case 'em' :  factor = parent.$modalContent.css('font-size'); break;
+                        case 'rem':  factor = $('body').css('font-size'); break;
+                    }
+                    parent.options.innerWidthPx = parseInt(innerWidth) * parseInt(factor);
+                }
+            }
 
             this.parent = parent;
             if (!this.$container){
@@ -142363,26 +142430,32 @@ leaflet-bootstrap-control-legend.js
                         onWarning  : this._adjustHeaderIconOnClick( 'warning', options.onWarning),
                         onAlert    : this._adjustHeaderIconOnClick( 'alert',   options.onAlert  ),
                         onError    : this._adjustHeaderIconOnClick( 'error',   options.onError  ),
-                        icons      : {},
+                        icons      : {
+                            down   : { className: 'legend-content-resize-icon lcri-deminish', onClick: this.extendContent.bind(this) },
+                            up     : { className: 'legend-content-resize-icon',               onClick: this.extendContent.bind(this) },
+                        },
+
+                        upDownIconAsRadio: true,
+
+                        onChange: this.onChange.bind(this),
+
                         content    : '',
                         semiTransparent: true,
                         closeButton: false
                     };
 
+                if (parent.options.innerWidth)
+                    modalContentOptions.fitWidth = true;
 
                 //The extended content can be 'normal' content and/or buttons/buttonList
                 if (options.content || options.buttons || options.buttonList){
                     var content = [];
 
                     if (options.content){
-
                         this.$contentContainer =
                             $('<div/>')
                                 .addClass('modal-body')
-                                .addClass(options.contentClassName)
-
-                                .toggleClass('no-vertical-padding',   !!options.noVerticalPadding)
-                                .toggleClass('no-horizontal-padding', !!options.noHorizontalPadding);
+                                .addClass(options.contentClassName);
 
                         this.updateContent();
 
@@ -142438,7 +142511,10 @@ leaflet-bootstrap-control-legend.js
                         {onClick: $.proxy(this.remove, this)},
                         options.closeIconOptions
                     );
-                this.$container    = $('<div/>')._bsModalContent(modalContentOptions);
+                this.$container = $('<div/>')
+                                    ._bsModalContent(modalContentOptions)
+                                    .toggleClass('legend-fit-inner-width', !!parent.options.innerWidth);
+
                 this.bsModal = this.$container.bsModal;
                 this.$modalContent = this.bsModal.$modalContent;
 
@@ -142457,25 +142533,32 @@ leaflet-bootstrap-control-legend.js
                 });
 
                 this.sizeIcons = {};
-                ['extend', 'diminish'].forEach( id => _this.sizeIcons[id] = _this.$container.find('[data-header-icon-id="'+id+'"]') );
+                ['extend', 'diminish'].forEach( id => this.sizeIcons[id] = this.$container.find('[data-header-icon-id="'+id+'"]'), this );
+
 
                 this.$header = this.$container.find('.modal-header');
-
 
                 this.toggleContent( this.options.showContent );
                 this.toggle( this.options.show );
 
                 this.setStateNormal();
 
+                this.updateExtendDiminishContent();
+
                 this.workingOff();
             }
 
             this.$container.appendTo(this.parent.$modalContent);
 
+            this.isCreated = true;
+            this.loadSetting();
+
         },
 
         /*******************************************
-        Show or hide icons
+        ********************************************
+        Show or hide action icons
+        ********************************************
         *******************************************/
         toggleIcon: function(id, show){
             this.actionIcons[id].toggle(!!show);
@@ -142508,6 +142591,65 @@ leaflet-bootstrap-control-legend.js
 
 
         /*******************************************
+        ********************************************
+        save/load settings
+        ********************************************
+        *******************************************/
+        getSetting: function(){
+            let result = {};
+            ['isShown', 'currentContentSize'].forEach( id => {
+                if (this[id] !== undefined)
+                    result[id] = this[id];
+            }, this);
+            if (this.bsModal && this.bsModal.$modalContent)
+                result['size'] = this.bsModal.$modalContent._bsModalGetSize();
+
+            return result;
+        },
+
+
+        onChange: function(){
+            if (this.options.onChange && this.isCreated)
+                this.options.onChange(this.getSetting(), this);
+            return this;
+        },
+
+
+        setSetting: function(setting){
+            //Set show
+            if (typeof setting.isShown == 'boolean')
+                this.toggle( setting.isShown );
+
+            //Set content-size
+            const contentSize = setting.currentContentSize;
+            if (contentSize)
+                (this.contentSizeList || []).forEach( (size, index) => {
+                    if (size == contentSize)
+                        this.setContentSize( index );
+                }, this);
+
+            //Set size
+            if (setting.size && this.bsModal && this.bsModal.$modalContent)
+                this.bsModal.$modalContent._bsModalSetSizeClass( setting.size );
+
+        },
+
+        loadSetting: function(){
+            if (this.options.setting)
+                this.setSetting( this.options.setting );
+            else
+                if (this.options.loadSetting)
+                    this.setSetting( this.options.loadSetting(this) || {} );
+            return this;
+        },
+
+        /*******************************************
+        ********************************************
+        show/hide the content
+        ********************************************
+        *******************************************/
+
+        /*******************************************
         show
         *******************************************/
         show: function( extended ){
@@ -142534,6 +142676,7 @@ leaflet-bootstrap-control-legend.js
                 if (!extended)
                     this.$container._bsModalDiminish();
             }
+            this.onChange();
             return this;
         },
 
@@ -142566,10 +142709,57 @@ leaflet-bootstrap-control-legend.js
                 if (typeof extended == 'boolean')
                     this.toggle(this.isShown, extended);
             }
+            this.onChange();
         },
 
+
         /*******************************************
+        ********************************************
+        extend/diminish content
+        ********************************************
+        *******************************************/
+        updateExtendDiminishContent: function(){
+            if (!this.$container) return;
+
+            this.contentSizeList = [];
+            for (var i=1; i<=9; i++){
+                this.$container.removeClass(`legend-content-is-${i}`);
+                if (this.$container.find(`.legend-content-${i}`).length)
+                    this.contentSizeList.push(i);
+            }
+
+            this.$container.toggleClass('legend-content-is-sizeable', !!this.contentSizeList.length);
+            if (this.$contentContainer)
+                this.$contentContainer.off('click.legend-content');
+
+            if (this.contentSizeList.length){
+                this.$contentContainer.on('click.legend-content', this.extendContent.bind(this) );
+                this.setContentSize( this.currentContentSizeIndex || 0 );
+            }
+            this.onChange();
+        },
+
+        setContentSize: function( index ){
+            this.$container.removeClass(`legend-content-is-${this.currentContentSize}`);
+
+            this.currentContentSizeIndex = index;
+            this.currentContentSize = this.contentSizeList[ index ];
+            this.$container.addClass(`legend-content-is-${this.currentContentSize}`);
+
+            this.$header.modernizrToggle('modal-header-icon-up-on', index < (this.contentSizeList.length-1));
+            this.onChange();
+        },
+
+        extendContent: function(){
+            this.setContentSize( (this.currentContentSizeIndex + 1) % this.contentSizeList.length );
+        },
+
+
+
+        /*******************************************
+        ********************************************
         remove
+        ********************************************
         *******************************************/
         remove: function(e){
             //Since this.parent.removeLegend removed DOM-elements the event must stop propagation
@@ -142602,6 +142792,8 @@ leaflet-bootstrap-control-legend.js
                 this.$contentContainer
                     .empty()
                     ._bsAppendContent( this.options.content, this.options.contentContext, this.options.contentArg );
+
+            this.updateExtendDiminishContent();
         }
 
     };
@@ -151340,7 +151532,7 @@ Objects and methods to handle leaflet-maps
         maxZoom: 12,
 
         zoomSnap: 0.25,
-            
+
         //Hide attribution
         attributionControl: false,
 
@@ -151461,14 +151653,13 @@ Objects and methods to handle leaflet-maps
         bsLegendControl: true,
         bsLegendOptions: {
             position: 'topright',
+            width: '20em',  //<= TODO Adjust
+            innerWidth: true,
             content: {
                 header: {
                     icon: ns.icons.mapLegend,
                     text: ns.texts.mapLegend
                 },
-                noVerticalPadding   : true,
-                noHorizontalPadding : false,
-                width: '20em',  //<= TODO Adjust
             }
         },
 

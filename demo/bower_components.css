@@ -37895,6 +37895,16 @@ div.modal-header-icon-full-screen-off {
   display: initial !important;
 }
 
+/****************************************************
+Spedcial classes for header-icons up and down to be used as "radio" (one on at the time)
+****************************************************/
+.modal-header-icon-up-and-down-as-radio .modal-header-icon-up-on .hide-for-modal-header-icon-up-on {
+  display: none !important;
+}
+.modal-header-icon-up-and-down-as-radio .no-modal-header-icon-up-on .show-for-modal-header-icon-up-on {
+  display: none !important;
+}
+
 /************************************************************
 MODAL-BACKDROP
 
@@ -39316,6 +39326,7 @@ CAROUSEL
   max-width: 100%;
   display: flex;
   flex-direction: row;
+  align-items: center;
   font-size: var(--bs-footer-font-size);
   --bs-footer-font-size: 0.75rem;
   --bs-footer-padding-y: 0.25rem;
@@ -47142,6 +47153,126 @@ leaflet-bootstrap-control-legend.scss
 
 .fa-map-margin-right {
   margin-right: 0.4rem;
+}
+
+.legend-fit-inner-width {
+  width: calc(var(--legend-inner-width) + 4 * var(--bs-modal-padding) + 2px);
+}
+
+.legend-content-1 {
+  display: none;
+}
+
+.legend-content-is-1 div.legend-content-1 {
+  display: block;
+}
+.legend-content-is-1 .legend-content-1 {
+  display: initial;
+}
+
+.legend-content-2 {
+  display: none;
+}
+
+.legend-content-is-2 div.legend-content-2 {
+  display: block;
+}
+.legend-content-is-2 .legend-content-2 {
+  display: initial;
+}
+
+.legend-content-3 {
+  display: none;
+}
+
+.legend-content-is-3 div.legend-content-3 {
+  display: block;
+}
+.legend-content-is-3 .legend-content-3 {
+  display: initial;
+}
+
+.legend-content-4 {
+  display: none;
+}
+
+.legend-content-is-4 div.legend-content-4 {
+  display: block;
+}
+.legend-content-is-4 .legend-content-4 {
+  display: initial;
+}
+
+.legend-content-5 {
+  display: none;
+}
+
+.legend-content-is-5 div.legend-content-5 {
+  display: block;
+}
+.legend-content-is-5 .legend-content-5 {
+  display: initial;
+}
+
+.legend-content-6 {
+  display: none;
+}
+
+.legend-content-is-6 div.legend-content-6 {
+  display: block;
+}
+.legend-content-is-6 .legend-content-6 {
+  display: initial;
+}
+
+.legend-content-7 {
+  display: none;
+}
+
+.legend-content-is-7 div.legend-content-7 {
+  display: block;
+}
+.legend-content-is-7 .legend-content-7 {
+  display: initial;
+}
+
+.legend-content-8 {
+  display: none;
+}
+
+.legend-content-is-8 div.legend-content-8 {
+  display: block;
+}
+.legend-content-is-8 .legend-content-8 {
+  display: initial;
+}
+
+.legend-content-9 {
+  display: none;
+}
+
+.legend-content-is-9 div.legend-content-9 {
+  display: block;
+}
+.legend-content-is-9 .legend-content-9 {
+  display: initial;
+}
+
+.legend-content-resize-icon {
+  display: none;
+}
+
+.legend-content-is-sizeable .legend-content-resize-icon {
+  display: block;
+}
+.legend-content-is-sizeable .modal-content.no-modal-extended .legend-content-resize-icon.lcri-deminish {
+  display: none !important;
+}
+.legend-content-is-sizeable .modal-content.no-modal-extended .legend-content-resize-icon {
+  visibility: hidden !important;
+}
+.legend-content-is-sizeable .modal-body, .legend-content-is-sizeable .modal-body-fixed {
+  cursor: pointer;
 }
 
 /***********************************************
