@@ -14,134 +14,6 @@
 	https://github.com/FCOO
 
 ************************************************/
-/*
-    red,
-    orange,
-    yellow,
-    green,
-    blue,
-    white,
-    grey,
-    black,
-    darkblue
-*/
-.text-chocolate {
-  color: chocolate !important;
-}
-
-.lpl-base.lpl-chocolate {
-  fill: chocolate;
-}
-
-.lpl-base.lpl-border-chocolate,
-.lpl-shadow.lpl-border-chocolate {
-  stroke: chocolate;
-}
-
-.text-springgreen {
-  color: springgreen !important;
-}
-
-.lpl-base.lpl-springgreen {
-  fill: springgreen;
-}
-
-.lpl-base.lpl-border-springgreen,
-.lpl-shadow.lpl-border-springgreen {
-  stroke: springgreen;
-}
-
-.text-olive {
-  color: olive !important;
-}
-
-.lpl-base.lpl-olive {
-  fill: olive;
-}
-
-.lpl-base.lpl-border-olive,
-.lpl-shadow.lpl-border-olive {
-  stroke: olive;
-}
-
-.text-darkviolet {
-  color: darkviolet !important;
-}
-
-.lpl-base.lpl-darkviolet {
-  fill: darkviolet;
-}
-
-.lpl-base.lpl-border-darkviolet,
-.lpl-shadow.lpl-border-darkviolet {
-  stroke: darkviolet;
-}
-
-.text-cyan {
-  color: cyan !important;
-}
-
-.lpl-base.lpl-cyan {
-  fill: cyan;
-}
-
-.lpl-base.lpl-border-cyan,
-.lpl-shadow.lpl-border-cyan {
-  stroke: cyan;
-}
-
-.text-purple {
-  color: purple !important;
-}
-
-.lpl-base.lpl-purple {
-  fill: purple;
-}
-
-.lpl-base.lpl-border-purple,
-.lpl-shadow.lpl-border-purple {
-  stroke: purple;
-}
-
-.text-grey {
-  color: grey !important;
-}
-
-.lpl-base.lpl-grey {
-  fill: grey;
-}
-
-.lpl-base.lpl-border-grey,
-.lpl-shadow.lpl-border-grey {
-  stroke: grey;
-}
-
-.text-pink {
-  color: pink !important;
-}
-
-.lpl-base.lpl-pink {
-  fill: pink;
-}
-
-.lpl-base.lpl-border-pink,
-.lpl-shadow.lpl-border-pink {
-  stroke: pink;
-}
-
-.text-brown {
-  color: brown !important;
-}
-
-.lpl-base.lpl-brown {
-  fill: brown;
-}
-
-.lpl-base.lpl-border-brown,
-.lpl-shadow.lpl-border-brown {
-  stroke: brown;
-}
-
 .text-red {
   color: red !important;
 }
@@ -153,6 +25,97 @@
 .lpl-base.lpl-border-red,
 .lpl-shadow.lpl-border-red {
   stroke: red;
+}
+
+.text-fuchsia {
+  color: fuchsia !important;
+}
+
+.lpl-base.lpl-fuchsia {
+  fill: fuchsia;
+}
+
+.lpl-base.lpl-border-fuchsia,
+.lpl-shadow.lpl-border-fuchsia {
+  stroke: fuchsia;
+}
+
+.text-chartreuse {
+  color: chartreuse !important;
+}
+
+.lpl-base.lpl-chartreuse {
+  fill: chartreuse;
+}
+
+.lpl-base.lpl-border-chartreuse,
+.lpl-shadow.lpl-border-chartreuse {
+  stroke: chartreuse;
+}
+
+.text-orange {
+  color: orange !important;
+}
+
+.lpl-base.lpl-orange {
+  fill: orange;
+}
+
+.lpl-base.lpl-border-orange,
+.lpl-shadow.lpl-border-orange {
+  stroke: orange;
+}
+
+.text-aqua {
+  color: aqua !important;
+}
+
+.lpl-base.lpl-aqua {
+  fill: aqua;
+}
+
+.lpl-base.lpl-border-aqua,
+.lpl-shadow.lpl-border-aqua {
+  stroke: aqua;
+}
+
+.text-lime {
+  color: lime !important;
+}
+
+.lpl-base.lpl-lime {
+  fill: lime;
+}
+
+.lpl-base.lpl-border-lime,
+.lpl-shadow.lpl-border-lime {
+  stroke: lime;
+}
+
+.text-blueviolet {
+  color: blueviolet !important;
+}
+
+.lpl-base.lpl-blueviolet {
+  fill: blueviolet;
+}
+
+.lpl-base.lpl-border-blueviolet,
+.lpl-shadow.lpl-border-blueviolet {
+  stroke: blueviolet;
+}
+
+.text-slateblue {
+  color: slateblue !important;
+}
+
+.lpl-base.lpl-slateblue {
+  fill: slateblue;
+}
+
+.lpl-base.lpl-border-slateblue,
+.lpl-shadow.lpl-border-slateblue {
+  stroke: slateblue;
 }
 
 .text-darkblue {
@@ -169,7 +132,7 @@
 }
 
 :root {
-  --cmd-current-map: darkmagenta;
+  --cmd-current-map: black;
 }
 
 .cmd-current-map-container {

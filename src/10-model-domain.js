@@ -391,8 +391,8 @@ Objects and methods to create and manages list of models
                 subContent,
                 hasDynamicContent = !!status;
 
-            if (STATUSTEXT)
-                content.push({label: 'DEBUG', type: 'textarea', center: true, text: STATUSTEXT});
+               if (STATUSTEXT)
+                   content.push({label: 'DEBUG', type: 'textarea', center: true, text: STATUSTEXT});
 
 
             if (hasDynamicContent){

@@ -59252,7 +59252,7 @@ Adjusted ES5 version by Niel sHolt
         var json;
 
         try{
-            json = window.jsyaml.load(response);
+            json = window.jsyaml.load(response, {schema: window.jsyaml.JSON_SCHEMA});
         }
         catch (e){
             json = undefined;
@@ -102421,7 +102421,7 @@ return index;
     ***********************************************************/
     ns.ajdustLangName = function(name){
         var result = typeof name == 'string' ? {en: name} : name,
-            defaultName = result['en'] || result['da'];
+            defaultName = result['en'] || result['da'] || '';
 
         languages.forEach( lang => result[lang] = result[lang] || defaultName );
         return result;
@@ -142728,11 +142728,11 @@ leaflet-bootstrap-control-legend.js
                     this.contentSizeList.push(i);
             }
 
-            this.$container.toggleClass('legend-content-is-sizeable', !!this.contentSizeList.length);
+            this.$container.toggleClass('legend-content-is-sizeable', this.contentSizeList.length > 1);
             if (this.$contentContainer)
                 this.$contentContainer.off('click.legend-content');
 
-            if (this.contentSizeList.length){
+            if (this.contentSizeList.length > 1){
                 this.$contentContainer.on('click.legend-content', this.extendContent.bind(this) );
                 this.setContentSize( this.currentContentSizeIndex || 0 );
             }
@@ -144586,6 +144586,7 @@ ctx.fillRect(0, 0, shapeDim, shapeDim);
             extraTransparent: false,  //True to make the line and fill almost full -transparent
             hover           : false,  //True to show big-shadow and 0.9 opacuity for lpl-transparent when hover
             onlyShowOnHover : false,  //When true the polyline/polygon is only visible on hover and popup-open. Need {shadow: false, hover: true}
+            hoverWeight     : null,   //The width of the line when hover. Need hover: true
 
             shadow               : false,  //true to add big shadow to the line
             shadowWhenInteractive: false,  //When true a shadow is shown when the polyline is interactive
@@ -144670,10 +144671,30 @@ ctx.fillRect(0, 0, shapeDim, shapeDim);
 
 
         /*****************************************************
+        setWeight
+        *****************************************************/
+        setWeight: function(weight){
+            const options = this.options;
+            const optionsWeight = options.weight;
+            const currentOptions = this.currentOptions;
+            const currentOptionsWeight = currentOptions.weight;
+
+            ///Set line-width of the differnet polyline
+            this.polylineList[thisIndex].setStyle(       {weight: weight },                             true );
+            this.polylineList[borderIndex].setStyle(     {weight: weight + 2*options.borderWidth     }, true  );
+            this.polylineList[shadowIndex].setStyle(     {weight: weight + 2*options.shadowWidth     }, true );
+            this.polylineList[interactiveIndex].setStyle({weight: weight + 2*options.interactiveWidth}, true );
+
+            this.options.weight = optionsWeight;
+            this.currentOptions.weight = currentOptionsWeight;
+            return this;
+        },
+
+        /*****************************************************
         setStyle
         *****************************************************/
         setStyle: function(setStyle){
-            return function( style ){
+            return function( style, isSimple ){
                 function adjust(options){
                     options = $.extend({}, options || {});
                     options.weight = options.width || options.weight;
@@ -144682,7 +144703,7 @@ ctx.fillRect(0, 0, shapeDim, shapeDim);
                     return options;
                 }
 
-                if (!this.options.addInteractive)
+                if (!this.options.addInteractive || isSimple)
                     return setStyle.call(this, style );
 
                 this.options = $.extend(true,  adjust(defaultOptions), adjust(this.options), adjust(style) );
@@ -144703,10 +144724,7 @@ ctx.fillRect(0, 0, shapeDim, shapeDim);
                 this.currentOptions = options;
 
                 ///Set line-width of the differnet polyline
-                this.polylineList[thisIndex].setStyle(       {weight: options.weight });
-                this.polylineList[borderIndex].setStyle(     {weight: options.weight + 2*options.borderWidth     });
-                this.polylineList[shadowIndex].setStyle(     {weight: options.weight + 2*options.shadowWidth     });
-                this.polylineList[interactiveIndex].setStyle({weight: options.weight + 2*options.interactiveWidth});
+                this.setWeight( this.mouseover && options.hoverWeight ? options.hoverWeight :  options.weight );
 
                 //Add class and colors to this and shadow
                 this._addClass(thisIndex, (options.baseClassName || '') + ' ' + (options.className || ''));
@@ -144821,7 +144839,8 @@ ctx.fillRect(0, 0, shapeDim, shapeDim);
         *****************************************************/
         _eachPolyline: function( onlyPolyline, methodName, arg ){
             if (onlyPolyline != null){
-                if ($.isNumeric(onlyPolyline))
+//                if ($.isNumeric(onlyPolyline))
+                if (typeof onlyPolyline == 'number')
                     onlyPolyline = this.polylineList[onlyPolyline];
                 if (onlyPolyline){
                     var $path = $(onlyPolyline._path);
@@ -144849,6 +144868,10 @@ ctx.fillRect(0, 0, shapeDim, shapeDim);
         _mouseover and _mouseout: Highlight polyline
         *****************************************************/
         _mouseover: function(/* mouseEvent */){
+            this.mouseover = true;
+            if (this.currentOptions.hoverWeight)
+                this.setWeight( this.currentOptions.hoverWeight );
+
              if (this.currentOptions.hover)
                  this._addClass(null, 'lpl-hover');
              if (this.currentOptions.onlyShowOnHover)
@@ -144856,6 +144879,9 @@ ctx.fillRect(0, 0, shapeDim, shapeDim);
         },
 
         _mouseout: function(/* mouseEvent */){
+            this.mouseover = false;
+            if (this.currentOptions.hoverWeight)
+                this.setWeight( this.currentOptions.weight );
             if (this.currentOptions.hover)
                  this._removeClass(null, 'lpl-hover');
              if (this.currentOptions.onlyShowOnHover)
@@ -152196,7 +152222,7 @@ L.Layer.addInitHook(function(){
     //Adjust default options for legend
     L.BsLegend_close_icon = [
         ['show-for-single-maps-selected far fa-map fa-scale-x-08', 'show-for-single-maps-selected fas fa-slash fa-scale-x-08'],
-        ['show-for-multi-maps-selected fa-square-check']
+        ['show-for-multi-maps-selected far fa-square-check']
     ];
     L.BsLegend_close_title = {da: 'Skjul/Vælg', en: 'Hide/Select'};
 
@@ -152365,7 +152391,7 @@ L.Layer.addInitHook(function(){
         isAddedTo(mapOrIndex) - return true if the MapLayer is added to the map
         *********************************************************/
         isAddedToMap: function(mapOrIndex){
-            var mapIndex = nsMap.getMap(mapOrIndex).fcooMapIndex;
+            let mapIndex = nsMap.getMap(mapOrIndex).fcooMapIndex;
             return !!this.info[mapIndex] && !!this.info[mapIndex].map;
         },
 
@@ -152376,19 +152402,31 @@ L.Layer.addInitHook(function(){
         applySetting: function(/*setting, map, mapInfo, mapIndex*/){
 
         },
+
         //applyCommonSetting - apply common setting for the Map_layer
         applyCommonSetting: function(/*setting*/){
 
         },
 
+        /*********************************************************
+        _applySetting
+        *********************************************************/
         _applySetting: function(data){
             //Apply common setting
             this.applyCommonSetting(data.common || null);
+
+            //Apply legend-setting
+            this.legendSetting = this.legendSetting || {};
+            $.each(data, function(mapIndex, setting){
+                if (setting && setting.legendSetting)
+                    this.legendSetting[mapIndex] = setting.legendSetting;
+            }.bind(this) );
 
             //Apply individuel settings
             nsMap.visitAllMaps( function(map){
                 var mapIndex = map.fcooMapIndex,
                     setting = data[mapIndex] || {};
+
                 if (setting.show)
                     this.addTo(map);
                 else
@@ -152401,6 +152439,7 @@ L.Layer.addInitHook(function(){
 
                 //Individual setting
                 this.applySetting(setting, map, this.info[mapIndex], mapIndex);
+
             }.bind(this));
         },
 
@@ -152413,6 +152452,9 @@ L.Layer.addInitHook(function(){
             return null;
         },
 
+        /*********************************************************
+        _saveSetting
+        *********************************************************/
         _saveSetting: function(){
             var data = {},
                 commonSetting = this.saveCommonSetting() || null;
@@ -152420,19 +152462,34 @@ L.Layer.addInitHook(function(){
             if (commonSetting !== null)
                 data.common = commonSetting;
 
-            $.each(this.info, function(index, info){
+            this.info.forEach( (info, index) => {
                 data[index] =
                     $.extend({
-                        show       : this.isAddedToMap(index),
-                        isInvisible: info ? info.isInvisible : false,
+                        show         : this.isAddedToMap(index),
+                        isInvisible  : info ? info.isInvisible : false,
+                        legendSetting: info && info.legend && info.legend.isCreated ? info.legend.getSetting() : null
                         //colorInfo - @TODO
                     },
                         this.saveSetting(info ? info.map : null, info, index) || {}
                     );
-            }.bind(this));
+
+            }, this);
+
             ns.appSetting.set(this.id, data);
+
             return ns.appSetting.save();
         },
+
+
+        /*********************************************************
+        legend
+        *********************************************************/
+        legend_loadSetting: function( mapIndex ){
+            return this.legendSetting && this.legendSetting[mapIndex] ?
+                    $.extend({}, this.legendSetting[mapIndex], {isShown: true}) :
+                    {};
+        },
+
 
         /*********************************************************
         addTo
@@ -152467,7 +152524,6 @@ L.Layer.addInitHook(function(){
 
             //Create and add legend
             if (map.bsLegendControl && !this.options.noLegend){
-
                 if (!info.legend){
                     var legendOptions = this.options.legendOptions,
                         buttonList = legendOptions.buttonList || legendOptions.buttons || [];
@@ -152478,8 +152534,7 @@ L.Layer.addInitHook(function(){
                             buttonOptions.class = (buttonOptions.class || '') + ' ' + this.showAndHideClasses + '-visibility';
                     }, this);
 
-
-                    //Find index for legend
+                    //Find index for menu
                     var levelIndex = [],
                         menuItem = this.menuItem;
                     while (menuItem && menuItem._getParentIndex){
@@ -152509,17 +152564,19 @@ L.Layer.addInitHook(function(){
 
                         //onInfo      : this.options.onInfo,
                         //onWarning   : this.options.onWarning,
-                        onRemove    : $.proxy(this.removeViaLegend, this),
-                        normalIconClass: this.showAndHideClasses,
-                        hiddenIconClass: this.inversShowAndHideClasses,
-                        mapLayer       : this,
+                        onRemove        : $.proxy(this.removeViaLegend, this),
+                        normalIconClass : this.showAndHideClasses,
+                        hiddenIconClass : this.inversShowAndHideClasses,
+                        mapLayer        : this,
+
+                        onChange        : this._saveSetting.bind(this), //this.legend_onChange.bind(this, mapIndex),
+                        loadSetting     : this.legend_loadSetting.bind(this, mapIndex)
 
                     }, legendOptions);
 
 
                     delete legendOptions.buttons;
                     legendOptions.buttonList = buttonList.length ? buttonList : null;
-
                     info.legend = new L.BsLegend( legendOptions );
                 }
 
@@ -152691,9 +152748,7 @@ L.Layer.addInitHook(function(){
             if (info.isInvisible)
                 this.invisible(map);
 
-
             this._saveSetting();
-
 
             return this;
         },
@@ -157613,7 +157668,8 @@ tile-filter.js
 
     //Load units
     ns.promiseList.append({
-        fileName: {subDir: 'parameter-unit', fileName: 'cf_sn_unit.json'},
+        fileName: {subDir: 'parameter-unit', fileName: 'cf_sn_unit.yaml'},
+        format:'yaml',
         resolve : function(data){
             $.each(data, (unit_id, options) => {
                 nsUnit.units[unit_id] = nsUnit[unit_id] = new nsParameter.Unit(unit_id, options);
@@ -157665,18 +157721,32 @@ tile-filter.js
 
     nsParameter.Parameter = Parameter;
     nsParameter.Parameter.prototype = {
-        getName: function(inclUnit, z, useUnit, useShortName){
-            var result = {};
+        getName: function(inclUnit, z, useUnit, useShortName, postfix ){
+            return this._getName({
+                inclUnit    : inclUnit,
+                z           : z,
+                useUnit     : useUnit,
+                useShortName: useShortName,
+                postfix     : postfix
+            });
+        },
 
-            z = z ? ns.ajdustLangName(z) : null;
-            useUnit = nsParameter.getUnit(useUnit || this.unit);
+        _getName: function(options){
+            let o       = options,
+                result  = {},
+                z       = o.z      ? ns.ajdustLangName(o.z)    : null,
+                postfix  = o.postfix ? ns.ajdustLangName(o.postfix) : null,
+                useUnit = nsParameter.getUnit(o.useUnit || this.unit);
 
-            $.each(useShortName ? this.shortName : this.name, (lang, text) => {
+            $.each(o.useShortName ? this.shortName : this.name, (lang, text) => {
                 var langText = text;
                 if (z)
                     langText = langText + '&nbsp;(' + z[lang] + ')';
 
-                if (inclUnit)
+                if (postfix)
+                    langText = langText + '&nbsp;(' + postfix[lang] + ')';
+
+                if (o.inclUnit)
                     langText = langText + '&nbsp;[' + useUnit.name[lang] + ']';
 
                 result[lang] = langText;
@@ -157739,7 +157809,8 @@ tile-filter.js
 
     //Load parameter
     ns.promiseList.append({
-        fileName: {subDir: 'parameter-unit', fileName: 'cf_sn_parameter.json'},
+        fileName: {subDir: 'parameter-unit', fileName: 'cf_sn_parameter.yaml'},
+        format  :'yaml',
         resolve : function(data){
             $.each(data, (parameter_id, options) => {
                 nsParameter.parameters[parameter_id] = nsParameter[parameter_id] = new nsParameter.Parameter(parameter_id, options);

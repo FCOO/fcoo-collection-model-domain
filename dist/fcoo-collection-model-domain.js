@@ -391,8 +391,8 @@ Objects and methods to create and manages list of models
                 subContent,
                 hasDynamicContent = !!status;
 
-            if (STATUSTEXT)
-                content.push({label: 'DEBUG', type: 'textarea', center: true, text: STATUSTEXT});
+               if (STATUSTEXT)
+                   content.push({label: 'DEBUG', type: 'textarea', center: true, text: STATUSTEXT});
 
 
             if (hasDynamicContent){
@@ -596,12 +596,14 @@ Create collections and datasets
           mdsOutside     = nsCollection.mdsOutside   = 5; //LatLng is outside the dataset domain
 
 
-    //colorNameList = []COLORNAME = different colors for domains
-    //const colorNameList   = ["blue", "green", "cyan", "purple", "grey", "pink"];
-    const colorNameList   = ['chocolate', 'springgreen', 'olive', 'darkviolet', 'cyan', 'purple', 'grey', 'pink'],
-          //globalColorName = "brown";
-          globalColorName = "darkblue";
+    //colorNameList = []COLORNAME = different colors for domains - there has been many variations....
+    //const colorNameList   = ["blue", "green", "cyan", "purple", "grey", "pink"],
+    //const colorNameList   = ["red", "orange", "yellow", "green", "blue", "white", "grey", "black", "darkblue"],
+    //const colorNameList   = ['chocolate', 'springgreen', 'olive', 'darkviolet', 'cyan', 'purple', 'grey', 'pink'],
+    const colorNameList   = ['red', 'chartreuse', 'aqua', 'blueviolet', 'fuchsia', 'orange', 'lime', 'slateblue'],
 
+    //globalColorName = "brown";
+    globalColorName = "darkblue";
 
     const timeUnit = window.FCOOMAPSTIME_TEST_NOW ? 'seconds' : 'hour';
     nsCollection.globalMin       = null;
@@ -728,11 +730,8 @@ Create collections and datasets
 
         resolveCollections: function(data){
             //Create all the Collections
-            $.each( data.collections, function(id, options){
-                new nsCollection.Collection(id, options, this);
-                //let collection = new nsCollection.Collection(id, options, this);
-                //this.list.push( collection );
-            }.bind(this));
+            //$.each( data.collections, function(id, options){
+            ( data.collections || []).forEach( options => this.list.push( new nsCollection.Collection(options, this) ), this);
         },
 
         getCollection: function(id){
@@ -743,8 +742,8 @@ Create collections and datasets
     /****************************************************************************
     Collection
     ****************************************************************************/
-    let Collection = nsCollection.Collection = function(id, options, collectionList) {
-        this.id             = id;
+    let Collection = nsCollection.Collection = function(options, collectionList) {
+        this.id             = options.id;
         this.options        = options;
         this.collectionList = collectionList;
         this.list           = [];
@@ -970,13 +969,14 @@ Create collections and datasets
         _accordion_onChange - Update the polygons in the map in the modal
         *********************************************/
         _accordion_onChange: function(accordion, status){
+//console.log('status', status );
             this.accordionStatus = status;
 
             if (this.doNotUpdateMap){
                 this.doNotUpdateMap = false;
                 return;
             }
-            //The 'open' domain (if any) is set in second status
+            //The 'open' domain (if any) is set in second or third status
             let currentIndex = null;
             let statusIndex = this.hasTimeRange ? 2 : 1;
 
@@ -985,7 +985,10 @@ Create collections and datasets
                     if (open)
                         currentIndex = index;
                 });
+if (currentIndex != null )
+//    console.log(currentIndex, this.getDataset( this.accordionItemIds[currentIndex] ) );
             this._updateModalMap( currentIndex == null ? null : this.list[currentIndex] );
+//            this._updateModalMap( currentIndex == null ? null : this.getDataset( this.accordionItemIds[currentIndex] ) );
         },
 
 
@@ -1182,7 +1185,9 @@ Create collections and datasets
             //Add each dataset to this.list
             this.list = [];
             $.each( this.datasets, function(id, dataset){ this.list.push(dataset); }.bind(this) );
-            this.list.sort( (ds1, ds2) => { return ds1.options.sequence_id - ds2.options.sequence_id; } );
+
+//            this.list.sort( (ds1, ds2) => { return ds2.options.sequence_id - ds1.options.sequence_id; } );  //Regional -> local
+            this.list.sort( (ds1, ds2) => { return ds1.options.sequence_id - ds2.options.sequence_id; } );  //local -> Regional
 
             //Add colorNames
             let nextColorNameIndex = 0;
@@ -1191,6 +1196,7 @@ Create collections and datasets
             });
 
             let accordionItems = [];
+this.accordionItemIds = [];
             let datasetVisible = 0;
             this.list.forEach( (dataset, index) => {
                 dataset.include = true;
@@ -1204,18 +1210,23 @@ Create collections and datasets
                     if (this.accordionStatus && Array.isArray(this.accordionStatus[1]) &&  this.accordionStatus[1][index])
                         accordionContent.isOpen = true;
                     accordionItems.push( accordionContent );
+                    this.accordionItemIds.push( dataset.id );
                 }
-            });
+            }, this);
+            accordionItems.reverse();
+            this.accordionItemIds.reverse();
 
-            //Add polygon (if not disabled and not global) to the overview map in reverse order
-            for (var i=this.list.length-1; i>=0; i--){
-                let dataset = this.list[i];
+            //Add polygon (if not disabled and not global) to the overview map
+            this.list.reverse();
+            this.list.forEach( dataset => {
                 if (dataset.include)
                     dataset.addToMap();
-            }
+            });
+            this.list.reverse();
+
             let footer = null;
             if (options.bounds){
-                //Construkt a map-outline in the footer
+                //Construct a map-outline in the footer
                 let ne = e.map.latLngToLayerPoint( options.bounds.getNorthEast() ),
                     sw = e.map.latLngToLayerPoint( options.bounds.getSouthWest() ),
                     wh  = Math.abs( ne.x - sw.x ) / Math.abs( ne.y - sw.y ),
@@ -1654,14 +1665,18 @@ Create Datasets
 
                 if (this.errorLoadingMask)
                     this.updatePolyginIcons( false );
-                else
-                    //Load polygons from json-file
+                else {
+                    //Load polygons from geojson-file
+//HER                       if (this.domain.options.mask == 'METNO_TOPAZ5_ARC.geojson')
+//HER                           this.addPolygon.bind(this)(TOPAZ);
+//HER                       else
                     Promise.getJSON(
                         ns.dataFilePath({subDir: 'model-domain', fileName: this.domain.options.mask}), {
                         useDefaultErrorHandler: false,
                         resolve: this.addPolygon.bind(this),
                         reject : this.rejectPolygon.bind(this)
                     });
+                }
             }
         },
 
@@ -1687,11 +1702,16 @@ Create Datasets
             this.polygon = L.polygon(this.latLngs, {
                 borderColorName : disabled ? 'black' : this.colorName,
                 colorName       : disabled ? 'gray'  : this.colorName,
-                extraTransparent: true,
+
+                transparent     : !this.isOcean,
+                weight          : 2,
+                hoverWeight     : this.isOcean ? null : 4,
+                hover           : this.isOcean,
+
+
                 addInteractive  : true,
                 border          : true,
                 shadow          : false,
-                hover           : true,
                 interactive     : true,
                 pane            : (this.isOcean ? 'oceanPane' : 'overlayPane')
             })
@@ -1742,10 +1762,9 @@ Create Datasets
                 if (this.polygon){
                     //Set style of selected/not-selected polygon
                     this.polygon.setStyle({
-                        transparent    : true, //!selected || !this.isOcean,
-                        weight         : selected && !this.isOcean ? 3 : 1,
                         borderColorName: (selected && !this.isOcean) || disabled ? 'black' : this.colorName,
                     });
+
                     if (selected)
                          map.fitBounds(this.polygon.getBounds(), {_maxZoom: map.getZoom()});
                 }

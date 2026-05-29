@@ -47160,102 +47160,129 @@ leaflet-bootstrap-control-legend.scss
 }
 
 .legend-content-1 {
-  display: none;
+  display: none !important;
 }
 
-.legend-content-is-1 div.legend-content-1 {
-  display: block;
-}
 .legend-content-is-1 .legend-content-1 {
-  display: initial;
+  display: var(--display, initial) !important;
+}
+.legend-content-is-1 div[class^=legend-content-], .legend-content-is-1 div[class*=" legend-content-"] {
+  --display: block;
+}
+.legend-content-is-1 table[class^=legend-content-], .legend-content-is-1 div[class*=" legend-content-"] {
+  --display: table;
 }
 
 .legend-content-2 {
-  display: none;
+  display: none !important;
 }
 
-.legend-content-is-2 div.legend-content-2 {
-  display: block;
-}
 .legend-content-is-2 .legend-content-2 {
-  display: initial;
+  display: var(--display, initial) !important;
+}
+.legend-content-is-2 div[class^=legend-content-], .legend-content-is-2 div[class*=" legend-content-"] {
+  --display: block;
+}
+.legend-content-is-2 table[class^=legend-content-], .legend-content-is-2 div[class*=" legend-content-"] {
+  --display: table;
 }
 
 .legend-content-3 {
-  display: none;
+  display: none !important;
 }
 
-.legend-content-is-3 div.legend-content-3 {
-  display: block;
-}
 .legend-content-is-3 .legend-content-3 {
-  display: initial;
+  display: var(--display, initial) !important;
+}
+.legend-content-is-3 div[class^=legend-content-], .legend-content-is-3 div[class*=" legend-content-"] {
+  --display: block;
+}
+.legend-content-is-3 table[class^=legend-content-], .legend-content-is-3 div[class*=" legend-content-"] {
+  --display: table;
 }
 
 .legend-content-4 {
-  display: none;
+  display: none !important;
 }
 
-.legend-content-is-4 div.legend-content-4 {
-  display: block;
-}
 .legend-content-is-4 .legend-content-4 {
-  display: initial;
+  display: var(--display, initial) !important;
+}
+.legend-content-is-4 div[class^=legend-content-], .legend-content-is-4 div[class*=" legend-content-"] {
+  --display: block;
+}
+.legend-content-is-4 table[class^=legend-content-], .legend-content-is-4 div[class*=" legend-content-"] {
+  --display: table;
 }
 
 .legend-content-5 {
-  display: none;
+  display: none !important;
 }
 
-.legend-content-is-5 div.legend-content-5 {
-  display: block;
-}
 .legend-content-is-5 .legend-content-5 {
-  display: initial;
+  display: var(--display, initial) !important;
+}
+.legend-content-is-5 div[class^=legend-content-], .legend-content-is-5 div[class*=" legend-content-"] {
+  --display: block;
+}
+.legend-content-is-5 table[class^=legend-content-], .legend-content-is-5 div[class*=" legend-content-"] {
+  --display: table;
 }
 
 .legend-content-6 {
-  display: none;
+  display: none !important;
 }
 
-.legend-content-is-6 div.legend-content-6 {
-  display: block;
-}
 .legend-content-is-6 .legend-content-6 {
-  display: initial;
+  display: var(--display, initial) !important;
+}
+.legend-content-is-6 div[class^=legend-content-], .legend-content-is-6 div[class*=" legend-content-"] {
+  --display: block;
+}
+.legend-content-is-6 table[class^=legend-content-], .legend-content-is-6 div[class*=" legend-content-"] {
+  --display: table;
 }
 
 .legend-content-7 {
-  display: none;
+  display: none !important;
 }
 
-.legend-content-is-7 div.legend-content-7 {
-  display: block;
-}
 .legend-content-is-7 .legend-content-7 {
-  display: initial;
+  display: var(--display, initial) !important;
+}
+.legend-content-is-7 div[class^=legend-content-], .legend-content-is-7 div[class*=" legend-content-"] {
+  --display: block;
+}
+.legend-content-is-7 table[class^=legend-content-], .legend-content-is-7 div[class*=" legend-content-"] {
+  --display: table;
 }
 
 .legend-content-8 {
-  display: none;
+  display: none !important;
 }
 
-.legend-content-is-8 div.legend-content-8 {
-  display: block;
-}
 .legend-content-is-8 .legend-content-8 {
-  display: initial;
+  display: var(--display, initial) !important;
+}
+.legend-content-is-8 div[class^=legend-content-], .legend-content-is-8 div[class*=" legend-content-"] {
+  --display: block;
+}
+.legend-content-is-8 table[class^=legend-content-], .legend-content-is-8 div[class*=" legend-content-"] {
+  --display: table;
 }
 
 .legend-content-9 {
-  display: none;
+  display: none !important;
 }
 
-.legend-content-is-9 div.legend-content-9 {
-  display: block;
-}
 .legend-content-is-9 .legend-content-9 {
-  display: initial;
+  display: var(--display, initial) !important;
+}
+.legend-content-is-9 div[class^=legend-content-], .legend-content-is-9 div[class*=" legend-content-"] {
+  --display: block;
+}
+.legend-content-is-9 table[class^=legend-content-], .legend-content-is-9 div[class*=" legend-content-"] {
+  --display: table;
 }
 
 .legend-content-resize-icon {

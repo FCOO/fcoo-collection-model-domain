@@ -288,14 +288,18 @@ Create Datasets
 
                 if (this.errorLoadingMask)
                     this.updatePolyginIcons( false );
-                else
-                    //Load polygons from json-file
+                else {
+                    //Load polygons from geojson-file
+//HER                       if (this.domain.options.mask == 'METNO_TOPAZ5_ARC.geojson')
+//HER                           this.addPolygon.bind(this)(TOPAZ);
+//HER                       else
                     Promise.getJSON(
                         ns.dataFilePath({subDir: 'model-domain', fileName: this.domain.options.mask}), {
                         useDefaultErrorHandler: false,
                         resolve: this.addPolygon.bind(this),
                         reject : this.rejectPolygon.bind(this)
                     });
+                }
             }
         },
 
@@ -321,11 +325,16 @@ Create Datasets
             this.polygon = L.polygon(this.latLngs, {
                 borderColorName : disabled ? 'black' : this.colorName,
                 colorName       : disabled ? 'gray'  : this.colorName,
-                extraTransparent: true,
+
+                transparent     : !this.isOcean,
+                weight          : 2,
+                hoverWeight     : this.isOcean ? null : 4,
+                hover           : this.isOcean,
+
+
                 addInteractive  : true,
                 border          : true,
                 shadow          : false,
-                hover           : true,
                 interactive     : true,
                 pane            : (this.isOcean ? 'oceanPane' : 'overlayPane')
             })
@@ -376,10 +385,9 @@ Create Datasets
                 if (this.polygon){
                     //Set style of selected/not-selected polygon
                     this.polygon.setStyle({
-                        transparent    : true, //!selected || !this.isOcean,
-                        weight         : selected && !this.isOcean ? 3 : 1,
                         borderColorName: (selected && !this.isOcean) || disabled ? 'black' : this.colorName,
                     });
+
                     if (selected)
                          map.fitBounds(this.polygon.getBounds(), {_maxZoom: map.getZoom()});
                 }

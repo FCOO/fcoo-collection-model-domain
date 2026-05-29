@@ -12,29 +12,15 @@
 
 //Create class for color of different domains
 $color-list:
-    chocolate,
-    springgreen,
-    olive,
-    darkviolet,
-    cyan,
-    purple,
-    grey,
-    pink,
-    brown,
     red,
-    darkblue;
-
-/*
-    red,
+    fuchsia,
+    chartreuse,
     orange,
-    yellow,
-    green,
-    blue,
-    white,
-    grey,
-    black,
-    darkblue
-*/
+    aqua,
+    lime,
+    blueviolet,
+    slateblue,
+    darkblue;
 
 @each $color in $color-list {
     $color-name: ''+$color;
@@ -47,7 +33,7 @@ $color-list:
 
 //Color for the outline of "current map"
 :root {
-    --cmd-current-map: darkmagenta;
+    --cmd-current-map: black;
 }
 
 .cmd-current-map-container {

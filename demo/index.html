@@ -47,7 +47,7 @@
     window.bsIsTouch = window.bsIsTouch || (window.location.search =='?touch');
 
     i18next.init();
-    i18next.changeLanguage('da');
+    i18next.changeLanguage('en');
     i18next.options.fallbackLng = i18next.language == 'da' ? 'en' : 'da';
 
     moment.sfSetFormat({ time: 24, timezone:'UTC' } );
@@ -80,9 +80,9 @@
                 bounds   :  bounds,
                 timeRange: [-2*24, 5*24],
                 timeColor: {
-                    past  : 'pink',
-                    now   : 'green',
-                    future: 'lightblue'
+                    past  : '#EADCC1',
+                    now   : '#BDD9BF',
+                    future: '#94B5C2'
                 },
                 time : 9,
 
