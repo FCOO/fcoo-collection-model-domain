@@ -453,7 +453,6 @@ Create collections and datasets
         _accordion_onChange - Update the polygons in the map in the modal
         *********************************************/
         _accordion_onChange: function(accordion, status){
-//console.log('status', status );
             this.accordionStatus = status;
 
             if (this.doNotUpdateMap){
@@ -469,10 +468,9 @@ Create collections and datasets
                     if (open)
                         currentIndex = index;
                 });
-if (currentIndex != null )
-//    console.log(currentIndex, this.getDataset( this.accordionItemIds[currentIndex] ) );
-            this._updateModalMap( currentIndex == null ? null : this.list[currentIndex] );
-//            this._updateModalMap( currentIndex == null ? null : this.getDataset( this.accordionItemIds[currentIndex] ) );
+
+            if (currentIndex != null )
+                this._updateModalMap( currentIndex == null ? null : this.list[currentIndex] );
         },
 
 
@@ -491,7 +489,6 @@ if (currentIndex != null )
                 dataset._updateModalMap( selected );
 
             }, this);
-
 
             this.updateModalDisplayStatus();
         },
@@ -519,7 +516,8 @@ if (currentIndex != null )
             let currentDatasetFound = false;
 
             this.modalDisplayStatus = 99;
-            this.list.forEach( dataset => {
+            for (var i=this.list.length-1; i>=0; i--){
+                const dataset = this.list[i];
                 if (currentDatasetFound)
                     dataset._toggleTimeInfo(false);
                 else {
@@ -527,7 +525,7 @@ if (currentIndex != null )
                     currentDatasetFound = dataset.modalDisplayStatus == mdsOk;
                 }
                 this.modalDisplayStatus = Math.min(this.modalDisplayStatus, dataset.modalDisplayStatus);
-            });
+            }
 
             /*
             switch (this.displayStatus){
@@ -540,7 +538,6 @@ if (currentIndex != null )
             //*/
 
             //Show/hide display-status for no-forecast
-
             $.each(this.modalDisplayStatusElement, (mdsId, $elem) => {
                 $elem.toggleClass('d-none', mdsId != this.modalDisplayStatus);
             }, this);
@@ -572,6 +569,7 @@ if (currentIndex != null )
             let map        = this.elements.map,
                 latLng     = map ? map.getCenter() : null,
                 isOverLand = map ? map.isOverLand(latLng) : null;
+
 
             if (map){
                 this.list.forEach( dataset => {
@@ -670,8 +668,9 @@ if (currentIndex != null )
             this.list = [];
             $.each( this.datasets, function(id, dataset){ this.list.push(dataset); }.bind(this) );
 
-//            this.list.sort( (ds1, ds2) => { return ds2.options.sequence_id - ds1.options.sequence_id; } );  //Regional -> local
-            this.list.sort( (ds1, ds2) => { return ds1.options.sequence_id - ds2.options.sequence_id; } );  //local -> Regional
+            //Unknown to Niel sHolt, but this is the working way to sort the list correct
+            this.list.sort( (ds1, ds2) => { return ds1.options.sequence_id - ds2.options.sequence_id; } );  //Regional -> local
+            this.list.reverse();
 
             //Add colorNames
             let nextColorNameIndex = 0;
@@ -680,7 +679,6 @@ if (currentIndex != null )
             });
 
             let accordionItems = [];
-this.accordionItemIds = [];
             let datasetVisible = 0;
             this.list.forEach( (dataset, index) => {
                 dataset.include = true;
@@ -694,19 +692,14 @@ this.accordionItemIds = [];
                     if (this.accordionStatus && Array.isArray(this.accordionStatus[1]) &&  this.accordionStatus[1][index])
                         accordionContent.isOpen = true;
                     accordionItems.push( accordionContent );
-                    this.accordionItemIds.push( dataset.id );
                 }
             }, this);
-            accordionItems.reverse();
-            this.accordionItemIds.reverse();
 
             //Add polygon (if not disabled and not global) to the overview map
-            this.list.reverse();
             this.list.forEach( dataset => {
                 if (dataset.include)
                     dataset.addToMap();
-            });
-            this.list.reverse();
+             });
 
             let footer = null;
             if (options.bounds){
