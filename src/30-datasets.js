@@ -289,10 +289,8 @@ Create Datasets
                 if (this.errorLoadingMask)
                     this.updatePolyginIcons( false );
                 else {
+
                     //Load polygons from geojson-file
-//HER                       if (this.domain.options.mask == 'METNO_TOPAZ5_ARC.geojson')
-//HER                           this.addPolygon.bind(this)(TOPAZ);
-//HER                       else
                     Promise.getJSON(
                         ns.dataFilePath({subDir: 'model-domain', fileName: this.domain.options.mask}), {
                         useDefaultErrorHandler: false,
