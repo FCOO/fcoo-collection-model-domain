@@ -10742,7 +10742,7 @@ return jQuery;
 
 ;(function(window, document, undefined){
   var tests = [];
-  
+
 
   /**
    *
@@ -10791,7 +10791,7 @@ return jQuery;
     }
   };
 
-  
+
 
   // Fake some of Object.create so we can force non test results to be non "own" properties.
   var Modernizr = function() {};
@@ -10801,10 +10801,10 @@ return jQuery;
   // Overwrite name so constructor name is nicer :D
   Modernizr = new Modernizr();
 
-  
+
 
   var classes = [];
-  
+
 
   /**
    * is returns a boolean if the typeof an obj is exactly type.
@@ -10900,7 +10900,7 @@ return jQuery;
    */
 
   var docElement = document.documentElement;
-  
+
 
   /**
    * A convenience helper to check if the document we are running in is an SVG document
@@ -10910,7 +10910,7 @@ return jQuery;
    */
 
   var isSVG = docElement.nodeName.toLowerCase() === 'svg';
-  
+
 
   /**
    * setClasses takes an array of class names and adds them to the root element
@@ -10978,7 +10978,7 @@ return jQuery;
     }
   })();
 
-  
+
 
 
    // _l tracks listeners for async tests, as well as tests that execute after the initial run
@@ -11188,7 +11188,7 @@ return jQuery;
     ModernizrProto.addTest = addTest;
   });
 
-  
+
 
 
   /**
@@ -11208,11 +11208,11 @@ return jQuery;
    */
 
   var omPrefixes = 'Moz O ms Webkit';
-  
+
 
   var cssomPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.split(' ') : []);
   ModernizrProto._cssomPrefixes = cssomPrefixes;
-  
+
 
   /**
    * atRule returns a given CSS property at-rule (eg @keyframes), possibly in
@@ -11279,7 +11279,7 @@ return jQuery;
 
   ModernizrProto.atRule = atRule;
 
-  
+
 
   /**
    * createElement is a convenience wrapper around document.createElement. Since we
@@ -11380,7 +11380,7 @@ return jQuery;
 
 
   ModernizrProto.hasEvent = hasEvent;
-  
+
 
   /**
    * getBody returns the body of a document, or an element that can stand in for
@@ -11553,7 +11553,7 @@ return jQuery;
 
   ModernizrProto.mq = mq;
 
-  
+
 
 
   /**
@@ -11587,7 +11587,7 @@ return jQuery;
     delete modElem.elem;
   });
 
-  
+
 
   var mStyle = {
     style: modElem.elem.style
@@ -11599,7 +11599,7 @@ return jQuery;
     delete mStyle.style;
   });
 
-  
+
 
   /**
    * domToCSS takes a camelCase string and converts it to kebab-case
@@ -11789,7 +11789,7 @@ return jQuery;
 
   var domPrefixes = (ModernizrProto._config.usePrefixes ? omPrefixes.toLowerCase().split(' ') : []);
   ModernizrProto._domPrefixes = domPrefixes;
-  
+
 
   /**
    * fnBind is a super small [bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) polyfill.
@@ -11884,7 +11884,7 @@ return jQuery;
   // Modernizr.testAllProps('boxSizing')
   ModernizrProto.testAllProps = testPropsAll;
 
-  
+
 
   /**
    * prefixed returns the prefixed or nonprefixed property name variant of your input
@@ -11968,7 +11968,7 @@ return jQuery;
     }
   };
 
-  
+
 /*!
 {
   "name": "Fullscreen API",
@@ -12027,7 +12027,7 @@ Detects support for the ability to make the current website take over the user's
   // expose these for the plugin API. Look in the source for how to join() them against your input
   ModernizrProto._prefixes = prefixes;
 
-  
+
 
   /**
    * testStyles injects an element with style element and some CSS rules
@@ -12087,7 +12087,7 @@ Detects support for the ability to make the current website take over the user's
    */
 
   var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
-  
+
 /*!
 {
   "name": "Touch Events",
@@ -12207,7 +12207,7 @@ This test will also return `true` for Firefox 4 Multitouch support.
     return testPropsAll(prop, undefined, undefined, value, skipValueTest);
   }
   ModernizrProto.testAllProps = testAllProps;
-  
+
 /*!
 {
   "name": "Flexbox",
@@ -12559,7 +12559,7 @@ else {
 
 ;
 /****************************************************************************
-	modernizr-javascript.js, 
+	modernizr-javascript.js,
 
 	(c) 2016, FCOO
 
@@ -12570,20 +12570,20 @@ else {
 
 (function ($, window, document, undefined) {
 	"use strict";
-	
+
 	var ns = window;
 
     //Extend the jQuery prototype
     $.fn.extend({
-        modernizrOn : function( test ){ 
-            return this.modernizrToggle( test, true ); 
+        modernizrOn : function( test ){
+            return this.modernizrToggle( test, true );
         },
 
-        modernizrOff: function( test ){ 
-            return this.modernizrToggle( test, false ); 
+        modernizrOff: function( test ){
+            return this.modernizrToggle( test, false );
         },
-        
-        modernizrToggle: function( test, on ){ 
+
+        modernizrToggle: function( test, on ){
 		if ( on === undefined )
             return this.modernizrToggle( test, !this.hasClass( test ) );
 
@@ -12624,13 +12624,13 @@ else {
             for (j=0; j<eventNames.length; j++ ){
                 eventName = eventNames[j];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
+                    this.events[eventName] = this.events[eventName] || [];
                     var i, lgd = this.events[eventName].length;
                     if (reverse){
                         for (i=lgd-1; i>=0; i-- )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
                                 break;
-                    } 
+                    }
                     else {
                         for (i=0; i<lgd; i++ )
                             if (func( this.events[eventName][i], i, this.events[eventName] ))
@@ -12646,11 +12646,11 @@ else {
             for (i=0; i<eventNames.length; i++ ){
                 eventName = eventNames[i];
                 if (eventName){
-                    this.events[eventName] = this.events[eventName] || [];         
+                    this.events[eventName] = this.events[eventName] || [];
                     this.events[eventName].push( {
                         callback: callback,
                         context : context || null,
-                        options : $.extend( {once:false, first:false, last:false}, options ) 
+                        options : $.extend( {once:false, first:false, last:false}, options )
                     });
                 }
             }
@@ -12667,7 +12667,7 @@ else {
             eventNames = ( eventNames || "" ).match( (/\S+/g) ) || [ "" ];
             _loop_func = function( eventObj, index, list ){
                 if ( (callback == eventObj.callback) &&
-                    (!context || (context == eventObj.context)) ){ 
+                    (!context || (context == eventObj.context)) ){
                     list.splice(index, 1);
                     return true;
                 }
@@ -12682,32 +12682,32 @@ else {
         };
 
 
-        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){ 
+        this.fire = function( eventName /*, arg1, arg2, .., argN */ ){
             var newArguments = [];
             for (var i=1; i < arguments.length; i++) {
                 newArguments.push(arguments[i]);
             }
 
             //Fire the functions marked 'first'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (eventObj.options.first)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
 
             //Fire the functions not marked 'first' or 'last'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (!eventObj.options.first && !eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
 
             //Fire the functions marked 'last'
-            this._loop( eventName, function( eventObj ){ 
+            this._loop( eventName, function( eventObj ){
                 if (eventObj.options.last)
-                    eventObj.callback.apply( eventObj.context, newArguments );      
+                    eventObj.callback.apply( eventObj.context, newArguments );
             });
-            
+
             //Remove all functions marked 'once'
-            this._loop( eventName, function( eventObj, index, list ){ 
+            this._loop( eventName, function( eventObj, index, list ){
                 if (eventObj.options.once)
                     list.splice(index, 1);
             }, true);
@@ -12718,7 +12718,7 @@ else {
         this.oneFirst = function(){ this.onceFirst( arguments ); };
         this.oneLast  = function(){ this.onceLast( arguments  ); };
     }
-  
+
     // expose access to the constructor
     window.GlobalEvents = GlobalEvents;
 
@@ -34153,7 +34153,7 @@ L.GeometryUtil = L.extend(L.GeometryUtil || {}, {
 
         return new L.LatLng(ty, tx);
     },
-    
+
 
     /**
         Returns the closest latlng on layer.
@@ -34507,7 +34507,7 @@ L.GeometryUtil = L.extend(L.GeometryUtil || {}, {
 			cumulativeDistanceToA = cumulativeDistanceToB;
 			cumulativeDistanceToB += pointA.distanceTo(pointB);
 		}
-		
+
 		if (pointA == undefined && pointB == undefined) { // Happens when line has no length
 			var pointA = pts[0], pointB = pts[1], i = 1;
 		}
@@ -35380,7 +35380,7 @@ L.geodesic = function(latlngs, options) {
      * Note that L.Polygon, L.GeodesicPolygons, and L.GeodesicCircles are types of L.Polygon.
      * @member external:L.Polyline.contains
      * @param {L.LatLng} p A geographical point with a latitude and longitude.
-     * @returns {boolean} True if the point is contained in the polygon or polyline; otherwise, 
+     * @returns {boolean} True if the point is contained in the polygon or polyline; otherwise,
      * @see {@link https://github.com/Fragger/Leaflet.Geodesic Leaflet.Geodesc} for information about Leaflet.Geodesc by Fragger.
      */
     L.Polyline.prototype.contains = function (p) {
@@ -35447,7 +35447,7 @@ L.geodesic = function(latlngs, options) {
 
         vertices = this.getLatLngs();
         vertices = flatten(vertices); // Flatten array of LatLngs since multi-polylines return nested array.
-        // Filter out duplicate vertices.  
+        // Filter out duplicate vertices.
         vertices = vertices.filter(function (v, i, array) { // remove adjacent duplicates
             if (i > 0 && v.lat === array[i-1].lat && v.lng === array[i-1].lng) {
                 return false;
@@ -36377,7 +36377,7 @@ module.exports.TinyEmitter = E;
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -36390,14 +36390,14 @@ module.exports.TinyEmitter = E;
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	!function() {
@@ -36410,7 +36410,7 @@ module.exports.TinyEmitter = E;
 /******/ 			return getter;
 /******/ 		};
 /******/ 	}();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
 /******/ 		// define getter functions for harmony exports
@@ -36422,12 +36422,12 @@ module.exports.TinyEmitter = E;
 /******/ 			}
 /******/ 		};
 /******/ 	}();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	!function() {
 /******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
 /******/ 	}();
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
@@ -39808,7 +39808,7 @@ module.exports.TinyEmitter = E;
         deltaHp = abs(deltaHp) <= 180 ? deltaHp : h2p <= h1p ? deltaHp + 360 : deltaHp - 360;
         deltaHp = 2*sqrt(C1p*C2p)*sin(deg2rad(deltaHp)/2);
         var deltaL = L2 - L1;
-        var deltaCp = C2p - C1p;    
+        var deltaCp = C2p - C1p;
         var sl = 1 + (0.015*pow(avgL - 50, 2))/sqrt(20 + pow(avgL - 50, 2));
         var sc = 1 + 0.045*avgCp;
         var sh = 1 + 0.015*avgCp*T;
@@ -47088,7 +47088,7 @@ Methods for creating <meta> in <head> and adding favicons
 
     var keys = ['Hours', 'Minutes', 'Seconds', 'Milliseconds'];
     var maxValues = [24, 60, 60, 1000];
-    
+
     // Capitalize first letter
     key = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
 
@@ -47135,19 +47135,19 @@ Methods for creating <meta> in <head> and adding favicons
 ;
 /* @preserve
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2013-2018 Petka Antonov
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -47155,7 +47155,7 @@ Methods for creating <meta> in <head> and adding favicons
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- * 
+ *
  */
 /**
  * bluebird build version 3.7.2
@@ -50747,28 +50747,28 @@ _dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext,
 _dereq_('./any.js')(Promise);
 _dereq_('./each.js')(Promise, INTERNAL);
 _dereq_('./filter.js')(Promise, INTERNAL);
-                                                         
-    util.toFastProperties(Promise);                                          
-    util.toFastProperties(Promise.prototype);                                
-    function fillTypes(value) {                                              
-        var p = new Promise(INTERNAL);                                       
-        p._fulfillmentHandler0 = value;                                      
-        p._rejectionHandler0 = value;                                        
-        p._promise0 = value;                                                 
-        p._receiver0 = value;                                                
-    }                                                                        
-    // Complete slack tracking, opt out of field-type tracking and           
-    // stabilize map                                                         
-    fillTypes({a: 1});                                                       
-    fillTypes({b: 2});                                                       
-    fillTypes({c: 3});                                                       
-    fillTypes(1);                                                            
-    fillTypes(function(){});                                                 
-    fillTypes(undefined);                                                    
-    fillTypes(false);                                                        
-    fillTypes(new Promise(INTERNAL));                                        
-    debug.setBounds(Async.firstLineError, util.lastLineError);               
-    return Promise;                                                          
+
+    util.toFastProperties(Promise);
+    util.toFastProperties(Promise.prototype);
+    function fillTypes(value) {
+        var p = new Promise(INTERNAL);
+        p._fulfillmentHandler0 = value;
+        p._rejectionHandler0 = value;
+        p._promise0 = value;
+        p._receiver0 = value;
+    }
+    // Complete slack tracking, opt out of field-type tracking and
+    // stabilize map
+    fillTypes({a: 1});
+    fillTypes({b: 2});
+    fillTypes({c: 3});
+    fillTypes(1);
+    fillTypes(function(){});
+    fillTypes(undefined);
+    fillTypes(false);
+    fillTypes(new Promise(INTERNAL));
+    debug.setBounds(Async.firstLineError, util.lastLineError);
+    return Promise;
 
 };
 
@@ -60046,11 +60046,11 @@ window.xmlToJSON = function(xml) {
 	var minor = parseInt(splitVersion[1]);
 
 	var JQ_LT_17 = (major < 1) || (major == 1 && minor < 7);
-	
+
 	function eventsData($el) {
 		return JQ_LT_17 ? $el.data('events') : $._data($el[0]).events;
 	}
-	
+
 	function moveHandlerToTop($el, eventName, isDelegated) {
 		var data = eventsData($el);
 		var events = data[eventName];
@@ -60068,7 +60068,7 @@ window.xmlToJSON = function(xml) {
 			events.unshift(events.pop());
 		}
 	}
-	
+
 	function moveEventHandlers($elems, eventsString, isDelegate) {
 		var events = eventsString.split(/\s+/);
 		$elems.each(function() {
@@ -60078,7 +60078,7 @@ window.xmlToJSON = function(xml) {
 			}
 		});
 	}
-	
+
 	function makeMethod(methodName) {
 		$.fn[methodName + 'First'] = function() {
 			var args = $.makeArray(arguments);
@@ -60103,7 +60103,7 @@ window.xmlToJSON = function(xml) {
 	$.fn.delegateFirst = function() {
 		var args = $.makeArray(arguments);
 		var eventsString = args[1];
-		
+
 		if (eventsString) {
 			args.splice(0, 2);
 			$.fn.delegate.apply(this, arguments);
@@ -60123,7 +60123,7 @@ window.xmlToJSON = function(xml) {
 
 		return this;
 	};
-	
+
 	// on (jquery >= 1.7)
 	if (!JQ_LT_17) {
 		$.fn.onFirst = function(types, selector) {
@@ -68399,8 +68399,8 @@ window.xmlToJSON = function(xml) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -68494,8 +68494,8 @@ window.xmlToJSON = function(xml) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ], 
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(3), __webpack_require__(5) ],
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, window, undefined) {
@@ -70008,7 +70008,7 @@ window.xmlToJSON = function(xml) {
             function seekPrevious(pos, newBlock) {
                 var position = pos, tests;
                 if (position <= 0) return 0;
-                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position), 
+                while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position),
                 tests.length < 2 || tests.length === 2 && tests[1].match.def === ""))) {}
                 return position;
             }
@@ -71245,8 +71245,8 @@ window.xmlToJSON = function(xml) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($) {
@@ -71275,8 +71275,8 @@ window.xmlToJSON = function(xml) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -71527,8 +71527,8 @@ window.xmlToJSON = function(xml) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, 
-            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = factory,
+            __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function(Inputmask) {
@@ -72078,8 +72078,8 @@ window.xmlToJSON = function(xml) {
     };
     (function(factory) {
         if (true) {
-            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ], 
-            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, 
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(4), __webpack_require__(2) ],
+            __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === "function" ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__,
             __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else {}
     })(function($, Inputmask) {
@@ -84111,12 +84111,12 @@ options:
 /*! @websanova/url - v2.6.3 - 2020-01-25 */
 !function(){function t(t,r){var a,o={};if("tld?"!==t){if(r=r||window.location.toString(),!t)return r;if(t=t.toString(),a=r.match(/^mailto:([^\/].+)/))o.protocol="mailto",o.email=a[1];else{if((a=r.match(/(.*?)\/#\!(.*)/))&&(r=a[1]+a[2]),(a=r.match(/(.*?)#(.*)/))&&(o.hash=a[2],r=a[1]),o.hash&&t.match(/^#/))return h(t,o.hash);if((a=r.match(/(.*?)\?(.*)/))&&(o.query=a[2],r=a[1]),o.query&&t.match(/^\?/))return h(t,o.query);if((a=r.match(/(.*?)\:?\/\/(.*)/))&&(o.protocol=a[1].toLowerCase(),r=a[2]),(a=r.match(/(.*?)(\/.*)/))&&(o.path=a[2],r=a[1]),o.path=(o.path||"").replace(/^([^\/])/,"/$1"),t.match(/^[\-0-9]+$/)&&(t=t.replace(/^([^\/])/,"/$1")),t.match(/^\//))return e(t,o.path.substring(1));if((a=(a=e("/-1",o.path.substring(1)))&&a.match(/(.*?)\.([^.]+)$/))&&(o.file=a[0],o.filename=a[1],o.fileext=a[2]),(a=r.match(/(.*)\:([0-9]+)$/))&&(o.port=a[2],r=a[1]),(a=r.match(/(.*?)@(.*)/))&&(o.auth=a[1],r=a[2]),o.auth&&(a=o.auth.match(/(.*)\:(.*)/),o.user=a?a[1]:o.auth,o.pass=a?a[2]:void 0),o.hostname=r.toLowerCase(),"."===t.charAt(0))return e(t,o.hostname);o.port=o.port||("https"===o.protocol?"443":"80"),o.protocol=o.protocol||("443"===o.port?"https":"http")}return t in o?o[t]:"{}"===t?o:void 0}}function e(t,r){var a=t.charAt(0),o=r.split(a);return a===t?o:o[(t=parseInt(t.substring(1),10))<0?o.length+t:t-1]}function h(t,r){for(var a,o=t.charAt(0),e=r.split("&"),h=[],n={},c=[],i=t.substring(1),p=0,u=e.length;p<u;p++)if(""!==(h=(h=e[p].match(/(.*?)=(.*)/))||[e[p],e[p],""])[1].replace(/\s/g,"")){if(h[2]=(a=h[2]||"",decodeURIComponent(a.replace(/\+/g," "))),i===h[1])return h[2];(c=h[1].match(/(.*)\[([0-9]+)\]/))?(n[c[1]]=n[c[1]]||[],n[c[1]][c[2]]=h[2]):n[h[1]]=h[2]}return o===t?n:n[i]}window.url=t}();
 ;
-/* 
-  @package NOTY - Dependency-free notification library 
-  @version version: 3.2.0-beta 
-  @contributors https://github.com/needim/noty/graphs/contributors 
-  @documentation Examples and Documentation - https://ned.im/noty 
-  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php 
+/*
+  @package NOTY - Dependency-free notification library
+  @version version: 3.2.0-beta
+  @contributors https://github.com/needim/noty/graphs/contributors
+  @documentation Examples and Documentation - https://ned.im/noty
+  @license Licensed under the MIT licenses: http://www.opensource.org/licenses/mit-license.php
 */
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -86149,7 +86149,7 @@ Promise$2.prototype = {
     The primary way of interacting with a promise is through its `then` method,
     which registers callbacks to receive either a promise's eventual value or the
     reason why the promise cannot be fulfilled.
-  
+
     ```js
     findUser().then(function(user){
       // user is available
@@ -86157,14 +86157,14 @@ Promise$2.prototype = {
       // user is unavailable, and you are given the reason why
     });
     ```
-  
+
     Chaining
     --------
-  
+
     The return value of `then` is itself a promise.  This second, 'downstream'
     promise is resolved with the return value of the first promise's fulfillment
     or rejection handler, or rejected if the handler throws an exception.
-  
+
     ```js
     findUser().then(function (user) {
       return user.name;
@@ -86174,7 +86174,7 @@ Promise$2.prototype = {
       // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
       // will be `'default name'`
     });
-  
+
     findUser().then(function (user) {
       throw new Error('Found user, but still unhappy');
     }, function (reason) {
@@ -86187,7 +86187,7 @@ Promise$2.prototype = {
     });
     ```
     If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
-  
+
     ```js
     findUser().then(function (user) {
       throw new PedagogicalException('Upstream error');
@@ -86199,15 +86199,15 @@ Promise$2.prototype = {
       // The `PedgagocialException` is propagated all the way down to here
     });
     ```
-  
+
     Assimilation
     ------------
-  
+
     Sometimes the value you want to propagate to a downstream promise can only be
     retrieved asynchronously. This can be achieved by returning a promise in the
     fulfillment or rejection handler. The downstream promise will then be pending
     until the returned promise is settled. This is called *assimilation*.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -86215,9 +86215,9 @@ Promise$2.prototype = {
       // The user's comments are now available
     });
     ```
-  
+
     If the assimliated promise rejects, then the downstream promise will also reject.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -86227,15 +86227,15 @@ Promise$2.prototype = {
       // If `findCommentsByAuthor` rejects, we'll have the reason here
     });
     ```
-  
+
     Simple Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let result;
-  
+
     try {
       result = findResult();
       // success
@@ -86243,9 +86243,9 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
     findResult(function(result, err){
       if (err) {
@@ -86255,9 +86255,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findResult().then(function(result){
       // success
@@ -86265,15 +86265,15 @@ Promise$2.prototype = {
       // failure
     });
     ```
-  
+
     Advanced Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let author, books;
-  
+
     try {
       author = findAuthor();
       books  = findBooksByAuthor(author);
@@ -86282,19 +86282,19 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
-  
+
     function foundBooks(books) {
-  
+
     }
-  
+
     function failure(reason) {
-  
+
     }
-  
+
     findAuthor(function(author, err){
       if (err) {
         failure(err);
@@ -86319,9 +86319,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findAuthor().
       then(findBooksByAuthor).
@@ -86331,7 +86331,7 @@ Promise$2.prototype = {
       // something went wrong
     });
     ```
-  
+
     @method then
     @param {Function} onFulfilled
     @param {Function} onRejected
@@ -86343,25 +86343,25 @@ Promise$2.prototype = {
   /**
     `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
     as the catch block of a try/catch statement.
-  
+
     ```js
     function findAuthor(){
       throw new Error('couldn't find that author');
     }
-  
+
     // synchronous
     try {
       findAuthor();
     } catch(reason) {
       // something went wrong
     }
-  
+
     // async with promises
     findAuthor().catch(function(reason){
       // something went wrong
     });
     ```
-  
+
     @method catch
     @param {Function} onRejection
     Useful for tooling.
@@ -95211,7 +95211,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
         sortId     = 0;
 
     $.bsTable = function( options ){
-        
+
         options = $._bsAdjustOptions( options, defaultOptions );
 
         //Fixed first column only needed when horizontal scrolling ( = full width)
@@ -95361,7 +95361,7 @@ TODO:   truncate     : false. If true the column will be truncated. Normally onl
             if (columnOptions.sortable){
                 multiSortList.push( {columnId: columnOptions.id, columnIndex: ''+index, sortIndex: columnOptions.sortIndex });
                 anyColumnSortable = true;
-            }                
+            }
         });
         multiSortList.sort(function( c1, c2){ return c1.sortIndex - c2.sortIndex; });
 
@@ -103585,7 +103585,7 @@ ID:name, ID:abbr, ID:link, ID:email
         }
     });
 
-    
+
 
 (function() {
         numeral.register('format', 'bps', {
@@ -106093,7 +106093,7 @@ Greenland
 }(jQuery, window.moment, window.i18next, this, document));
 ;
 /****************************************************************************
-    kl.js, 
+    kl.js,
 
     Translation of Moment text to Kalaallisut/Greenlandic (language code = kl)
 
@@ -106101,7 +106101,7 @@ Greenland
 
 moment.defineLocale('kl', {
     parentLocale: 'da',
-  
+
     /* TODO */
 
 
@@ -115163,7 +115163,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       _error;
     }
     return results;
-  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{}, 
+  }, Offline = {}, Offline.options = window.Offline ? window.Offline.options || {} :{},
   defaultOptions = {
     checks:{
       xhr:{
@@ -115186,22 +115186,22 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     deDupBody:!1
   }, grab = function(obj, key) {
     var cur, i, j, len, part, parts;
-    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i], 
+    for (cur = obj, parts = key.split("."), i = j = 0, len = parts.length; j < len && (part = parts[i],
     "object" == typeof (cur = cur[part])); i = ++j) ;
     return i === parts.length - 1 ? cur :void 0;
   }, Offline.getOption = function(key) {
     var ref, val;
-    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key), 
+    return val = null != (ref = grab(Offline.options, key)) ? ref :grab(defaultOptions, key),
     "function" == typeof val ? val() :val;
   }, "function" == typeof window.addEventListener && window.addEventListener("online", function() {
     return setTimeout(Offline.confirmUp, 100);
   }, !1), "function" == typeof window.addEventListener && window.addEventListener("offline", function() {
     return Offline.confirmDown();
   }, !1), Offline.state = "up", Offline.markUp = function() {
-    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up", 
+    if (Offline.trigger("confirmed-up"), "up" !== Offline.state) return Offline.state = "up",
     Offline.trigger("up");
   }, Offline.markDown = function() {
-    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down", 
+    if (Offline.trigger("confirmed-down"), "down" !== Offline.state) return Offline.state = "down",
     Offline.trigger("down");
   }, handlers = {}, Offline.on = function(event, handler, ctx) {
     var e, events, j, len, results;
@@ -115214,7 +115214,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     var _handler, i, ref, results;
     if (null != handlers[event]) {
       if (handler) {
-        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i], 
+        for (i = 0, results = []; i < handlers[event].length; ) ref = handlers[event][i],
         ref[0], _handler = ref[1], _handler === handler ? results.push(handlers[event].splice(i, 1)) :results.push(i++);
         return results;
       }
@@ -115223,7 +115223,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, Offline.trigger = function(event) {
     var ctx, handler, j, len, ref, ref1, results;
     if (null != handlers[event]) {
-      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j], 
+      for (ref = handlers[event].slice(0), results = [], j = 0, len = ref.length; j < len; j++) ref1 = ref[j],
       ctx = ref1[0], handler = ref1[1], results.push(handler.call(ctx));
       return results;
     }
@@ -115242,8 +115242,8 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     });
   }, Offline.checks = {}, Offline.checks.xhr = function() {
     var xhr;
-    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0), 
-    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")), 
+    xhr = new XMLHttpRequest(), xhr.offline = !1, xhr.open(Offline.getOption("checks.xhr.type"), Offline.getOption("checks.xhr.url"), !0),
+    null != xhr.timeout && (xhr.timeout = Offline.getOption("checks.xhr.timeout")),
     checkXHR(xhr, Offline.markUp, Offline.markDown);
     try {
       xhr.send();
@@ -115253,7 +115253,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
     return xhr;
   }, Offline.checks.image = function() {
     var img;
-    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp, 
+    img = document.createElement("img"), img.onerror = Offline.markDown, img.onload = Offline.markUp,
     img.src = Offline.getOption("checks.image.url");
   }, Offline.checks.down = Offline.markDown, Offline.checks.up = Offline.markUp, Offline.check = function() {
     return Offline.trigger("checking"), Offline.checks[Offline.getOption("checks.active")]();
@@ -115274,13 +115274,13 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       };
     }, _XMLHttpRequest = window.XMLHttpRequest, window.XMLHttpRequest = function(flags) {
       var _overrideMimeType, _setRequestHeader, req;
-      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader, 
+      return req = new _XMLHttpRequest(flags), monitorXHR(req, flags), _setRequestHeader = req.setRequestHeader,
       req.headers = {}, req.setRequestHeader = function(name, value) {
         return req.headers[name] = value, _setRequestHeader.call(req, name, value);
       }, _overrideMimeType = req.overrideMimeType, req.overrideMimeType = function(type) {
         return req.mimeType = type, _overrideMimeType.call(req, type);
       }, req;
-    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest, 
+    }, extendNative(window.XMLHttpRequest, _XMLHttpRequest), null != window.XDomainRequest) return _XDomainRequest = window.XDomainRequest,
     window.XDomainRequest = function() {
       var req;
       return req = new _XDomainRequest(), monitorXHR(req), req;
@@ -115296,37 +115296,37 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   if (!window.Offline) throw new Error("Offline Reconnect brought in without offline.js");
   rc = Offline.reconnect = {}, retryIntv = null, reset = function() {
     var ref;
-    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"), 
+    return null != rc.state && "inactive" !== rc.state && Offline.trigger("reconnect:stopped"),
     rc.state = "inactive", rc.remaining = rc.delay = null != (ref = Offline.getOption("reconnect.initialDelay")) ? ref :3;
   }, next = function() {
     var delay, ref;
-    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600), 
+    return delay = null != (ref = Offline.getOption("reconnect.delay")) ? ref :Math.min(Math.ceil(1.5 * rc.delay), 3600),
     rc.remaining = rc.delay = delay;
   }, tick = function() {
-    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"), 
+    if ("connecting" !== rc.state) return rc.remaining -= 1, Offline.trigger("reconnect:tick"),
     0 === rc.remaining ? tryNow() :void 0;
   }, tryNow = function() {
-    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting", 
+    if ("waiting" === rc.state) return Offline.trigger("reconnect:connecting"), rc.state = "connecting",
     Offline.check();
   }, down = function() {
-    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"), 
+    if (Offline.getOption("reconnect")) return reset(), rc.state = "waiting", Offline.trigger("reconnect:started"),
     retryIntv = setInterval(tick, 1e3);
   }, up = function() {
     return null != retryIntv && clearInterval(retryIntv), reset();
   }, nope = function() {
-    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"), 
+    if (Offline.getOption("reconnect")) return "connecting" === rc.state ? (Offline.trigger("reconnect:failure"),
     rc.state = "waiting", next()) :void 0;
-  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope), 
+  }, rc.tryNow = tryNow, reset(), Offline.on("down", down), Offline.on("confirmed-down", nope),
   Offline.on("up", up);
 }.call(this), function() {
   var clear, flush, held, holdRequest, makeRequest, waitingOnConfirm;
   if (!window.Offline) throw new Error("Requests module brought in without offline.js");
   held = [], waitingOnConfirm = !1, holdRequest = function(req) {
-    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"), 
+    if (!1 !== Offline.getOption("requests")) return Offline.trigger("requests:capture"),
     "down" !== Offline.state && (waitingOnConfirm = !0), held.push(req);
   }, makeRequest = function(arg) {
     var body, name, password, ref, type, url, user, val, xhr;
-    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password, 
+    if (xhr = arg.xhr, url = arg.url, type = arg.type, user = arg.user, password = arg.password,
     body = arg.body, !1 !== Offline.getOption("requests")) {
       xhr.abort(), xhr.open(type, url, !0, user, password), ref = xhr.headers;
       for (name in ref) val = ref[name], xhr.setRequestHeader(name, val);
@@ -115337,10 +115337,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, flush = function() {
     var body, i, key, len, request, requests, url;
     if (!1 !== Offline.getOption("requests")) {
-      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i], 
+      for (Offline.trigger("requests:flush"), requests = {}, i = 0, len = held.length; i < len; i++) request = held[i],
       url = request.url.replace(/(\?|&)_=[0-9]+/, function(match, chr) {
         return "?" === chr ? chr :"";
-      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(), 
+      }), Offline.getOption("deDupBody") ? (body = request.body, body = "[object Object]" === body.toString() ? JSON.stringify(body) :body.toString(),
       requests[request.type.toUpperCase() + " - " + url + " - " + body] = request) :requests[request.type.toUpperCase() + " - " + url] = request;
       for (key in requests) request = requests[key], makeRequest(request);
       return clear();
@@ -115356,10 +115356,10 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
         return holdRequest(request);
       }, _send = xhr.send, xhr.send = function(body) {
         return request.body = body, _send.apply(xhr, arguments);
-      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1), 
-      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange, 
+      }, async)) return null === xhr.onprogress ? (xhr.addEventListener("error", hold, !1),
+      xhr.addEventListener("timeout", hold, !1)) :(_onreadystatechange = xhr.onreadystatechange,
       xhr.onreadystatechange = function() {
-        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(), 
+        return 0 === xhr.readyState ? hold() :4 === xhr.readyState && (0 === xhr.status || xhr.status >= 12e3) && hold(),
         "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
       });
     }), Offline.requests = {
@@ -115378,12 +115378,12 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       _error, simulate = !1;
     }
   }
-  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}), 
+  simulate && (null == Offline.options && (Offline.options = {}), null == (base = Offline.options).checks && (base.checks = {}),
   Offline.options.checks.active = state);
 }.call(this), function() {
   var RETRY_TEMPLATE, TEMPLATE, _onreadystatechange, addClass, content, createFromHTML, el, flashClass, flashTimeouts, init, removeClass, render, roundTime;
   if (!window.Offline) throw new Error("Offline UI brought in without offline.js");
-  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>', 
+  TEMPLATE = '<div class="offline-ui"><div class="offline-ui-content"></div></div>',
   RETRY_TEMPLATE = '<a href class="offline-ui-retry"></a>', createFromHTML = function(html) {
     var el;
     return el = document.createElement("div"), el.innerHTML = html, el.children[0];
@@ -115392,7 +115392,7 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
   }, removeClass = function(name) {
     return el.className = el.className.replace(new RegExp("(^| )" + name.split(" ").join("|") + "( |$)", "gi"), " ");
   }, flashTimeouts = {}, flashClass = function(name, time) {
-    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]), 
+    return addClass(name), null != flashTimeouts[name] && clearTimeout(flashTimeouts[name]),
     flashTimeouts[name] = setTimeout(function() {
       return removeClass(name), delete flashTimeouts[name];
     }, 1e3 * time);
@@ -115404,39 +115404,39 @@ S.addons={offcanvas:function(){var e=this;if(this.opts.offCanvas){var t=function
       minute:60,
       second:1
     };
-    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult), 
+    for (unit in units) if (mult = units[unit], sec >= mult) return val = Math.floor(sec / mult),
     [ val, unit ];
     return [ "now", "" ];
   }, render = function() {
     var button, handler;
-    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)), 
+    return el = createFromHTML(TEMPLATE), document.body.appendChild(el), null != Offline.reconnect && Offline.getOption("reconnect") && (el.appendChild(createFromHTML(RETRY_TEMPLATE)),
     button = el.querySelector(".offline-ui-retry"), handler = function(e) {
       return e.preventDefault(), Offline.reconnect.tryNow();
-    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)), 
+    }, null != button.addEventListener ? button.addEventListener("click", handler, !1) :button.attachEvent("click", handler)),
     addClass("offline-ui-" + Offline.state), content = el.querySelector(".offline-ui-content");
   }, init = function() {
     return render(), Offline.on("up", function() {
-      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2), 
+      return removeClass("offline-ui-down"), addClass("offline-ui-up"), flashClass("offline-ui-up-2s", 2),
       flashClass("offline-ui-up-5s", 5);
     }), Offline.on("down", function() {
-      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2), 
+      return removeClass("offline-ui-up"), addClass("offline-ui-down"), flashClass("offline-ui-down-2s", 2),
       flashClass("offline-ui-down-5s", 5);
     }), Offline.on("reconnect:connecting", function() {
       return addClass("offline-ui-connecting"), removeClass("offline-ui-waiting");
     }), Offline.on("reconnect:tick", function() {
       var ref, time, unit;
-      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining), 
-      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time), 
+      return addClass("offline-ui-waiting"), removeClass("offline-ui-connecting"), ref = roundTime(Offline.reconnect.remaining),
+      time = ref[0], unit = ref[1], content.setAttribute("data-retry-in-value", time),
       content.setAttribute("data-retry-in-unit", unit);
     }), Offline.on("reconnect:stopped", function() {
-      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null), 
+      return removeClass("offline-ui-connecting offline-ui-waiting"), content.setAttribute("data-retry-in-value", null),
       content.setAttribute("data-retry-in-unit", null);
     }), Offline.on("reconnect:failure", function() {
       return flashClass("offline-ui-reconnect-failed-2s", 2), flashClass("offline-ui-reconnect-failed-5s", 5);
     }), Offline.on("reconnect:success", function() {
       return flashClass("offline-ui-reconnect-succeeded-2s", 2), flashClass("offline-ui-reconnect-succeeded-5s", 5);
     });
-  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange, 
+  }, "complete" === document.readyState ? init() :null != document.addEventListener ? document.addEventListener("DOMContentLoaded", init, !1) :(_onreadystatechange = document.onreadystatechange,
   document.onreadystatechange = function() {
     return "complete" === document.readyState && init(), "function" == typeof _onreadystatechange ? _onreadystatechange.apply(null, arguments) :void 0;
   });
@@ -135642,7 +135642,7 @@ var SVG = (function () {
             //bottomcenter need an extra container to be placed at the bottom
             this._controlCorners['bottomcenter'] =
                 L.DomUtil.create(
-                    'div', 
+                    'div',
                     'leaflet-bottom leaflet-center',
                     L.DomUtil.create('div', 'leaflet-control-bottomcenter',    this._controlContainer)
                 );
@@ -136382,7 +136382,7 @@ if (Number.prototype.toDegrees === undefined) {
 
 ;
 /*! =======================================================
-                      VERSION  11.0.2              
+                      VERSION  11.0.2
 ========================================================= */
 "use strict";
 
@@ -141195,7 +141195,7 @@ Options for selectiong position-format and to activate context-menu
 
                 if (_this.options.inclContextmenu)
                     options.after = options.after || {};
-                
+
                 return options;
             }
 
@@ -145017,7 +145017,6 @@ ctx.fillRect(0, 0, shapeDim, shapeDim);
 
 }(jQuery, L, this, document));
 
-
 ;
 /****************************************************************************
 leaflet-bootstrap-geopolyline.js,
@@ -148264,7 +148263,7 @@ L.Route - Extend L.GeoPolyline with vessels (L.VesselMarker)
 }(jQuery, L, this, document));
 ;
 /****************************************************************************
-	jquery-screen-ratio.js, 
+	jquery-screen-ratio.js,
 
 	(c) 2017, FCOO
 
@@ -148275,11 +148274,11 @@ L.Route - Extend L.GeoPolyline with vessels (L.VesselMarker)
 
 (function ($, window/*, document, undefined*/) {
 	"use strict";
-	
+
     /********************************************
     Screen Ratio
     *********************************************/
-	$.fn.screenRatio = function ( minDimension ) { 
+	$.fn.screenRatio = function ( minDimension ) {
 		return this.each(function() {
             var $this = $(this);
             $this.data("screenRatio_minDimension", minDimension);
@@ -148288,24 +148287,24 @@ L.Route - Extend L.GeoPolyline with vessels (L.VesselMarker)
 		});
 	};
 
-    $.fn._setScreenRatio = function () { 
-        var w = screen.availWidth, 
-            h = screen.availHeight, 
+    $.fn._setScreenRatio = function () {
+        var w = screen.availWidth,
+            h = screen.availHeight,
             r = h/w,
             p = r > 1,
             minD = parseFloat( this.data('screenRatio_minDimension') ),
-            maxD = minD*(p ? r : 1/r ); 
+            maxD = minD*(p ? r : 1/r );
 
         this
             .height( p ? maxD : minD )
             .width( p ? minD : maxD );
     };
-    
+
 
     /********************************************
     Window Ratio
     *********************************************/
-	$.fn.windowRatio = function ( minDimension, maxDimension ) { 
+	$.fn.windowRatio = function ( minDimension, maxDimension ) {
 		return this.each(function() {
             var $this = $(this);
             $this.data("windowRatio_minDimension", minDimension);
@@ -148316,8 +148315,8 @@ L.Route - Extend L.GeoPolyline with vessels (L.VesselMarker)
 	};
 
 
-    $.fn._setWindowRatio = function () { 
-        var w = window.innerWidth, 
+    $.fn._setWindowRatio = function () {
+        var w = window.innerWidth,
             h = window.innerHeight,
             r = h/w,
             p = r > 1,
@@ -148326,7 +148325,7 @@ L.Route - Extend L.GeoPolyline with vessels (L.VesselMarker)
             maxmaxD = parseFloat( this.data('windowRatio_maxDimension') );
 
             maxD = maxmaxD ? Math.min( maxD, maxmaxD ) : maxD;
-        
+
         this
             .height( p ? maxD : minD )
             .width( p ? minD : maxD );
@@ -148891,40 +148890,40 @@ Objects and methods to handle map-sync
                     text = {da: zoomOffset+ ' x zoom ind', en: zoomOffset+ ' x zoom in'};
 
             //Create zoom-mode-icon
-            let outerIcon = 'fa-square-full', 
+            let outerIcon = 'fa-square-full',
                 innerIcon = '';
             switch (Math.abs(zoomOffset)){
                 case 0:  innerIcon = outerIcon; break;
                 case 1:  innerIcon = 'fa-square fa-1xzoom'; break;
                 case 2:  innerIcon = 'fa-square-small fa-2xzoom'; break;
-            }                
+            }
 
             if (zoomOffset < 0){
                 outerIcon = 'fas text-multi-maps-current '  + outerIcon;
-                innerIcon = 'far text-multi-maps-main '     + innerIcon;                
+                innerIcon = 'far text-multi-maps-main '     + innerIcon;
             }
             else {
                 outerIcon = 'far text-multi-maps-main '     + outerIcon;
-                innerIcon = 'fas text-multi-maps-current  ' + innerIcon;                
+                innerIcon = 'fas text-multi-maps-current  ' + innerIcon;
             }
-                
+
             zoomItems.push({
-                id: 'zoomOffset_'+zoomOffset, 
+                id: 'zoomOffset_'+zoomOffset,
                 icon: [[
-                    zoomOffset ? outerIcon : innerIcon, 
+                    zoomOffset ? outerIcon : innerIcon,
                     zoomOffset ? innerIcon : outerIcon
                 ]],
                 text: text
             });
         }
-        
+
         let showWhen = {};
         showWhen[controlId + (controlId?'_':'')+'enabled'+idPostfix] = true;
         content.push({
             id       : 'zoomOffset'+idPostfix,
             label    : {da:'Zoom-niveau', en:'Zoom level'},
             type     : 'selectbutton',
-            fullWidth: true,            
+            fullWidth: true,
             items    : zoomItems,
             showWhen : showWhen
         });
@@ -151992,7 +151991,7 @@ Global context-menu for all maps
         onClick    : (id, latlng, $button, map) => nsMap.selectLayerInModal(map)
     });
 
-    
+
     //Map setting
     map_contextmenu_itemList.push({
         icon       : ns.icons.mapSettingSingle,
@@ -156047,7 +156046,7 @@ search-mapLayer.js
         /*****************************************************
         searchButton and buttonList = ´Buttons for legend, menu etc.
         *****************************************************/
-        _searchButton_onClick: function(id, selected, $button, map){ 
+        _searchButton_onClick: function(id, selected, $button, map){
             if (this.searchResultListModal)
                 this.searchResultListModal.close();
             nsMap.showSearchModalForm('', map || ns.showSearchResultInMap );
@@ -156059,7 +156058,7 @@ search-mapLayer.js
                 icon        : 'fa-search',
                 class       : 'min-width',
                 text        : {da:'Søg', en:'Search'},
-                showAllways : true,                    
+                showAllways : true,
                 onClick     : this._searchButton_onClick,
                 context     : this
             };

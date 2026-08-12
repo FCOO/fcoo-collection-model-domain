@@ -559,7 +559,7 @@ Create collections and datasets
             trackResize         : false,	//true	Whether the map automatically handles browser window resize to update itself.
 
             worldCopyJump       : true,
-            maxBounds           : [[90, 180], [-90, -180]],
+            //maxBounds           : [[90, 180], [-90, -180]],
             minZoom             : 2.5,        //Minimum zoom level of the map. If not specified and at least one GridLayer or TileLayer is in the map, the lowest of their minZoom options will be used instead.
             maxZoom	            : 7        //Maximum zoom level of the map. If not specified and at least one GridLayer or TileLayer is in the map, the highest of their maxZoom options will be used instead.
         },
@@ -1116,6 +1116,27 @@ Create collections and datasets
         },
 
         /*********************************************
+        addAllPolygonsToMap
+        *********************************************/
+        addAllPolygonsToMap: function(){
+            let allReady = true;
+            this.list.forEach( dataset => {
+                if (dataset.isGlobal || dataset.polygon || dataset.errorLoadingMask)
+                    ; //Ok
+                else
+                    allReady = false;
+            });
+            if (allReady)
+                this.list.forEach( dataset => {
+                    if (dataset.polygon){
+                        dataset.polygon.addTo(this.elements.layerGroup);
+                        dataset.polygonBounds = dataset.polygon.getBounds();
+                    }
+                }, this);
+        },
+
+
+        /*********************************************
         _modalContent
         *********************************************/
         _modalContent: function(options = {}){
@@ -1135,8 +1156,6 @@ Create collections and datasets
 
             //Create map-container and map-element and the info-map
             e.$mapContainer = $('<div/>').css(nsCollection.options.mapContainerCss).height(mapHeight);
-
-
 
             e.map = L.map(e.$mapContainer.get(0), $.extend(true, {},
                         nsCollection.options.modalMapOptions, {
@@ -1609,7 +1628,7 @@ Create Datasets
             };
         },
 
-        updatePolyginIcons: function( hasPolygon ){
+        updatePolygonIcons: function( hasPolygon ){
             this.hasPolygon = hasPolygon;
             this.collection.updatePolygonIcons();
         },
@@ -1652,7 +1671,6 @@ Create Datasets
                 return;
             }
 
-
             if (this.latLngs)
                 this.addPolygon();
             else {
@@ -1660,9 +1678,8 @@ Create Datasets
                     this.errorLoadingMask = true;
 
                 if (this.errorLoadingMask)
-                    this.updatePolyginIcons( false );
+                    this.updatePolygonIcons( false );
                 else {
-
                     //Load polygons from geojson-file
                     Promise.getJSON(
                         ns.dataFilePath({subDir: 'model-domain', fileName: this.domain.options.mask}), {
@@ -1692,7 +1709,7 @@ Create Datasets
 
             this.latLngs = this.latLngs || latLngs;
 
-            let disabled        = this.displayStatus.disabled;
+            let disabled = this.displayStatus.disabled;
             this.polygon = L.polygon(this.latLngs, {
                 borderColorName : disabled ? 'black' : this.colorName,
                 colorName       : disabled ? 'gray'  : this.colorName,
@@ -1708,23 +1725,21 @@ Create Datasets
                 shadow          : false,
                 interactive     : true,
                 pane            : (this.isOcean ? 'oceanPane' : 'overlayPane')
-            })
-                .addTo(this.collection.elements.layerGroup)
-                .bringToFront();
+            });
 
-            this.polygon
-                .on('click', this._polygon_onClick.bind(this) )
-                .bindTooltip(this.domain.fullNameSimple(), {sticky: true});
+            this.polygon.on('click', this._polygon_onClick.bind(this) );
+            this.polygon.bindTooltip(this.domain.fullNameSimple(), {sticky: true});
 
-            this.polygonBounds = this.polygon.getBounds();
+            this.updatePolygonIcons( true );
 
-            this.updatePolyginIcons( true );
-
+            this.collection.addAllPolygonsToMap();
         },
+
 
         rejectPolygon: function(){
             this.errorLoadingMask = true;
-            this.updatePolyginIcons( false );
+            this.updatePolygonIcons( false );
+            this.collection.addAllPolygonsToMap();
         },
 
 

@@ -43,7 +43,7 @@ Create collections and datasets
             trackResize         : false,	//true	Whether the map automatically handles browser window resize to update itself.
 
             worldCopyJump       : true,
-            maxBounds           : [[90, 180], [-90, -180]],
+            //maxBounds           : [[90, 180], [-90, -180]],
             minZoom             : 2.5,        //Minimum zoom level of the map. If not specified and at least one GridLayer or TileLayer is in the map, the lowest of their minZoom options will be used instead.
             maxZoom	            : 7        //Maximum zoom level of the map. If not specified and at least one GridLayer or TileLayer is in the map, the highest of their maxZoom options will be used instead.
         },
@@ -600,6 +600,27 @@ Create collections and datasets
         },
 
         /*********************************************
+        addAllPolygonsToMap
+        *********************************************/
+        addAllPolygonsToMap: function(){
+            let allReady = true;
+            this.list.forEach( dataset => {
+                if (dataset.isGlobal || dataset.polygon || dataset.errorLoadingMask)
+                    ; //Ok
+                else
+                    allReady = false;
+            });
+            if (allReady)
+                this.list.forEach( dataset => {
+                    if (dataset.polygon){
+                        dataset.polygon.addTo(this.elements.layerGroup);
+                        dataset.polygonBounds = dataset.polygon.getBounds();
+                    }
+                }, this);
+        },
+
+
+        /*********************************************
         _modalContent
         *********************************************/
         _modalContent: function(options = {}){
@@ -619,8 +640,6 @@ Create collections and datasets
 
             //Create map-container and map-element and the info-map
             e.$mapContainer = $('<div/>').css(nsCollection.options.mapContainerCss).height(mapHeight);
-
-
 
             e.map = L.map(e.$mapContainer.get(0), $.extend(true, {},
                         nsCollection.options.modalMapOptions, {

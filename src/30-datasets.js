@@ -236,7 +236,7 @@ Create Datasets
             };
         },
 
-        updatePolyginIcons: function( hasPolygon ){
+        updatePolygonIcons: function( hasPolygon ){
             this.hasPolygon = hasPolygon;
             this.collection.updatePolygonIcons();
         },
@@ -279,7 +279,6 @@ Create Datasets
                 return;
             }
 
-
             if (this.latLngs)
                 this.addPolygon();
             else {
@@ -287,9 +286,8 @@ Create Datasets
                     this.errorLoadingMask = true;
 
                 if (this.errorLoadingMask)
-                    this.updatePolyginIcons( false );
+                    this.updatePolygonIcons( false );
                 else {
-
                     //Load polygons from geojson-file
                     Promise.getJSON(
                         ns.dataFilePath({subDir: 'model-domain', fileName: this.domain.options.mask}), {
@@ -319,7 +317,7 @@ Create Datasets
 
             this.latLngs = this.latLngs || latLngs;
 
-            let disabled        = this.displayStatus.disabled;
+            let disabled = this.displayStatus.disabled;
             this.polygon = L.polygon(this.latLngs, {
                 borderColorName : disabled ? 'black' : this.colorName,
                 colorName       : disabled ? 'gray'  : this.colorName,
@@ -335,23 +333,21 @@ Create Datasets
                 shadow          : false,
                 interactive     : true,
                 pane            : (this.isOcean ? 'oceanPane' : 'overlayPane')
-            })
-                .addTo(this.collection.elements.layerGroup)
-                .bringToFront();
+            });
 
-            this.polygon
-                .on('click', this._polygon_onClick.bind(this) )
-                .bindTooltip(this.domain.fullNameSimple(), {sticky: true});
+            this.polygon.on('click', this._polygon_onClick.bind(this) );
+            this.polygon.bindTooltip(this.domain.fullNameSimple(), {sticky: true});
 
-            this.polygonBounds = this.polygon.getBounds();
+            this.updatePolygonIcons( true );
 
-            this.updatePolyginIcons( true );
-
+            this.collection.addAllPolygonsToMap();
         },
+
 
         rejectPolygon: function(){
             this.errorLoadingMask = true;
-            this.updatePolyginIcons( false );
+            this.updatePolygonIcons( false );
+            this.collection.addAllPolygonsToMap();
         },
 
 
